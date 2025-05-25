@@ -1,7 +1,6 @@
 ## Eternal Survival
 
-![image](https://github.com/user-attachments/assets/5aac877e-5dd4-4571-8c75-389bffcd8e63)
-
+![image](https://github.com/user-attachments/assets/b7d082b2-de12-49ed-a479-8ddc74671351)
 
 스팀 인기 게임 '이터널리턴' IP를 활용한 뱀파이어 서바이벌 라이크 장르의 게임을 개발중입니다.
 유튜버 골드메탈님의 영상과 에셋스토어에 업로드되어있는 [리소스](https://assetstore.unity.com/packages/2d/undead-survivor-assets-pack-238068?clickref=1011lAAmpGkC&utm_source=partnerize&utm_medium=affiliate&utm_campaign=unity_affiliate#content)를 시작으로 차근차근 만들어 나가고 있습니다.
