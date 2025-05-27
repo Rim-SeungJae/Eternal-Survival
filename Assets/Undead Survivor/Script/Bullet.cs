@@ -21,7 +21,7 @@ public class Bullet : MonoBehaviour
 
         if(per >= 0) // per == -1 when melle weapon
         {
-            rigid.velocity = dir * 15;
+            rigid.linearVelocity = dir * 15;
         }
     }
 
@@ -33,7 +33,7 @@ public class Bullet : MonoBehaviour
         
         if(per < 0)
         {
-            rigid.velocity = Vector2.zero;
+            rigid.linearVelocity = Vector2.zero;
             gameObject.SetActive(false);
         }
     }
@@ -42,7 +42,7 @@ public class Bullet : MonoBehaviour
     {
         if(!collision.CompareTag("Area") || per == -100) return;
 
-        rigid.velocity = Vector2.zero;
+        rigid.linearVelocity = Vector2.zero;
         gameObject.SetActive(false);
     }
 }

@@ -1,0 +1,19 @@
+{
+    "asset": "12ea031fc3c776243965cb228628010f",
+    "fileName": "0197113f-45ea-736e-bbe3-72760c5fc899.png",
+    "prompt": "8-frame pixel art sprite sheet of a cute bat character in flight and damage states, retro 16-bit style. Frame 1: bat lying dead with X eyes, wings drooping and curled. Frame 2: bat hit reaction with white flash effect. Frames 3 to 8: bat flying animation with smooth wing flapping cycle (up and down alternation), body bobbing naturally. Consistent color palette: red wings, orange body, black eyes. Beige background, 128x16 canvas.",
+    "negativePrompt": "realistic, blurry, low-resolution, 3D, grayscale, photorealism, noise, double image, cropped, artifacts, cluttered background, inconsistent lighting, disproportionate limbs, chibi, manga, comic style, wrong pixel count, extra limbs",
+    "model": "242b56c1-2224-41c4-8949-2ba760bbfc69",
+    "customSeed": -1,
+    "w3CTraceId": "4f670b2e63fd7a1f7b87b6c69fb0b750",
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0
+}

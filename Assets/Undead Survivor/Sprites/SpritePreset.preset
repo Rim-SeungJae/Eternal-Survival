@@ -73,6 +73,10 @@ Preset:
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: m_FlipGreenChannel
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: m_IsReadable
     value: 0
     objectReference: {fileID: 0}
@@ -89,7 +93,7 @@ Preset:
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: m_IgnoreMasterTextureLimit
+    propertyPath: m_IgnoreMipmapLimit
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
@@ -253,6 +257,10 @@ Preset:
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: m_Swizzle
+    value: 50462976
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: m_CookieLightType
     value: 0
     objectReference: {fileID: 0}
@@ -294,6 +302,10 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: m_PlatformSettings.Array.data[0].m_Overridden
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_PlatformSettings.Array.data[0].m_IgnorePlatformSupport
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
@@ -341,6 +353,10 @@ Preset:
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: m_PlatformSettings.Array.data[1].m_IgnorePlatformSupport
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: m_PlatformSettings.Array.data[1].m_AndroidETC2FallbackOverride
     value: 0
     objectReference: {fileID: 0}
@@ -385,6 +401,10 @@ Preset:
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: m_PlatformSettings.Array.data[2].m_IgnorePlatformSupport
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: m_PlatformSettings.Array.data[2].m_AndroidETC2FallbackOverride
     value: 0
     objectReference: {fileID: 0}
@@ -426,6 +446,10 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: m_PlatformSettings.Array.data[3].m_Overridden
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_PlatformSettings.Array.data[3].m_IgnorePlatformSupport
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
@@ -487,6 +511,10 @@ Preset:
   - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_Sprites.Array.data[0].m_Border.w
     value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_Sprites.Array.data[0].m_CustomData
+    value: 
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_Sprites.Array.data[0].m_Outline.Array.size
@@ -577,6 +605,10 @@ Preset:
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_Sprites.Array.data[1].m_CustomData
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_Sprites.Array.data[1].m_Outline.Array.size
     value: 0
     objectReference: {fileID: 0}
@@ -663,6 +695,10 @@ Preset:
   - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_Sprites.Array.data[2].m_Border.w
     value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_Sprites.Array.data[2].m_CustomData
+    value: 
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_Sprites.Array.data[2].m_Outline.Array.size
@@ -753,6 +789,10 @@ Preset:
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_Sprites.Array.data[3].m_CustomData
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_Sprites.Array.data[3].m_Outline.Array.size
     value: 0
     objectReference: {fileID: 0}
@@ -839,6 +879,10 @@ Preset:
   - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_Sprites.Array.data[4].m_Border.w
     value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_Sprites.Array.data[4].m_CustomData
+    value: 
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_Sprites.Array.data[4].m_Outline.Array.size
@@ -929,6 +973,10 @@ Preset:
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_Sprites.Array.data[5].m_CustomData
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_Sprites.Array.data[5].m_Outline.Array.size
     value: 0
     objectReference: {fileID: 0}
@@ -1015,6 +1063,10 @@ Preset:
   - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_Sprites.Array.data[6].m_Border.w
     value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_Sprites.Array.data[6].m_CustomData
+    value: 
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_Sprites.Array.data[6].m_Outline.Array.size
@@ -1105,6 +1157,10 @@ Preset:
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_Sprites.Array.data[7].m_CustomData
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_Sprites.Array.data[7].m_Outline.Array.size
     value: 0
     objectReference: {fileID: 0}
@@ -1149,6 +1205,10 @@ Preset:
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_CustomData
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_PhysicsShape.Array.size
     value: 0
     objectReference: {fileID: 0}
@@ -1185,16 +1245,20 @@ Preset:
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_SpriteCustomMetadata.m_Entries.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.size
     value: 8
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[0].first
-    value: chicken_3
+    value: chicken_0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[0].second
-    value: 1603091006
+    value: -1821775361
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[1].first
@@ -1206,62 +1270,58 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[2].first
-    value: chicken_7
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[2].second
-    value: 477880560
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[3].first
-    value: chicken_4
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[3].second
-    value: -1828360804
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[4].first
     value: chicken_2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[4].second
+    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[2].second
     value: 888646243
     objectReference: {fileID: 0}
   - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[3].first
+    value: chicken_3
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[3].second
+    value: 1603091006
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[4].first
+    value: chicken_4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[4].second
+    value: -1828360804
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
     propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[5].first
-    value: chicken_6
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[5].second
-    value: 1087965150
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[6].first
-    value: chicken_0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[6].second
-    value: -1821775361
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[7].first
     value: chicken_5
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[7].second
+    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[5].second
     value: 524726756
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: m_SpritePackingTag
+    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[6].first
+    value: chicken_6
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[6].second
+    value: 1087965150
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[7].first
+    value: chicken_7
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_SpriteSheet.m_NameFileIdTable.Array.data[7].second
+    value: 477880560
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_MipmapLimitGroupName
     value: 
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: m_PSDRemoveMatte
-    value: 0
-    objectReference: {fileID: 0}
-  - target: {fileID: 0}
-    propertyPath: m_PSDShowRemoveMatteOption
     value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
@@ -1277,3 +1337,8 @@ Preset:
     value: 
     objectReference: {fileID: 0}
   m_ExcludedProperties: []
+  m_CoupledType:
+    m_NativeTypeID: 0
+    m_ManagedTypePPtr: {fileID: 0}
+    m_ManagedTypeFallback: 
+  m_CoupledProperties: []

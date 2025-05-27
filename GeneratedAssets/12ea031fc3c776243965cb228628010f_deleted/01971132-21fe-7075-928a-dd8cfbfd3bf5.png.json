@@ -1,0 +1,19 @@
+{
+    "asset": "12ea031fc3c776243965cb228628010f",
+    "fileName": "01971132-21fe-7075-928a-dd8cfbfd3bf5.png",
+    "prompt": "8-frame pixel art sprite sheet of a hound character, retro 16-bit style. Frame 1: Hound lying dead with X eyes. Frame 2: Hound hit reaction with white flash effect. Frames 3 to 8: Hound running animation with body bobbing naturally. Consistent color palette: red eyes, dark body, red claws. removed background, 1pixel of padding",
+    "negativePrompt": "realistic, blurry, low-resolution, 3D, grayscale, photorealism, noise, double image, cropped, artifacts, cluttered background, inconsistent lighting, disproportionate limbs, chibi, manga, comic style, wrong pixel count, extra limbs",
+    "model": "242b56c1-2224-41c4-8949-2ba760bbfc69",
+    "customSeed": -1,
+    "w3CTraceId": "365dbc214c8abc716ece95c9914ec842",
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0
+}

@@ -1,0 +1,19 @@
+{
+    "asset": "12ea031fc3c776243965cb228628010f",
+    "fileName": "01971138-16ce-770a-801e-8ba54c2cac40.png",
+    "prompt": "Pixel art of a cyberpunk attack hound from side view, centered in the canvas. Only the hound sprite visible, no background, no extra labels or design elements. The hound is muscular and armored, with black plating, glowing red eyes, sharp teeth, red claws, steel muzzle, and a thick collar labeled \"CHOCO\". Aggressive stance, retro 16-bit RPG style, 64x64 resolution.",
+    "negativePrompt": "realistic, blurry, low-resolution, 3D, grayscale, photorealism, noise, double image, cropped, artifacts, cluttered background, inconsistent lighting, disproportionate limbs, chibi, manga, comic style, wrong pixel count, extra limbs",
+    "model": "242b56c1-2224-41c4-8949-2ba760bbfc69",
+    "customSeed": -1,
+    "w3CTraceId": "3eccbd142422149622c426c09dfb338f",
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0
+}

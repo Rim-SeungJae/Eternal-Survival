@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour
     public Transform shadow;
 
     bool isLive;
+    bool isKnockBack;
 
     Rigidbody2D rigid;
     Collider2D coll;
@@ -39,10 +40,12 @@ public class Enemy : MonoBehaviour
 
         if(!isLive || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit") ) return;
 
+        if(isKnockBack) return;
+
         Vector2 dirVec = target.position - rigid.position;
         Vector2 nextVec = dirVec.normalized * speed * Time.fixedDeltaTime;
         rigid.MovePosition(rigid.position + nextVec);
-        rigid.velocity = Vector2.zero;
+        rigid.linearVelocity = Vector2.zero;
     }
 
     private void LateUpdate() {
@@ -57,6 +60,7 @@ public class Enemy : MonoBehaviour
     {
         target = GameManager.instance.player.GetComponent<Rigidbody2D>();
         isLive = true;
+        isKnockBack = false;
         coll.enabled = true;
         rigid.simulated = true;
         spriter.sortingOrder = 2;
@@ -107,10 +111,14 @@ public class Enemy : MonoBehaviour
 
     IEnumerator KnockBack()
     {
+        isKnockBack = true;
         yield return wait;
         Vector3 playerPos = GameManager.instance.player.transform.position;
         Vector3 dirVec = transform.position - playerPos;
         rigid.AddForce(dirVec.normalized * 3, ForceMode2D.Impulse);
+
+        yield return new WaitForSeconds(0.1f); // 넉백 지속시간
+        isKnockBack = false;
     }
 
     public void Dead()

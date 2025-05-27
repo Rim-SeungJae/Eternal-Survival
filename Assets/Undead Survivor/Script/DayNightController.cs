@@ -16,15 +16,17 @@ public class DayNightController : MonoBehaviour
     {
         if (gameManager.IsNight())
         {
-            playerLight.lightType = Light2D.LightType.Point;
+            playerLight.lightType = Light2D.LightType.Sprite;
             float t = gameManager.GetNightFactor(); // 0~1
             float factor = visionCurve.Evaluate(t);
-            playerLight.pointLightOuterRadius = Mathf.Lerp(minRadius, maxRadius, factor);
+
+            float scale = Mathf.Lerp(minRadius, maxRadius, factor);
+            playerLight.transform.localScale = new Vector3(scale, scale, 1);
+            //playerLight.pointLightOuterRadius = Mathf.Lerp(minRadius, maxRadius, factor);
         }
-        else
+        else if (!gameManager.IsNight() && playerLight.lightType != Light2D.LightType.Global)
         {
             playerLight.lightType = Light2D.LightType.Global;
-            playerLight.pointLightOuterRadius = maxRadius;
         }
     }
 }
