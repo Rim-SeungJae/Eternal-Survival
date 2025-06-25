@@ -49,5 +49,6 @@ public class SpawnData
     public int health;
     public float speed;
     public Vector2 shadowOffset;
+    public Vector2 shadowSize;
     public Vector2 colliderSize;
 }

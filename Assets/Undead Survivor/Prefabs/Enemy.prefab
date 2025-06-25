@@ -291,6 +291,8 @@ MonoBehaviour:
   - {fileID: 22100000, guid: 52d80718c268fd64ea3b4b16f1682532, type: 2}
   - {fileID: 22100000, guid: 7d366490aba4cc247a93bc67d60c7516, type: 2}
   - {fileID: 22100000, guid: eb16f055c1900d740bc4b14d1b78656d, type: 2}
+  - {fileID: 22100000, guid: 0bc3bc6d20edc4646b80f7f6c85ab483, type: 2}
+  - {fileID: 22100000, guid: f1fe3b0179a97c24ab60bace999a9d34, type: 2}
   target: {fileID: 0}
   shadow: {fileID: 0}
 --- !u!114 &2959337854166553341

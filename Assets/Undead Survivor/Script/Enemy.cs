@@ -75,6 +75,7 @@ public class Enemy : MonoBehaviour
             Vector3 pos = shadow.localPosition;
             pos = data.shadowOffset;
             shadow.localPosition = pos;
+            shadow.localScale = data.shadowSize;
         }
         capsule.size = data.colliderSize;
         anim.runtimeAnimatorController = animCon[data.spriteType];

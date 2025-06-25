@@ -2638,7 +2638,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 8.240741
+  orthographic size: 10.138889
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -21018,19 +21018,36 @@ MonoBehaviour:
     health: 10
     speed: 1.5
     shadowOffset: {x: 0, y: -0.3}
+    shadowSize: {x: 1, y: 1}
     colliderSize: {x: 0.7, y: 0.8}
   - spriteType: 1
     spawnTime: 0.2
     health: 15
     speed: 2.4
     shadowOffset: {x: 0, y: -0.45}
+    shadowSize: {x: 1, y: 1}
     colliderSize: {x: 0.7, y: 0.8}
   - spriteType: 2
     spawnTime: 0.2
     health: 20
     speed: 2
     shadowOffset: {x: 0, y: -0.3}
+    shadowSize: {x: 1.5, y: 1.5}
     colliderSize: {x: 0.8, y: 0.7}
+  - spriteType: 3
+    spawnTime: 0.2
+    health: 25
+    speed: 2
+    shadowOffset: {x: 0, y: -0.3}
+    shadowSize: {x: 1.4, y: 1.4}
+    colliderSize: {x: 0.8, y: 0.7}
+  - spriteType: 4
+    spawnTime: 0.2
+    health: 50
+    speed: 1
+    shadowOffset: {x: -0.1, y: -0.55}
+    shadowSize: {x: 3, y: 3}
+    colliderSize: {x: 1.6, y: 1.4}
   levelTime: 0
 --- !u!1 &1827883731
 GameObject:
