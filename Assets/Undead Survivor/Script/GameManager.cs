@@ -34,6 +34,13 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         Application.targetFrameRate = 60;
+
+        playerId = GlobalData.selectedCharacterId;
+    }
+
+    void Start()
+    {
+        GameStart(playerId);
     }
 
     public void GameStart(int id)
