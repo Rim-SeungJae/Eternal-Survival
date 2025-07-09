@@ -10,6 +10,8 @@ public class Enemy : MonoBehaviour
     public RuntimeAnimatorController[] animCon;
     public Rigidbody2D target;
     public Transform shadow;
+    public DayNightController dayNightController;
+    private SpriteRenderer spriteren;
 
     bool isLive;
     bool isKnockBack;
@@ -31,6 +33,8 @@ public class Enemy : MonoBehaviour
         coll = GetComponent<Collider2D>();
         shadow = transform.Find("Shadow");
         wait = new WaitForFixedUpdate();
+        spriteren = GetComponent<SpriteRenderer>();
+        dayNightController = FindObjectsByType<DayNightController>(FindObjectsSortMode.None)[0];
     }
 
     // Update is called once per frame
@@ -48,10 +52,26 @@ public class Enemy : MonoBehaviour
         rigid.linearVelocity = Vector2.zero;
     }
 
-    private void LateUpdate() {
-        if(!GameManager.instance.isLive) return;
-        
-        if(!isLive) return;
+    void Update()
+    {
+        if (GameManager.instance.IsNight())
+        {
+            Vector3 playerPos = GameManager.instance.player.transform.position;
+            float dist = Vector3.Distance(playerPos, transform.position);
+            spriteren.enabled = dist < dayNightController.CurrentLightRadius / 2.0f;
+        }
+        else if (!spriteren.enabled)
+        {
+            spriteren.enabled = true;
+        }
+    }
+
+
+    private void LateUpdate()
+    {
+        if (!GameManager.instance.isLive) return;
+
+        if (!isLive) return;
 
         spriter.flipX = target.position.x < rigid.position.x;
     }

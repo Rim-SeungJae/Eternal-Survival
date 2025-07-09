@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Reposition : MonoBehaviour
+public class EnemyController : MonoBehaviour
 {
-
     Collider2D coll;
 
     void Awake()
