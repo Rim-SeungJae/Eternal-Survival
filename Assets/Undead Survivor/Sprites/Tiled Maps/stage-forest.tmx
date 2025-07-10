@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="180" height="120" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="1023">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="180" height="120" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="1030">
  <tileset firstgid="1" source="Tilesets/ERW - Grass Land 2.0 v1.7 1.2/ERW - Grass Land 2.0 v1.7.2/TiledMap Editor/Tilesets/Tileset-Terrain-new grass.tsx"/>
  <tileset firstgid="3961" source="Tilesets/ERW - Grass Land 2.0 v1.7 1.2/ERW - Grass Land 2.0 v1.7.2/TiledMap Editor/Tilesets/Atlas-Props-sheet1-sprites.tsx"/>
  <tileset firstgid="4600" source="Tilesets/ERW - Grass Land 2.0 v1.7 1.2/ERW - Grass Land 2.0 v1.7.2/TiledMap Editor/Tilesets/Atlas-Props-sheet1.tsx"/>
@@ -806,23 +806,10 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="10" name="props0">
+ <objectgroup id="2" name="props0">
   <properties>
-   <property name="unity:sortingLayer" value="Default"/>
-  </properties>
-  <object id="168" gid="4480" x="1475.33" y="2155.33" width="128" height="224"/>
-  <object id="169" gid="4484" x="1527" y="2100" width="128" height="224"/>
-  <object id="171" gid="4483" x="1568.67" y="2026.67" width="128" height="224"/>
-  <object id="172" gid="4489" x="1620.67" y="1978.67" width="128" height="224"/>
-  <object id="173" gid="4490" x="1677" y="1945" width="128" height="224"/>
-  <object id="174" gid="4479" x="1698" y="1850" width="192" height="192"/>
-  <object id="176" gid="4480" x="1792.67" y="1846" width="128" height="224"/>
-  <object id="177" gid="4482" x="1812.67" y="1815.33" width="192" height="160"/>
-  <object id="970" gid="4510" x="3946.5" y="2170.5" width="128" height="64"/>
- </objectgroup>
- <objectgroup id="2" name="props1">
-  <properties>
-   <property name="unity:sortingLayer" value="Default"/>
+   <property name="unity:orderInLayer" type="int" value="0"/>
+   <property name="unity:sortingLayer" value="PropsBelow"/>
   </properties>
   <object id="34" gid="15989" x="2171.8" y="3395.28" width="32" height="32"/>
   <object id="51" gid="4382" x="1758.67" y="3216" width="64" height="64"/>
@@ -1101,7 +1088,7 @@
   <object id="689" gid="4347" x="4564.84" y="2467.68" width="96" height="64"/>
   <object id="690" gid="4350" x="4572.84" y="2433.66" width="64" height="64"/>
   <object id="781" gid="4314" x="3833.22" y="1170.63" width="64" height="64"/>
-  <object id="784" gid="4381" x="3296.46" y="871.61" width="64" height="64"/>
+  <object id="784" gid="4381" x="3295.46" y="871.11" width="64" height="64"/>
   <object id="786" gid="4347" x="3291.14" y="677.963" width="96" height="64"/>
   <object id="787" gid="4317" x="3796.29" y="1168.13" width="64" height="64"/>
   <object id="794" gid="4380" x="3313.06" y="980.297" width="96" height="64"/>
@@ -1191,10 +1178,31 @@
   <object id="1020" gid="4317" x="2318.99" y="1624.79" width="64" height="64"/>
   <object id="1021" gid="4314" x="2335.82" y="1601.62" width="64" height="64"/>
   <object id="1022" gid="4349" x="2352.04" y="1569.45" width="64" height="64"/>
+  <object id="1027" gid="4056" x="2833.4" y="1445.38" width="96" height="96"/>
+  <object id="1028" gid="15489" x="2772.33" y="1506.45" width="222" height="222"/>
+  <object id="1029" x="2843.4" y="1372.88" width="71" height="50.5">
+   <ellipse/>
+  </object>
+ </objectgroup>
+ <objectgroup id="10" name="props1">
+  <properties>
+   <property name="unity:orderInLayer" type="int" value="0"/>
+   <property name="unity:sortingLayer" value="Above"/>
+  </properties>
+  <object id="168" gid="4480" x="1469.33" y="2140.83" width="128" height="224"/>
+  <object id="169" gid="4484" x="1524.5" y="2094" width="128" height="224"/>
+  <object id="171" gid="4483" x="1567.17" y="2023.67" width="128" height="224"/>
+  <object id="172" gid="4489" x="1602.67" y="1981.17" width="128" height="224"/>
+  <object id="173" gid="4490" x="1667" y="1938.5" width="128" height="224"/>
+  <object id="174" gid="4479" x="1681" y="1848" width="192" height="192"/>
+  <object id="176" gid="4480" x="1774.67" y="1840" width="128" height="224"/>
+  <object id="177" gid="4482" x="1812.67" y="1815.33" width="192" height="160"/>
+  <object id="970" gid="4510" x="3946.5" y="2170.5" width="128" height="64"/>
  </objectgroup>
  <objectgroup id="9" name="props2">
   <properties>
-   <property name="unity:sortingLayer" value="Default"/>
+   <property name="unity:orderInLayer" type="int" value="0"/>
+   <property name="unity:sortingLayer" value="Above"/>
   </properties>
   <object id="69" gid="4486" x="1600.5" y="3227.5" width="128" height="224"/>
   <object id="71" gid="4487" x="1539.5" y="3204" width="128" height="224"/>
@@ -1225,8 +1233,6 @@
   <object id="338" gid="4480" x="1297" y="1586" width="128" height="224"/>
   <object id="339" gid="4482" x="1192" y="1636" width="192" height="160"/>
   <object id="340" gid="4486" x="1197" y="1603" width="128" height="224"/>
-  <object id="345" gid="4056" x="2834" y="1446" width="96" height="96"/>
-  <object id="349" gid="15489" x="2802.75" y="1458.25" width="160" height="160"/>
   <object id="444" gid="4480" x="2538.67" y="3223.16" width="128" height="224"/>
   <object id="445" gid="4484" x="2533" y="3129.17" width="128" height="224"/>
   <object id="446" gid="4483" x="2511.33" y="3022.5" width="128" height="224"/>
@@ -1414,13 +1420,15 @@
   <object id="950" gid="4480" x="3308" y="756" width="128" height="224"/>
   <object id="951" gid="4485" x="3529.33" y="764" width="192" height="160"/>
   <object id="952" gid="4505" x="3887.5" y="2157.5" width="239" height="239"/>
+  <object id="1023" gid="3964" x="2863.55" y="1395.27" width="32" height="64"/>
  </objectgroup>
  <objectgroup id="7" name="structures">
   <properties>
-   <property name="unity:sortingLayer" value="Default"/>
+   <property name="unity:orderInLayer" type="int" value="0"/>
+   <property name="unity:sortingLayer" value="Above"/>
   </properties>
   <object id="43" gid="34700" x="3871" y="1226" width="192" height="128"/>
-  <object id="48" gid="2147518349" x="3994" y="1517.33" width="598.743" height="548"/>
+  <object id="48" gid="2147518349" x="3994" y="1511.33" width="598.743" height="548"/>
  </objectgroup>
  <objectgroup id="8" name="roofs">
   <properties>
@@ -1462,9 +1470,6 @@
   </object>
   <object id="344" x="1728" y="2624">
    <polygon points="0,0 32,-32 32,-192 64,-224 64,-320 96,-352 128,-384 128,-416 160,-448 160,-480 192,-512 224,-512 256,-544 288,-576 320,-576 352,-608 352,-704 192,-784 51,-756 -138,-548 -190,-242"/>
-  </object>
-  <object id="976" x="2844" y="1373.5" width="71" height="50.5">
-   <ellipse/>
   </object>
   <object id="978" x="2140" y="1469.67">
    <polygon points="0,0 17,43 22,63 41,101 57,116 84,134 112,147 146,163 156,167 171,169 191,166 223,147 234,132 237,124 257,98 267,71 275,48 282,19 297,-38 301,-48 296,-70 284,-82 233,-95 182,-90 146,-82 88,-61 49,-37 9,-12"/>

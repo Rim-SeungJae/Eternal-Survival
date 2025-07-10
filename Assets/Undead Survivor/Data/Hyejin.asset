@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50222ad0476514346b06468438442ccf, type: 3}
+  m_Name: Hyejin
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterDataSO
+  characterName: "\uD61C\uC9C4"
+  description: "\uC720\uBA85 \uC138\uC2B5\uBB34 \uC9D1\uC548\uC758 \uC678\uB3D9\uB538.\n18\uC138\uC5D0
+    \uB2E4\uAC00\uC62C \uD070 \uACE0\uBE44\uB97C \uB118\uAE30\uAE30 \uC804\uAE4C\uC9C4
+    \uBD88\uC6B4\uC774 \uB530\uB77C\uB2E4\uB2CC\uB2E4\uB294 \uC0AC\uC8FC\uB97C \uAC16\uACE0
+    \uD0DC\uC5B4\uB0AC\uB2E4."
+  portrait: {fileID: 1657854958, guid: a6bc1783767327043a4cc65a3a8db5ff, type: 3}
+  skillImage: {fileID: -537537479, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
+  characterId: 1
+  speedMultiplier: 4
+  weaponSpeedMultiplier: 1
+  weaponRateMultiplier: 1
+  baseHealth: 100
+  animatorController: {fileID: 22100000, guid: 8bee532eb54ea7743b250a7927dea153, type: 2}
