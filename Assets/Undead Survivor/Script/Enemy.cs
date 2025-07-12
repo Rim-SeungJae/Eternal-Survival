@@ -128,7 +128,7 @@ public class Enemy : MonoBehaviour
     /// Spawner가 전달하는 데이터로 적의 능력치를 초기화합니다.
     /// </summary>
     /// <param name="data">적 생성 데이터</param>
-    public void Init(SpawnData data)
+    public void Init(SpawnDataSO data)
     {
         if (shadow != null)
         {

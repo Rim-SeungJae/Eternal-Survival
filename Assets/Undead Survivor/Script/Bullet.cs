@@ -40,19 +40,23 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        // 적과 충돌하지 않았거나, 무한 관통 상태(-100)가 아닐 때만 로직을 실행합니다.
+        // 파괴 가능 오브젝트와 충돌했는지 확인합니다.
+        if (collision.CompareTag("Destructible"))
+        {
+            // DestructibleObject 컴포넌트를 가져와 TakeDamage 함수를 호출합니다.
+            collision.GetComponent<DestructibleObject>()?.TakeDamage(1);
+        }
+
+        // 기존의 적 충돌 로직은 그대로 둡니다.
         if (!collision.CompareTag("Enemy") || per == -100)
         {
             return;
         }
 
-        // 관통 횟수를 1 감소시킵니다.
         per--;
 
-        // 관통 횟수를 모두 소진하면
         if (per < 0)
         {
-            // 총알을 멈추고 비활성화하여 풀에 반환합니다.
             rigid.linearVelocity = Vector2.zero;
             gameObject.SetActive(false);
         }

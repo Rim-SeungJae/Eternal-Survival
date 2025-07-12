@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b791e16303e2e4c90a7b8360e70403, type: 3}
+  m_Name: tree2
+  m_EditorClassIdentifier: Assembly-CSharp::DestructibleData
+  objectName: tree2
+  health: 1
+  sprite: {fileID: -6861365922197683907, guid: 58a47e52678b5b0409ad86da018d329b, type: 3}
+  lootTable: []

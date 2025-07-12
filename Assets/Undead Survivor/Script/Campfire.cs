@@ -33,6 +33,9 @@ public class Campfire : MonoBehaviour
     [Tooltip("진행바에 나타날 설명")]
     public string description;
 
+    [Tooltip("캠프파이어 효과 (ParticleSystem)")]
+    public ParticleSystem campfireEffect; // 캠프파이어 효과
+
     // 내부 변수
     private int currentHealCount;
     private float currentTimer;
@@ -116,6 +119,7 @@ public class Campfire : MonoBehaviour
     {
         GameManager.instance.health = GameManager.instance.maxHealth;
         currentHealCount--;
+        campfireEffect.Play(); // 캠프파이어 효과 재생
 
         // AudioManager.instance.PlaySfx(AudioManager.Sfx.Heal); // 회복 효과음 업데이트 예정
 

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b791e16303e2e4c90a7b8360e70403, type: 3}
+  m_Name: loot box
+  m_EditorClassIdentifier: Assembly-CSharp::DestructibleData
+  objectName: loot box
+  health: 1
+  sprite: {fileID: 21300000, guid: 29a003f334721ab41a3c1d485ede85bd, type: 3}
+  lootTable:
+  - itemPrefab: {fileID: 5874015185383211538, guid: 7eca2cf0ed8c1fa4896bd83f9b3cfed0, type: 3}
+    dropChance: 1

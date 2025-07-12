@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
 /// <summary>
 /// 적을 주기적으로 생성하는 스포너 클래스입니다.
 /// 게임 시간에 따라 레벨이 오르며, 해당 레벨에 맞는 적을 생성합니다.
@@ -10,8 +14,8 @@ public class Spawner : MonoBehaviour
 {
     [Tooltip("적 생성 위치 배열. Spawner 오브젝트의 자식으로 생성 위치를 지정합니다.")]
     public Transform[] spawnPoint;
-    [Tooltip("레벨별 적 생성 데이터")]
-    public SpawnData[] spawnData;
+    [Tooltip("레벨별 적 생성 데이터 (ScriptableObject 참조)")]
+    public SpawnDataSO[] spawnData; // SpawnDataSO 타입으로 변경
     [Tooltip("레벨업에 걸리는 시간")]
     public float levelTime;
 
@@ -56,29 +60,4 @@ public class Spawner : MonoBehaviour
         // 현재 레벨에 맞는 데이터로 적을 초기화합니다.
         enemy.GetComponent<Enemy>().Init(spawnData[level]);
     }
-}
-
-/// <summary>
-/// 적 생성을 위한 데이터 클래스입니다.
-/// ScriptableObject로 만들면 더 유연하게 관리할 수 있습니다.
-/// </summary>
-[System.Serializable]
-public class SpawnData
-{
-    [Tooltip("적 스프라이트 타입 (애니메이터 컨트롤러 인덱스)")]
-    public int spriteType;
-    [Tooltip("생성 주기 (초)")]
-    public float spawnTime;
-    [Tooltip("체력")]
-    public int health;
-    [Tooltip("이동 속도")]
-    public float speed;
-    [Tooltip("그림자 위치 오프셋")]
-    public Vector2 shadowOffset;
-    [Tooltip("그림자 크기")]
-    public Vector2 shadowSize;
-    [Tooltip("콜라이더 크기")]
-    public Vector2 colliderSize;
-    [Tooltip("플레이어에게 입히는 접촉 데미지")]
-    public float contactDamage; // 새로 추가된 필드
 }
