@@ -55,6 +55,7 @@ public class CharacterSelectManager : MonoBehaviour
         descriptionText.text = data.description;
         skillImage.sprite = data.skillImage;
         skillImage.preserveAspect = true;
+        skillImage.color = new Color(1f, 1f, 1f, 1f); // 이미지가 투명하지 않도록 설정
 
         if (selectedButton != null)
             selectedButton.SetSelected(false);

@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
 
     [Header("# Game Control")]
     public bool isLive; // 게임 진행 상태 (true: 진행 중, false: 정지)
+    public bool isTimeStopped = false; // 시간 정지 상태
     public float gameTime; // 현재 게임 시간
     public float maxGameTime = 2 * 10f; // 최대 게임 시간 (생존 목표 시간)
 
@@ -50,7 +51,7 @@ public class GameManager : MonoBehaviour
         playerId = GlobalData.selectedCharacterDataSO.characterId;
 
         // DayNightController 참조를 GameManager에서 캐싱합니다.
-        dayNightController = FindObjectOfType<DayNightController>();
+        dayNightController = FindFirstObjectByType<DayNightController>();
     }
 
     void Start()
@@ -159,13 +160,13 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 경험치를 획득하는 함수입니다.
     /// </summary>
-    public void GetExp()
+    public void GetExp(int amount = 1)
     {
         if (!isLive) return;
 
-        exp++;
+        exp += amount;
         // 현재 레벨에 맞는 요구 경험치에 도달했는지 확인
-        if (exp == nextExp[Mathf.Min(level, nextExp.Length - 1)])
+        if (exp >= nextExp[Mathf.Min(level, nextExp.Length - 1)])
         {
             level++;
             exp = 0;
@@ -209,5 +210,25 @@ public class GameManager : MonoBehaviour
         if (!IsNight()) return 0f;
 
         return (nightTimer - nightStart) / (nightEnd - nightStart);
+    }
+
+    /// <summary>
+    /// 지정된 시간 동안 시간 정지 효과를 발동시키는 코루틴을 시작합니다.
+    /// </summary>
+    /// <param name="duration">시간 정지 지속 시간</param>
+    public void StartTimeStop(float duration)
+    {
+        StartCoroutine(TimeStopCoroutine(duration));
+    }
+
+    IEnumerator TimeStopCoroutine(float duration)
+    {
+        isTimeStopped = true;
+        // TODO: 시간 정지 시작 시각 효과 (화면 번쩍임 등) 추가
+
+        yield return new WaitForSeconds(duration);
+
+        isTimeStopped = false;
+        // TODO: 시간 정지 종료 시각 효과 추가
     }
 }

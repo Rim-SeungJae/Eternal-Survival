@@ -13,10 +13,13 @@ MonoBehaviour:
   m_Name: Bear
   m_EditorClassIdentifier: Assembly-CSharp::SpawnDataSO
   spriteType: 4
-  spawnTime: 1
-  health: 30
+  spawnTime: 2
+  health: 40
   speed: 1
   shadowOffset: {x: 0.05, y: -0.7}
   shadowSize: {x: 3.2, y: 2}
   colliderSize: {x: 2, y: 2}
   contactDamage: 20
+  lootTable:
+  - itemTag: Credit3
+    dropChance: 1

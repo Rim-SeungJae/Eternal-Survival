@@ -86,7 +86,7 @@ public class LevelUp : MonoBehaviour
         {
             Item ranItem = items[ran[i]];
             // 이미 마스터 레벨인 아이템은 건너뜁니다.
-            if (ranItem.level == ranItem.data.damages.Length)
+            if (ranItem.level == ranItem.data.maxLevel+1)
             {
                 continue;
             }

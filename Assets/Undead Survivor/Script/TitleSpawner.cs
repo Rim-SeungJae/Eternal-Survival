@@ -26,7 +26,7 @@ public class TitleIntroController : MonoBehaviour
     IEnumerator PlayIntroSequence()
     {
         // 초기 딜레이
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
 
         // 1번 캐릭터 등장
         char1.SetActive(true);

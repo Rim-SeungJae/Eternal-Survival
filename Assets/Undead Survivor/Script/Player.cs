@@ -12,13 +12,11 @@ public class Player : MonoBehaviour
     [Tooltip("플레이어의 입력 벡터")]
     public Vector2 inputVec;
     [Tooltip("플레이어의 이동 속도")]
-    public float speed;
+    public ModifiableStat speed; // float에서 ModifiableStat으로 변경
     [Tooltip("주변 적을 탐지하는 스캐너")]
     public Scanner scanner;
     [Tooltip("플레이어의 손 오브젝트 (무기 장착 위치)")]
     public Hand[] hands;
-    // [Tooltip("캐릭터별 애니메이터 컨트롤러")] // CharacterDataSO에서 가져오므로 더 이상 필요 없습니다.
-    // public RuntimeAnimatorController[] animCon; // CharacterDataSO에서 가져오므로 더 이상 필요 없습니다.
 
     // 컴포넌트 참조
     Rigidbody2D rg;
@@ -40,6 +38,9 @@ public class Player : MonoBehaviour
         scanner = GetComponent<Scanner>();
         // 비활성화된 자식 오브젝트도 포함하여 Hand 컴포넌트를 찾습니다.
         hands = GetComponentsInChildren<Hand>(true);
+
+        // ModifiableStat 인스턴스 초기화
+        speed = new ModifiableStat(0); 
     }
 
     void OnEnable()
@@ -48,7 +49,7 @@ public class Player : MonoBehaviour
         currentCharacterData = GlobalData.selectedCharacterDataSO;
 
         // CharacterDataSO에서 플레이어의 초기 능력치를 설정합니다.
-        speed = currentCharacterData.speedMultiplier; // 기본 속도에 배율 적용
+        speed.BaseValue = currentCharacterData.speedMultiplier; // speed.BaseValue에 할당
         GameManager.instance.maxHealth = currentCharacterData.baseHealth; // GameManager의 최대 체력 설정
         GameManager.instance.health = GameManager.instance.maxHealth; // 현재 체력도 최대 체력으로 설정
 
@@ -76,7 +77,7 @@ public class Player : MonoBehaviour
         
         // 입력 벡터와 속도를 기반으로 다음 위치를 계산하고,
         // Rigidbody를 사용하여 물리적으로 안전하게 이동시킵니다.
-        Vector2 nextVec = inputVec * speed * Time.fixedDeltaTime;
+        Vector2 nextVec = inputVec * speed.Value * Time.fixedDeltaTime; // speed.Value 사용
         rg.MovePosition(rg.position + nextVec);
     }
 
@@ -86,7 +87,7 @@ public class Player : MonoBehaviour
         if (!GameManager.instance.isLive) return;
 
         // 이동 속도에 따라 애니메이터의 "Speed" 파라미터를 조절하여 걷기/서기 애니메이션을 제어합니다.
-        an.SetFloat("Speed", inputVec.magnitude);
+        an.SetFloat("Speed", inputVec.magnitude); // speed.Value 대신 inputVec.magnitude 사용
 
         // x축 입력이 있을 경우, 입력 방향에 따라 스프라이트를 좌우로 뒤집습니다.
         if (inputVec.x != 0)
@@ -100,6 +101,9 @@ public class Player : MonoBehaviour
         // 게임이 진행 중이 아닐 때는 충돌 처리를 무시합니다.
         if (!GameManager.instance.isLive) return;
 
+        // 시간 정지중에는 충돌 처리를 하지 않습니다.
+        if (GameManager.instance.isTimeStopped) return;
+
         // 충돌한 오브젝트가 "Enemy" 태그를 가지고 있는지 확인합니다.
         if (collision.gameObject.CompareTag("Enemy"))
         {
@@ -111,11 +115,6 @@ public class Player : MonoBehaviour
                 // Time.deltaTime을 곱하여 프레임 속도에 관계없이 일정한 피해를 받도록 합니다.
                 GameManager.instance.health -= enemy.contactDamage * Time.deltaTime;
             }
-        }
-        else
-        {
-            // "Enemy" 태그가 아닌 다른 오브젝트와의 충돌은 데미지를 입히지 않습니다.
-            return;
         }
 
         // 체력이 0 미만으로 떨어지면 사망 처리 로직을 실행합니다.
@@ -133,3 +132,4 @@ public class Player : MonoBehaviour
         }
     }
 }
+

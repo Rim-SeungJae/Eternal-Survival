@@ -22,4 +22,7 @@ public class SpawnDataSO : ScriptableObject
     public Vector2 colliderSize;
     [Tooltip("플레이어에게 입히는 접촉 데미지")]
     public float contactDamage;
+    [Header("드롭 아이템")]
+    // 드롭 가능한 아이템 목록과 각 아이템의 드롭 확률입니다.
+    public LootItem[] lootTable; // DestructibleData와 동일한 구조체를 사용합니다.
 }

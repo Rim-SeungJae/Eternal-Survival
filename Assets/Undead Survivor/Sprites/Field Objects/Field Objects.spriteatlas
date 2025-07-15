@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Field Objects
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 0
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 29a003f334721ab41a3c1d485ede85bd, type: 3}
+    - {fileID: 2800000, guid: ae215dcca44ab0445a4355a4c17c3330, type: 3}
+    - {fileID: 2800000, guid: 28ee2d1f9f302404aa85b2f7dfcb657b, type: 3}
+    - {fileID: 2800000, guid: 58a47e52678b5b0409ad86da018d329b, type: 3}
+    - {fileID: 2800000, guid: 3d58aecd9e4ccd947a2a6cf84548707d, type: 3}
+    - {fileID: 2800000, guid: 96736331f70e56f4b8d096e30b8cf7a1, type: 3}
+    - {fileID: 2800000, guid: 2d839fc406e9c15498ff3bc5dd0096b1, type: 3}
+    - {fileID: 2800000, guid: f645e45c454c86f46ba26bf7c710166f, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - 96736331f70e56f4b8d096e30b8cf7a1: -3298739680747934206
+    - 58a47e52678b5b0409ad86da018d329b: -6861365922197683907
+    - 29a003f334721ab41a3c1d485ede85bd: 21300000
+    - 2d839fc406e9c15498ff3bc5dd0096b1: 1635718887107626151
+    - f645e45c454c86f46ba26bf7c710166f: 3672255075637400384
+    - ae215dcca44ab0445a4355a4c17c3330: 21300000
+    - 3d58aecd9e4ccd947a2a6cf84548707d: -7665195450718798357
+    - 28ee2d1f9f302404aa85b2f7dfcb657b: -4860417463286439256
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: -3298739680747934206, guid: 96736331f70e56f4b8d096e30b8cf7a1, type: 3}
+  - {fileID: -6861365922197683907, guid: 58a47e52678b5b0409ad86da018d329b, type: 3}
+  - {fileID: 21300000, guid: 29a003f334721ab41a3c1d485ede85bd, type: 3}
+  - {fileID: 1635718887107626151, guid: 2d839fc406e9c15498ff3bc5dd0096b1, type: 3}
+  - {fileID: 3672255075637400384, guid: f645e45c454c86f46ba26bf7c710166f, type: 3}
+  - {fileID: 21300000, guid: ae215dcca44ab0445a4355a4c17c3330, type: 3}
+  - {fileID: -7665195450718798357, guid: 3d58aecd9e4ccd947a2a6cf84548707d, type: 3}
+  - {fileID: -4860417463286439256, guid: 28ee2d1f9f302404aa85b2f7dfcb657b, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - combo meal 1_0
+  - tree2_0
+  - loot box
+  - credit2_0
+  - credit3_0
+  - supply box
+  - credit1_0
+  - tree1 1_0
+  m_RenderDataMap: {}
+  m_Tag: Field Objects
+  m_IsVariant: 0

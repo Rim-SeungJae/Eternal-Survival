@@ -16,7 +16,9 @@ public class Enemy : MonoBehaviour
     [Tooltip("최대 체력")]
     public float maxHealth;
     [Tooltip("플레이어에게 입히는 접촉 데미지")]
-    public float contactDamage; // 새로 추가된 필드
+    public float contactDamage;
+    [Tooltip("드롭 가능한 아이템 목록과 각 아이템의 드롭 확률")]
+    public LootItem[] lootTable; // DestructibleData와 동일한 구조체를 사용합니다.
 
     [Header("References")]
     [Tooltip("적 종류별 애니메이터 컨트롤러 배열")]
@@ -25,7 +27,6 @@ public class Enemy : MonoBehaviour
     public Rigidbody2D target;
     [Tooltip("그림자 오브젝트 Transform")]
     public Transform shadow;
-    // DayNightController는 GameManager에서 가져오므로 더 이상 직접 참조하지 않습니다.
 
     // 내부 상태 변수
     private bool isLive; // 생존 여부
@@ -64,6 +65,13 @@ public class Enemy : MonoBehaviour
 
     void FixedUpdate()
     {
+        // 시간 정지 상태일 때는 물리 로직을 실행하지 않습니다.
+        if (GameManager.instance.isTimeStopped) 
+        {
+            rigid.linearVelocity = Vector2.zero; // 혹시 모를 관성을 제거
+            return;
+        }
+
         // 게임이 진행 중이 아니거나, 적이 살아있지 않거나, 피격/넉백 중일 때는 이동 로직을 실행하지 않습니다.
         if (!GameManager.instance.isLive || !isLive || isKnockBack || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
         {
@@ -83,6 +91,12 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        // 시간 정지 상태일 때 애니메이션 속도를 0으로, 아닐 때 1로 설정합니다.
+        if (anim != null) anim.speed = GameManager.instance.isTimeStopped && health>0 ? 0 : 1;
+
+        // 시간 정지 상태일 때는 아래 로직을 실행하지 않습니다.
+        if (GameManager.instance.isTimeStopped) return;
+
         // 밤에는 플레이어의 빛 범위 안에 있을 때만 보이도록 처리
         if (GameManager.instance.IsNight())
         {
@@ -139,8 +153,9 @@ public class Enemy : MonoBehaviour
         anim.runtimeAnimatorController = animCon[data.spriteType];
         speed = data.speed;
         maxHealth = data.health;
-        health = data.health; // Init 시에는 health도 maxHealth와 동일하게 설정
-        contactDamage = data.contactDamage; // SpawnData에서 contactDamage를 받아 초기화
+        health = data.health;
+        contactDamage = data.contactDamage;
+        lootTable = data.lootTable;
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -149,7 +164,9 @@ public class Enemy : MonoBehaviour
         if (!collision.CompareTag("Bullet") || !isLive) return;
 
         health -= collision.GetComponent<Bullet>().damage;
-        StartCoroutine(KnockBack());
+
+        // 시간 정지 중이 아닐 때만 넉백 효과를 적용합니다.
+        if (!GameManager.instance.isTimeStopped) StartCoroutine(KnockBack());
 
         if (health > 0)
         {
@@ -164,11 +181,12 @@ public class Enemy : MonoBehaviour
             coll.enabled = false; // 다른 오브젝트와 더 이상 충돌하지 않도록
             rigid.simulated = false; // 물리 시뮬레이션 비활성화
             spriter.sortingOrder = 1; // 다른 오브젝트 뒤에 그려지도록
+            
             anim.SetBool("Dead", true);
 
             // 게임 매니저에 처치 및 경험치 획득 알림
             GameManager.instance.kill++;
-            GameManager.instance.GetExp();
+            DropLoot();
 
             if (GameManager.instance.isLive)
                 AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);
@@ -192,10 +210,43 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// 사망 애니메이션이 끝난 후 호출되어 오브젝트를 비활성화합니다. (Animation Event에서 호출)
+    /// 사망 애니메이션이 끝난 후 호출되어 오브젝트를 풀에 반환합니다. (Animation Event에서 호출)
     /// </summary>
     public void Dead()
     {
-        gameObject.SetActive(false);
+        // Poolable 컴포넌트에서 자신의 태그를 가져와 PoolManager에 반환합니다.
+        Poolable poolable = GetComponent<Poolable>();
+        if (poolable != null)
+        {
+            GameManager.instance.pool.ReturnToPool(poolable.poolTag, gameObject);
+        }
+        else
+        {
+            // Poolable이 없다면, 예전 방식대로 비활성화만 합니다.
+            gameObject.SetActive(false);
+        }
+    }
+
+    private void DropLoot()
+    {
+        if (lootTable.Length == 0)
+        {
+            return;
+        }
+
+        // 드롭 테이블의 각 아이템에 대해 드롭 확률을 계산합니다.
+        foreach (var loot in lootTable)
+        {
+            // Random.value는 0과 1 사이의 무작위 실수를 반환합니다.
+            if (Random.value <= loot.dropChance)
+            {
+                // 풀 매니저에서 태그를 사용하여 아이템을 가져옵니다.
+                GameObject item = GameManager.instance.pool.Get(loot.itemTag);
+                if (item != null)
+                {
+                    item.transform.position = transform.position;
+                }
+            }
+        }
     }
 }

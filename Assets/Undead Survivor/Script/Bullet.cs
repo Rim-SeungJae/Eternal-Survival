@@ -1,19 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// 총알의 로직을 관리하는 클래스입니다.
-/// 데미지, 관통 횟수, 이동 등을 처리합니다.
+/// 데미지, 관통, 속도, 지속시간, 크기 등 무기의 모든 속성을 받아 동작합니다.
 /// </summary>
 public class Bullet : MonoBehaviour
 {
-    [Tooltip("총알의 공격력")]
+    [Header("Bullet Stats")]
     public float damage;
-    [Tooltip("관통 가능 횟수. -100은 무한 관통을 의미합니다.")]
-    public int per;
+    public int per; // 관통 횟수 (pierce)
+    public float speed;
+    public float duration;
+    public float scale; // 투사체의 크기
 
     private Rigidbody2D rigid;
+    private float timer; // 지속시간 타이머
 
     void Awake()
     {
@@ -21,33 +22,54 @@ public class Bullet : MonoBehaviour
     }
 
     /// <summary>
-    /// 총알을 초기화하고 발사합니다.
+    /// Weapon으로부터 모든 속성을 받아 총알을 초기화하고 발사합니다.
     /// </summary>
-    /// <param name="damage">데미지</param>
-    /// <param name="per">관통 횟수</param>
-    /// <param name="dir">발사 방향</param>
-    public void Init(float damage, int per, Vector3 dir)
+    public void Init(float damage, int per, float duration, float speed, float scale, Vector3 dir)
     {
         this.damage = damage;
         this.per = per;
+        this.duration = duration;
+        this.speed = speed;
+        this.scale = scale;
 
-        // 관통 횟수가 0 이상일 때만(원거리 무기일 때) 물리적인 힘을 가합니다.
-        if (per >= 0)
+        // 투사체의 크기 적용
+        transform.localScale = Vector3.one * scale;
+
+        // 근접 무기가 아닌 경우 (dir이 Vector3.zero가 아님)
+        if (dir != Vector3.zero)
         {
-            rigid.linearVelocity = dir * 15f; // 속도 대신 velocity를 사용하여 일정한 속도로 이동
+            rigid.linearVelocity = dir * speed;
+        }
+    }
+
+    void OnEnable()
+    {
+        // 오브젝트 풀에서 재사용될 때마다 타이머를 초기화합니다.
+        timer = 0f;
+    }
+
+    void Update()
+    {
+        // 지속시간이 0보다 크고, 타이머가 지속시간을 초과하면 비활성화합니다.
+        // 근접 무기처럼 계속 유지되어야 하는 경우는 duration을 0 또는 음수로 설정하여 이 로직을 무시할 수 있습니다.
+        if (duration > 0)
+        {
+            timer += Time.deltaTime;
+            if (timer > duration)
+            {
+                Deactivate();
+            }
         }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        // 파괴 가능 오브젝트와 충돌했는지 확인합니다.
         if (collision.CompareTag("Destructible"))
         {
-            // DestructibleObject 컴포넌트를 가져와 TakeDamage 함수를 호출합니다.
             collision.GetComponent<DestructibleObject>()?.TakeDamage(1);
         }
 
-        // 기존의 적 충돌 로직은 그대로 둡니다.
+        // 적과 부딪혔고, 무한 관통(-100)이 아닐 때만 관통 횟수를 차감합니다.
         if (!collision.CompareTag("Enemy") || per == -100)
         {
             return;
@@ -57,25 +79,37 @@ public class Bullet : MonoBehaviour
 
         if (per < 0)
         {
-            rigid.linearVelocity = Vector2.zero;
-            gameObject.SetActive(false);
+            Deactivate();
         }
     }
 
-    /// <summary>
-    /// 화면 밖으로 나갔을 때 총알을 비활성화하는 함수입니다.
-    /// (원래 코드의 OTriggerExit2D는 오타로 보이며, OnTriggerExit2D로 수정했습니다)
-    /// </summary>
     void OnTriggerExit2D(Collider2D collision)
     {
-        // 'Area' 태그를 가진 경계 영역을 벗어났고, 무한 관통이 아닐 때
+        // 화면 밖으로 나갔고, 무한 관통이 아닐 때
         if (!collision.CompareTag("Area") || per == -100)
         {
             return;
         }
+        Deactivate();
+    }
 
-        // 총알을 멈추고 비활성화합니다.
+    /// <summary>
+    /// 총알을 비활성화하고 풀에 반납합니다.
+    /// </summary>
+    private void Deactivate()
+    {
         rigid.linearVelocity = Vector2.zero;
-        gameObject.SetActive(false);
+        
+        // Poolable 컴포넌트를 사용하여 풀에 반납하는 로직을 유지합니다.
+        Poolable poolable = GetComponent<Poolable>();
+        if (poolable != null)
+        {
+            GameManager.instance.pool.ReturnToPool(poolable.poolTag, gameObject);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 }
+

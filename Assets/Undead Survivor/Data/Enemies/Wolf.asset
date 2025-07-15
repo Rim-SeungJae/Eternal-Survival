@@ -13,10 +13,13 @@ MonoBehaviour:
   m_Name: Wolf
   m_EditorClassIdentifier: Assembly-CSharp::SpawnDataSO
   spriteType: 3
-  spawnTime: 2
-  health: 10
+  spawnTime: 1
+  health: 20
   speed: 2
   shadowOffset: {x: 0, y: -0.35}
   shadowSize: {x: 1.5, y: 1}
   colliderSize: {x: 1, y: 1}
-  contactDamage: 10
+  contactDamage: 12
+  lootTable:
+  - itemTag: Credit2
+    dropChance: 0.7

@@ -15,6 +15,10 @@ MonoBehaviour:
   objectName: loot box
   health: 1
   sprite: {fileID: 21300000, guid: 29a003f334721ab41a3c1d485ede85bd, type: 3}
+  colliderXSize: 0.6
+  colliderYSize: 0.9
   lootTable:
-  - itemPrefab: {fileID: 5874015185383211538, guid: 7eca2cf0ed8c1fa4896bd83f9b3cfed0, type: 3}
-    dropChance: 1
+  - itemTag: Artifact
+    dropChance: 0.1
+  - itemTag: Combo meal
+    dropChance: 0.1

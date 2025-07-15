@@ -89,11 +89,7 @@ public class Item : MonoBehaviour
                 else // 이미 가진 무기 레벨업
                 {
                     // 다음 레벨에 맞는 데미지와 개수로 무기를 업그레이드합니다.
-                    // 현재 로직은 데미지 계산에 오류가 있을 수 있습니다. (baseDamage에 계속 더하는 방식)
-                    // LevelUp 함수에서 총 데미지를 계산하도록 수정하는 것이 좋습니다.
-                    float nextDamage = data.baseDamage + data.baseDamage * data.damages[level];
-                    int nextCount = data.counts[level];
-                    weapon.LevelUp(nextDamage, nextCount);
+                    weapon.LevelUp();
                 }
                 level++;
                 break;
@@ -107,8 +103,7 @@ public class Item : MonoBehaviour
                 }
                 else // 이미 가진 장비 레벨업
                 {
-                    float nextRate = data.damages[level];
-                    gear.LevelUp(nextRate);
+                    gear.LevelUp();
                 }
                 level++;
                 break;
@@ -119,7 +114,7 @@ public class Item : MonoBehaviour
         }
 
         // 아이템이 최대 레벨에 도달하면 버튼을 비활성화합니다.
-        if (level == data.damages.Length)
+        if (level == data.maxLevel+1)
         {
             Button button = GetComponent<Button>();
             if (button != null)

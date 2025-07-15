@@ -15,4 +15,10 @@ MonoBehaviour:
   objectName: tree2
   health: 1
   sprite: {fileID: -6861365922197683907, guid: 58a47e52678b5b0409ad86da018d329b, type: 3}
-  lootTable: []
+  colliderXSize: 0.9
+  colliderYSize: 0.8
+  lootTable:
+  - itemTag: Artifact
+    dropChance: 0.1
+  - itemTag: Combo meal
+    dropChance: 0.1

@@ -1,59 +1,99 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// 오브젝트 풀링을 관리하는 클래스입니다.
-/// 자주 사용되는 게임 오브젝트(총알, 적 등)를 미리 생성하고 재활용하여
-/// 게임 실행 중의 성능 저하(특히 GC Spike)를 방지합니다.
+/// 비활성화된 오브젝트만 큐에 보관하는 정석적인 방식으로, 빠르고 효율적인 Get/Return을 지원합니다.
 /// </summary>
 public class PoolManager : MonoBehaviour
 {
-    [Tooltip("풀링할 프리팹 배열. 인덱스가 ID로 사용됩니다.")]
-    public GameObject[] prefabs;
+    [System.Serializable]
+    public class Pool
+    {
+        public string tag;
+        public GameObject prefab;
+        public int size;
+    }
 
-    // 각 프리팹 종류별로 오브젝트 리스트를 관리합니다.
-    private List<GameObject>[] pools;
+    [Tooltip("풀링할 오브젝트 목록")]
+    public List<Pool> pools;
+    private Dictionary<string, Queue<GameObject>> poolDictionary;
+    private Dictionary<string, GameObject> prefabDictionary;
 
     private void Awake()
     {
-        // 프리팹 배열 크기에 맞춰 풀 리스트를 초기화합니다.
-        pools = new List<GameObject>[prefabs.Length];
+        poolDictionary = new Dictionary<string, Queue<GameObject>>();
+        prefabDictionary = new Dictionary<string, GameObject>();
 
-        for (int i = 0; i < pools.Length; i++)
+        foreach (Pool pool in pools)
         {
-            pools[i] = new List<GameObject>();
+            Queue<GameObject> objectQueue = new Queue<GameObject>();
+
+            for (int i = 0; i < pool.size; i++)
+            {
+                GameObject obj = Instantiate(pool.prefab, transform);
+                obj.SetActive(false);
+                // Poolable 컴포넌트를 추가하여 자신의 태그를 알도록 합니다.
+                obj.AddComponent<Poolable>().poolTag = pool.tag;
+                objectQueue.Enqueue(obj);
+            }
+
+            poolDictionary.Add(pool.tag, objectQueue);
+            prefabDictionary.Add(pool.tag, pool.prefab);
         }
     }
 
     /// <summary>
-    /// 지정된 인덱스에 해당하는 오브젝트를 풀에서 가져옵니다.
+    /// 지정된 태그에 해당하는 오브젝트를 풀에서 가져옵니다.
+    /// 풀에 사용 가능한 오브젝트가 없으면 새로 생성합니다.
     /// </summary>
-    /// <param name="index">가져올 프리팹의 인덱스 (ID)</param>
-    /// <returns>활성화된 게임 오브젝트</returns>
-    public GameObject Get(int index)
+    public GameObject Get(string tag)
     {
-        GameObject select = null;
-
-        // 해당 풀에서 비활성화 상태인(사용 가능한) 오브젝트를 찾습니다.
-        foreach (GameObject item in pools[index])
+        if (!poolDictionary.ContainsKey(tag))
         {
-            if (!item.activeSelf)
-            {
-                select = item;
-                select.SetActive(true); // 찾았으면 활성화하고
-                break;                  // 반복문을 빠져나옵니다.
-            }
+            Debug.LogWarning("Pool with tag " + tag + " doesn't exist.");
+            return null;
         }
 
-        // 만약 사용 가능한 오브젝트가 풀에 없다면
-        if (!select)
-        {
-            // 새로 생성하고 풀에 추가합니다.
-            select = Instantiate(prefabs[index], transform); // PoolManager 하위에 생성
-            pools[index].Add(select);
-        }
+        Queue<GameObject> objectQueue = poolDictionary[tag];
 
-        return select;
+        // 큐에 사용 가능한 오브젝트가 있으면 꺼내서 사용합니다.
+        if (objectQueue.Count > 0)
+        {
+            GameObject obj = objectQueue.Dequeue();
+            obj.SetActive(true);
+            return obj;
+        }
+        // 큐가 비어있으면 새로 생성합니다.
+        else
+        {
+            GameObject newObj = Instantiate(prefabDictionary[tag], transform);
+            newObj.AddComponent<Poolable>().poolTag = tag; // 새로 만든 오브젝트에도 태그 부여
+            return newObj;
+        }
     }
+
+    /// <summary>
+    /// 사용이 끝난 오브젝트를 다시 풀에 반환합니다.
+    /// </summary>
+    public void ReturnToPool(string tag, GameObject obj)
+    {
+        if (!poolDictionary.ContainsKey(tag))
+        {
+            Debug.LogWarning("Pool with tag " + tag + " doesn't exist.");
+            Destroy(obj); // 풀이 없으면 그냥 파괴
+            return;
+        }
+        obj.transform.SetParent(transform);
+        obj.SetActive(false);
+        poolDictionary[tag].Enqueue(obj);
+    }
+}
+
+/// <summary>
+/// 풀링되는 모든 오브젝트에 부착되어, 자신의 풀 태그를 저장하는 역할을 합니다.
+/// </summary>
+public class Poolable : MonoBehaviour
+{
+    public string poolTag;
 }

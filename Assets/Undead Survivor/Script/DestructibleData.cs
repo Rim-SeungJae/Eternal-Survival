@@ -5,8 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public struct LootItem
 {
-    // 드롭될 아이템의 프리팹입니다. (골드, 보석 등)
-    public GameObject itemPrefab;
+    [Tooltip("PoolManager에 등록된 아이템의 태그")]
+    [PoolTagSelector] // 이 어트리뷰트를 추가!
+    public string itemTag;
     // 드롭될 확률입니다. (0.0 ~ 1.0)
     [Range(0, 1)]
     public float dropChance;
@@ -22,6 +23,8 @@ public class DestructibleData : ScriptableObject
     public int health = 1;
     // 오브젝트의 기본 스프라이트입니다.
     public Sprite sprite;
+    public float colliderXSize = 1f;
+    public float colliderYSize = 1f;
 
     [Header("드롭 아이템")]
     // 드롭 가능한 아이템 목록과 각 아이템의 드롭 확률입니다.

@@ -803,11 +803,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 5075ece4-5861-40b3-bcf0-109fe93a680d
+  cloudProjectId: ceb239a6-ff3a-4473-b1d6-490d66cabb5d
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: Vampire Survival Like
-  organizationId: seungjae23123
+  organizationId: dipreez
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

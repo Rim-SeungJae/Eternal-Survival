@@ -13,10 +13,13 @@ MonoBehaviour:
   m_Name: Chicken
   m_EditorClassIdentifier: Assembly-CSharp::SpawnDataSO
   spriteType: 0
-  spawnTime: 2
-  health: 5
+  spawnTime: 0.5
+  health: 7
   speed: 1.5
   shadowOffset: {x: 0, y: -0.35}
   shadowSize: {x: 1, y: 1}
   colliderSize: {x: 0.8, y: 1}
   contactDamage: 5
+  lootTable:
+  - itemTag: Credit1
+    dropChance: 0.7
