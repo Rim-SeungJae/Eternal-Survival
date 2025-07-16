@@ -158,12 +158,15 @@ public class Enemy : MonoBehaviour
         lootTable = data.lootTable;
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    /// <summary>
+    /// 외부로부터 피해를 받아 체력을 감소시키고 관련 효과를 처리합니다.
+    /// </summary>
+    /// <param name="damage">받은 피해량</param>
+    public void TakeDamage(float damage)
     {
-        // 총알에 맞았고, 살아있는 상태일 때만 처리
-        if (!collision.CompareTag("Bullet") || !isLive) return;
+        if (!isLive) return; // 이미 죽었다면 아무것도 하지 않음
 
-        health -= collision.GetComponent<Bullet>().damage;
+        health -= damage;
 
         // 시간 정지 중이 아닐 때만 넉백 효과를 적용합니다.
         if (!GameManager.instance.isTimeStopped) StartCoroutine(KnockBack());
@@ -191,6 +194,16 @@ public class Enemy : MonoBehaviour
             if (GameManager.instance.isLive)
                 AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);
         }
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        // 총알과의 충돌 처리는 이제 Bullet.cs에서 직접 TakeDamage를 호출하므로
+        // Enemy.cs에서는 별도의 처리를 하지 않습니다.
+        // 이 함수는 다른 종류의 트리거(예: 장판 스킬)를 위해 남겨둘 수 있습니다.
+        if (!collision.CompareTag("Bullet")) return;
+
+        // TakeDamage(collision.GetComponent<Bullet>().damage); // 이 줄을 제거 또는 주석 처리합니다.
     }
 
     /// <summary>

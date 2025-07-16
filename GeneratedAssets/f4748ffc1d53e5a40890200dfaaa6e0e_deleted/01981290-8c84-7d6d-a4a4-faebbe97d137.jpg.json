@@ -1,0 +1,19 @@
+{
+    "asset": "f4748ffc1d53e5a40890200dfaaa6e0e",
+    "fileName": "01981290-8c84-7d6d-a4a4-faebbe97d137.jpg",
+    "prompt": "Earthquake pixel effect",
+    "negativePrompt": "",
+    "model": "8dcf54e0-c670-4783-a721-57c13529c16c",
+    "customSeed": -1,
+    "w3CTraceId": "8966614ad4c3dada8b3702a8935a663d",
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0
+}

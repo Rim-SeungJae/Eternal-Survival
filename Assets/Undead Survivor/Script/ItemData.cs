@@ -12,7 +12,7 @@ public class ItemData : ScriptableObject
     /// <summary>
     /// 아이템의 종류를 정의하는 열거형입니다.
     /// </summary>
-    public enum ItemType { Melee, Range, Magic, Glove, Shoe, Heal }
+    public enum ItemType { Melee, Range, Magic, Glove, Shoe, Heal, Quake }
 
     [Header("# Main Info")]
     [Tooltip("아이템 종류")]

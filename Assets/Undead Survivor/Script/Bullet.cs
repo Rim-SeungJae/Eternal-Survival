@@ -69,17 +69,21 @@ public class Bullet : MonoBehaviour
             collision.GetComponent<DestructibleObject>()?.TakeDamage(1);
         }
 
-        // 적과 부딪혔고, 무한 관통(-100)이 아닐 때만 관통 횟수를 차감합니다.
-        if (!collision.CompareTag("Enemy") || per == -100)
+        // 적과 부딪혔을 때
+        if (collision.CompareTag("Enemy"))
         {
-            return;
-        }
+            // Enemy 스크립트의 TakeDamage 함수를 호출하여 피해를 줍니다.
+            collision.GetComponent<Enemy>()?.TakeDamage(damage);
 
-        per--;
-
-        if (per < 0)
-        {
-            Deactivate();
+            // 무한 관통이 아닐 때만 관통 횟수를 차감합니다.
+            if (per != -100)
+            {
+                per--;
+                if (per < 0)
+                {
+                    Deactivate();
+                }
+            }
         }
     }
 

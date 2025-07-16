@@ -1,0 +1,19 @@
+{
+    "asset": "6b148a51ef4f9f74d8ee7540d6f0edf5",
+    "fileName": "019812da-9660-7db0-a5d4-5e634d748931.png",
+    "prompt": "Create frames to create an animation of a crack widening.",
+    "negativePrompt": "",
+    "model": "242b56c1-2224-41c4-8949-2ba760bbfc69",
+    "customSeed": -1,
+    "w3CTraceId": "9176502450d41bef90bfd6084e0925e2",
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0
+}

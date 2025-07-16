@@ -13,7 +13,7 @@ public class Item : MonoBehaviour
     [Tooltip("현재 아이템 레벨")]
     public int level;
     [Tooltip("이 아이템이 생성/관리하는 무기")]
-    public Weapon weapon;
+    public WeaponBase weapon;
     [Tooltip("이 아이템이 생성/관리하는 장비")]
     public Gear gear;
 
@@ -56,14 +56,54 @@ public class Item : MonoBehaviour
                 case ItemData.ItemType.Melee:
                 case ItemData.ItemType.Range:
                     // 설명: "피해량 {0}%, 발사체 수 {1}개"
-                    textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100, data.counts[level]);
+                    // 2레벨 이상부터는 이전 레벨 대비 '증가량'을 표시합니다.
+                    if (level > 0) {
+                        // 이전 레벨과 현재 레벨의 스탯 차이를 계산합니다.
+                        float damageDiff = data.damages[level] - data.damages[level - 1];
+                        int countDiff = data.counts[level] - data.counts[level - 1];
+
+                        // 증가한 스탯만 동적으로 설명에 추가합니다.
+                        List<string> parts = new List<string>();
+                        if (damageDiff > 0) parts.Add($"피해량 +{damageDiff * 100:F0}%");
+                        if (countDiff > 0) parts.Add($"발사체 수 +{countDiff}");
+                        textDesc.text = string.Join(", ", parts);
+                    }
+                    else { // 첫 레벨은 기본 스탯을 그대로 표시합니다.
+                        textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100, data.counts[level]);
+                    }
+                    break;
+                case ItemData.ItemType.Quake:
+                    if (level > 0)
+                    {
+                        float damageDiff = data.damages[level] - data.damages[level - 1];
+                        float areaDiff = data.areas[level] - data.areas[level - 1];
+                        float cooldownDiff = data.cooldowns[level] - data.cooldowns[level-1];
+
+                        List<string> parts = new List<string>();
+                        if (damageDiff > 0) parts.Add($"피해량 +{damageDiff:F0}");
+                        if (areaDiff > 0) parts.Add($"범위 +{areaDiff * 100:F0}%");
+                        if (cooldownDiff < 0) parts.Add($"발동 거리 -{-cooldownDiff:F0}m");
+                        textDesc.text = string.Join(", ", parts);
+                    }
+                    else
+                    {
+                        textDesc.text = string.Format(data.itemDesc, data.damages[level], data.areas[level] * 100, data.cooldowns[level]);
+                    }
                     break;
                 case ItemData.ItemType.Glove:
                 case ItemData.ItemType.Shoe:
                     // 설명: "효과 {0}% 증가"
-                    textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100);
+                    // 2레벨 이상부터는 이전 레벨 대비 '증가량'을 표시합니다.
+                    if (level > 0) {
+                        float diff = data.damages[level] - data.damages[level - 1];
+                        // 기존 설명 포맷에 증가량을 +기호와 함께 적용합니다.
+                        textDesc.text = string.Format(data.itemDesc, $"+{diff * 100:F0}");
+                    }
+                    else { // 첫 레벨은 기본 스탯을 그대로 표시합니다.
+                        textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100);
+                    }
                     break;
-                default: // Heal 등
+                default: // Heal 등 (증가 개념이 없는 아이템)
                     textDesc.text = string.Format(data.itemDesc);
                     break;
             }
@@ -89,6 +129,20 @@ public class Item : MonoBehaviour
                 else // 이미 가진 무기 레벨업
                 {
                     // 다음 레벨에 맞는 데미지와 개수로 무기를 업그레이드합니다.
+                    weapon.LevelUp();
+                }
+                level++;
+                break;
+            case ItemData.ItemType.Quake:
+                // QuakeWeapon도 다른 무기들처럼 독립적인 게임오b젝트로 생성 및 관리합니다.
+                if (level == 0)
+                {
+                    GameObject newWeapon = new GameObject();
+                    weapon = newWeapon.AddComponent<QuakeWeapon>(); // weapon 변수를 재활용
+                    weapon.Init(data);
+                }
+                else
+                {
                     weapon.LevelUp();
                 }
                 level++;

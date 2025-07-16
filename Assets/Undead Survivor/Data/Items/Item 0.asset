@@ -27,7 +27,7 @@ MonoBehaviour:
   projectileSpeeds:
   - 100
   durations:
-  - 0
+  - -1
   areas:
   - 1
   cooldowns:
