@@ -12,27 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e956228538ab014cbc44c70cb816b8b, type: 3}
   m_Name: Item 4
   m_EditorClassIdentifier: 
-  itemType: 5
-  itemId: 4
-  itemName: "\uC74C\uB8CC\uC218"
-  itemDesc: "\uC0DD\uBA85\uB825 \uC804\uCCB4 \uD68C\uBCF5"
+  itemAction: {fileID: 0}
+  itemId: 3
+  itemName: Heal
+  itemDesc: "\uCCB4\uB825 \uD68C\uBCF5"
   itemIcon: {fileID: 927338625, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
-  baseDamage: 0
-  baseProjectileSpeed: 0
-  baseDuration: 0
-  baseAttackArea: 0
-  baseCooldown: 0
-  baseCount: 0
-  damages:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
+  maxLevel: 4
+  damages: []
   projectileSpeeds: []
   durations: []
   areas: []
   cooldowns: []
-  counts: 0000000000000000000000000000000000000000
+  counts: 
   projectileTag: Enemy
   hand: {fileID: 0}

@@ -1,0 +1,19 @@
+{
+    "asset": "be160dd54223a5547881f192e5b73d8a",
+    "fileName": "01982bc7-9a13-713c-be2c-296176e5bfc9.png",
+    "prompt": "toxic effect on floor. Green colored.",
+    "negativePrompt": "",
+    "model": "242b56c1-2224-41c4-8949-2ba760bbfc69",
+    "customSeed": -1,
+    "w3CTraceId": "b6044aa2f09adb1889a489810efc8e73",
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0
+}

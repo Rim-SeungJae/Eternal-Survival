@@ -1,0 +1,19 @@
+{
+    "asset": "be160dd54223a5547881f192e5b73d8a",
+    "fileName": "01982bc8-7520-7046-adf6-9bab2afe773e.png",
+    "prompt": "poisonous puddle. Green colored.",
+    "negativePrompt": "",
+    "model": "242b56c1-2224-41c4-8949-2ba760bbfc69",
+    "customSeed": -1,
+    "w3CTraceId": "255156c28f466ee6a89275c0948d56b5",
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0
+}

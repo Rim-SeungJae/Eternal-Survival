@@ -12,17 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e956228538ab014cbc44c70cb816b8b, type: 3}
   m_Name: Item 2
   m_EditorClassIdentifier: 
-  itemType: 3
+  itemAction: {fileID: 11400000, guid: c316fe23bb6aa6946b7ecea06fa68119, type: 2}
   itemId: 2
   itemName: "\uD14C\uD06C\uB2C8\uCEEC \uC7A5\uAC11"
   itemDesc: "\uC5F0\uC0AC\uC18D\uB3C4 {0}% \uC99D\uAC00"
   itemIcon: {fileID: -201829820, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
-  baseDamage: 0
-  baseProjectileSpeed: 0
-  baseDuration: 0
-  baseAttackArea: 0
-  baseCooldown: 0
-  baseCount: 0
+  maxLevel: 4
   damages:
   - 0.1
   - 0.2

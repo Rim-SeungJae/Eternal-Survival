@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e956228538ab014cbc44c70cb816b8b, type: 3}
+  m_Name: "Noxius Aftermath-\uC720\uB3C5\uC131 \uBC1C\uC790\uAD6D"
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemAction: {fileID: 11400000, guid: 09529590b442c2f4790d8d3a6ace790f, type: 2}
+  itemId: 5
+  itemName: "\uC720\uB3C5\uC131 \uBC1C\uC790\uAD6D"
+  itemDesc: "\uC774\uB3D9\uD55C \uC790\uB9AC\uC5D0 \uB3C5\uC7A5\uD310\uC744 \uC0DD\uC131\uD558\uACE0\n\uBC1F\uC740
+    \uC801\uC5D0\uAC8C \uC9C0\uC18D \uD53C\uD574\uB97C \uC785\uC2B5\uB2C8\uB2E4."
+  itemIcon: {fileID: -3624101242666055416, guid: 75bf5c61b424d8a408023119838bdf86, type: 3}
+  maxLevel: 4
+  damages:
+  - 5
+  - 6
+  - 7
+  - 9
+  - 11
+  projectileSpeeds:
+  - 1
+  durations:
+  - 3
+  areas:
+  - 1.5
+  - 1.5
+  - 1.6
+  - 1.6
+  - 1.7
+  cooldowns:
+  - 0.5
+  counts: 01000000
+  projectileTag: Noxius Aftermath
+  hand: {fileID: 0}

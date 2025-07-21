@@ -288,6 +288,7 @@ MonoBehaviour:
   health: 0
   maxHealth: 0
   contactDamage: 0
+  lootTable: []
   animCon:
   - {fileID: 22100000, guid: 52d80718c268fd64ea3b4b16f1682532, type: 2}
   - {fileID: 22100000, guid: 7d366490aba4cc247a93bc67d60c7516, type: 2}

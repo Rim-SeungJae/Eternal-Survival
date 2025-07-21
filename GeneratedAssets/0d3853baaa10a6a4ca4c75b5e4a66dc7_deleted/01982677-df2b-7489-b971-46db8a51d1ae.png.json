@@ -1,0 +1,19 @@
+{
+    "asset": "0d3853baaa10a6a4ca4c75b5e4a66dc7",
+    "fileName": "01982677-df2b-7489-b971-46db8a51d1ae.png",
+    "prompt": "purple fist pixel art, backside of the hand showing",
+    "negativePrompt": "",
+    "model": "242b56c1-2224-41c4-8949-2ba760bbfc69",
+    "customSeed": -1,
+    "w3CTraceId": "de656be041e4fdece95f264b574c7e52",
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0
+}
