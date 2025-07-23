@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d36102c46ab835e4fbe3ca8d17c41c6a, type: 3}
+  m_Name: Heal
+  m_EditorClassIdentifier: Assembly-CSharp::GearData
+  itemType: 1
+  itemAction: {fileID: 0}
+  itemId: 0
+  itemName: Heal
+  itemDesc: "\uCCB4\uB825\uC744 \uD68C\uBCF5\uD569\uB2C8\uB2E4."
+  itemIcon: {fileID: 927338625, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
+  maxLevel: 4
+  targetType: 0
+  statValues: []
+  modifierType: 0

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80b9f1ab32ae768448d951f416d4182c, type: 3}
   m_Name: Action_Default_weapon
   m_EditorClassIdentifier: Assembly-CSharp::Action_Weapon
-  weaponType:
+  weaponLogicType:
     assemblyQualifiedName: Weapon, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null

@@ -19,7 +19,7 @@ public class Weapon : WeaponBase
     {
         base.ApplyLevelData();
         // 근접 무기 타입일 경우 Deploy를 호출합니다. 이 구분은 향후 MeleeWeapon 클래스로 분리될 수 있습니다.
-        if (itemData.projectileTag.Contains("Bullet 0")) // 태그로 근접/원거리 구분 (임시)
+        if ((itemData as WeaponData).projectileTag.Contains("Bullet 0")) // 태그로 근접/원거리 구분 (임시)
         {
             Deploy();
         }
@@ -30,7 +30,7 @@ public class Weapon : WeaponBase
         if (!GameManager.instance.isLive) return;
 
         // 태그로 근접/원거리 구분 (임시)
-        if (itemData.projectileTag.Contains("Bullet 0")) // 근접 무기
+        if ((itemData as WeaponData).projectileTag.Contains("Bullet 0")) // 근접 무기
         {
             transform.Rotate(Vector3.back * projectileSpeed.Value * Time.deltaTime);
         }
@@ -71,7 +71,7 @@ public class Weapon : WeaponBase
         float angleStep = 360f / count.Value;
         for (int i = 0; i < (int)count.Value; i++)
         {
-            Transform bullet = GameManager.instance.pool.Get(itemData.projectileTag).transform;
+            Transform bullet = GameManager.instance.pool.Get((itemData as WeaponData).projectileTag).transform;
             bullet.parent = transform;
             bullet.localPosition = Vector3.zero;
             bullet.localRotation = Quaternion.identity;
@@ -95,7 +95,7 @@ public class Weapon : WeaponBase
         Vector3 targetPos = player.scanner.nearestTarget.position;
         Vector3 dir = (targetPos - transform.position).normalized;
 
-        Transform bullet = GameManager.instance.pool.Get(itemData.projectileTag).transform;
+        Transform bullet = GameManager.instance.pool.Get((itemData as WeaponData).projectileTag).transform;
         bullet.position = transform.position;
         bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
 

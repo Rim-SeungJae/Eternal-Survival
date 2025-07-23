@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f88ec3a107a0974e9961effc91da6cb, type: 3}
+  m_Name: Gun
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponData
+  itemAction: {fileID: 11400000, guid: b85e93bf640244a46a4af3eaeda52c32, type: 2}
+  itemId: 1
+  itemName: "\uC5FD\uCD1D"
+  itemDesc: "\uC801\uC744 \uC6D0\uAC70\uB9AC \uACF5\uACA9\uD558\uB294 \uCD1D"
+  itemIcon: {fileID: -205726582, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
+  maxLevel: 4
+  damages:
+  - 22
+  - 22
+  - 22
+  - 22
+  - 22
+  projectileSpeeds:
+  - 10
+  durations:
+  - 5
+  areas: []
+  cooldowns:
+  - 1
+  counts: 0100000001000000020000000200000003000000
+  projectileTag: Bullet 1

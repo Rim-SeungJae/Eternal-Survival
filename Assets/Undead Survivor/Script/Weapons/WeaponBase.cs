@@ -68,11 +68,30 @@ public abstract class WeaponBase : MonoBehaviour
     /// </summary>
     protected virtual void ApplyLevelData()
     {
-        damage.BaseValue = (itemData.damages.Length > level) ? itemData.damages[level] : itemData.damages[0];
-        count.BaseValue = (itemData.counts.Length > level) ? itemData.counts[level] : itemData.counts[0];
-        projectileSpeed.BaseValue = (itemData.projectileSpeeds.Length > level) ? itemData.projectileSpeeds[level] : itemData.projectileSpeeds[0];
-        duration.BaseValue = (itemData.durations.Length > level) ? itemData.durations[level] : itemData.durations[0];
-        attackArea.BaseValue = (itemData.areas.Length > level) ? itemData.areas[level] : itemData.areas[0];
-        cooldown.BaseValue = (itemData.cooldowns.Length > level) ? itemData.cooldowns[level] : itemData.cooldowns[0];
+        WeaponData weaponData = itemData as WeaponData;
+        if (weaponData == null)
+        {
+            Debug.LogError($"[{name}] WeaponData is null!");
+            return;
+        }
+
+        // Awake에서 설정된 기본값 유지, 데이터가 있는 경우에만 덮어쓰기
+        if (weaponData.damages != null && weaponData.damages.Length > 0)
+            damage.BaseValue = (weaponData.damages.Length > level) ? weaponData.damages[level] : weaponData.damages[0];
+
+        if (weaponData.counts != null && weaponData.counts.Length > 0)
+            count.BaseValue = (weaponData.counts.Length > level) ? weaponData.counts[level] : weaponData.counts[0];
+            
+        if (weaponData.projectileSpeeds != null && weaponData.projectileSpeeds.Length > 0)
+            projectileSpeed.BaseValue = (weaponData.projectileSpeeds.Length > level) ? weaponData.projectileSpeeds[level] : weaponData.projectileSpeeds[0];
+            
+        if (weaponData.durations != null && weaponData.durations.Length > 0)
+            duration.BaseValue = (weaponData.durations.Length > level) ? weaponData.durations[level] : weaponData.durations[0];
+            
+        if (weaponData.areas != null && weaponData.areas.Length > 0)
+            attackArea.BaseValue = (weaponData.areas.Length > level) ? weaponData.areas[level] : weaponData.areas[0];
+            
+        if (weaponData.cooldowns != null && weaponData.cooldowns.Length > 0)
+            cooldown.BaseValue = (weaponData.cooldowns.Length > level) ? weaponData.cooldowns[level] : weaponData.cooldowns[0];
     }
 }

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d36102c46ab835e4fbe3ca8d17c41c6a, type: 3}
+  m_Name: Defense
+  m_EditorClassIdentifier: Assembly-CSharp::GearData
+  itemType: 1
+  itemAction: {fileID: 11400000, guid: daab5231ab5fbea4fac17d120dbdfde9, type: 2}
+  itemId: 0
+  itemName: "\uBC29\uC5B4\uB825"
+  itemDesc: "\uBC29\uC5B4\uB825\uC774 {0} \uC99D\uAC00\uD569\uB2C8\uB2E4."
+  itemIcon: {fileID: 8422436742063580314, guid: a0671ff73522d3845887b4c3b688e81f, type: 3}
+  maxLevel: 4
+  targetType: 0
+  statValues:
+  - 5
+  - 10
+  - 15
+  - 20
+  - 25
+  modifierType: 0

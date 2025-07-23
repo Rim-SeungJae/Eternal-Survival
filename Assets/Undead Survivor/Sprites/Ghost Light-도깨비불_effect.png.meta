@@ -1,0 +1,358 @@
+fileFormatVersion: 2
+guid: 6fa88fac82c7cc547aec97a105015eec
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4528018214383983626
+    second: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_0"
+  - first:
+      213: -3629109090584660120
+    second: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_1"
+  - first:
+      213: 2796104117415659480
+    second: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_2"
+  - first:
+      213: -1768604966497334652
+    second: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_3"
+  - first:
+      213: 5012647401561127238
+    second: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_4"
+  - first:
+      213: 4279534627610693170
+    second: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_5"
+  - first:
+      213: -3060631005749098255
+    second: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_6"
+  - first:
+      213: -4097787082505016645
+    second: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_7"
+  - first:
+      213: 5942126634832649828
+    second: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_8"
+  - first:
+      213: -8284028601522724928
+    second: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_9"
+  - first:
+      213: -9135078473269363989
+    second: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_10"
+  - first:
+      213: 7827042487631954593
+    second: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_11"
+  - first:
+      213: -279863663355798286
+    second: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_12"
+  - first:
+      213: 1252929253203886961
+    second: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_13"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 64
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_0"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ceffb5949f2d80e45bd31dd3e5922a6b
+      internalID: 657344186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_1"
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ceac223f8e3e1fb4399f864521bcf2a1
+      internalID: 115724089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_2"
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9723723aa046fc541b28d93f730758af
+      internalID: -1077961827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_3"
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f386faa3965423346befd64f5c46eb56
+      internalID: 670010001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_4"
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9410f1a689e4d4d49bf7d716ac13fb22
+      internalID: 2063903482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_5"
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40f476753a767594cb778c23095f9f86
+      internalID: -1527480133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_6"
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0142a272ee214f44b8ec51e876a894c
+      internalID: 1864650721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_7"
+      rect:
+        serializedVersion: 2
+        x: 1120
+        y: 0
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a3a9fa9ab7f2644d9ae071a786c208c
+      internalID: 2059805058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 53e0aa978a0fabf40a90689cbee49cd8
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":160.0,"y":160.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_0": 657344186
+      "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_1": 115724089
+      "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_2": -1077961827
+      "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_3": 670010001
+      "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_4": 2063903482
+      "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_5": -1527480133
+      "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_6": 1864650721
+      "Ghost Light-\uB3C4\uAE68\uBE44\uBD88_effect_7": 2059805058
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

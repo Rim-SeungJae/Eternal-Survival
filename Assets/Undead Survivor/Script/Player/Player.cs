@@ -19,7 +19,11 @@ public class Player : MonoBehaviour
     [Tooltip("플레이어의 입력 벡터")]
     public Vector2 inputVec;
     [Tooltip("플레이어의 이동 속도")]
-    public ModifiableStat speed; // float에서 ModifiableStat으로 변경
+    public ModifiableStat speed;
+    [Tooltip("플레이어의 방어력")]
+    public ModifiableStat defense;
+    [Tooltip("플레이어의 부활 횟수")]
+    public ModifiableStat revive;
     [Tooltip("주변 적을 탐지하는 스캐너")]
     public Scanner scanner;
     [Tooltip("플레이어의 손 오브젝트 (무기 장착 위치)")]
@@ -33,10 +37,7 @@ public class Player : MonoBehaviour
     Animator an;
 
     private CharacterDataSO currentCharacterData; // 현재 플레이어의 CharacterDataSO
-
-    // CharacterDataSO에서 가져온 무기 관련 배율을 외부에 노출합니다.
-    public float WeaponSpeedMultiplier => currentCharacterData.weaponSpeedMultiplier;
-    public float WeaponRateMultiplier => currentCharacterData.weaponRateMultiplier;
+    private bool isInvincible = false; // 무적 상태 여부
 
     void Awake()
     {
@@ -52,6 +53,8 @@ public class Player : MonoBehaviour
 
         // ModifiableStat 인스턴스 초기화
         speed = new ModifiableStat(0); 
+        defense = new ModifiableStat(0);
+        revive = new ModifiableStat(0);
         items = new List<Item>(); // 아이템 리스트 초기화
     }
 
@@ -60,7 +63,7 @@ public class Player : MonoBehaviour
     /// </summary>
     public int WeaponCount
     {
-        get { return items.Count(item => item.data.itemAction is Action_Weapon); }
+        get { return items.Count(item => item.data.itemType == ItemData.ItemType.Weapon); }
     }
 
     /// <summary>
@@ -68,7 +71,7 @@ public class Player : MonoBehaviour
     /// </summary>
     public int GearCount
     {
-        get { return items.Count(item => item.data.itemAction is Action_StatBoostGear); }
+        get { return items.Count(item => item.data.itemType == ItemData.ItemType.Gear); }
     }
 
     /// <summary>
@@ -141,7 +144,7 @@ public class Player : MonoBehaviour
         if (!GameManager.instance.isLive) return;
 
         // 시간 정지중에는 충돌 처리를 하지 않습니다.
-        if (GameManager.instance.isTimeStopped) return;
+        if (GameManager.instance.isTimeStopped || isInvincible) return;
 
         // 충돌한 오브젝트가 "Enemy" 태그를 가지고 있는지 확인합니다.
         if (collision.gameObject.CompareTag("Enemy"))
@@ -152,12 +155,28 @@ public class Player : MonoBehaviour
             {
                 // 적과 충돌하고 있는 동안 지속적으로 체력이 감소합니다.
                 // Time.deltaTime을 곱하여 프레임 속도에 관계없이 일정한 피해를 받도록 합니다.
-                GameManager.instance.health -= enemy.contactDamage * Time.deltaTime;
+                GameManager.instance.health -= enemy.contactDamage * (100 / (100 + defense.Value)) * Time.deltaTime;
             }
         }
 
-        // 체력이 0 미만으로 떨어지면 사망 처리 로직을 실행합니다.
-        if (GameManager.instance.health < 0)
+        // 체력이 0 미만으로 떨어지면 부활을 시도합니다.
+        if (GameManager.instance.health <= 0)
+        {
+            TryRevive();
+        }
+    }
+
+    /// <summary>
+    /// 부활을 시도하고, 가능하면 부활 코루틴을 시작합니다. 불가능하면 게임 오버를 호출합니다.
+    /// </summary>
+    void TryRevive()
+    {
+        if (revive.Value > 0)
+        {
+            revive.BaseValue--; // 부활 횟수 차감
+            StartCoroutine(ReviveRoutine());
+        }
+        else
         {
             // 플레이어의 자식 오브젝트(무기 등)를 모두 비활성화합니다.
             for (int i = 2; i < transform.childCount; i++)
@@ -169,6 +188,35 @@ public class Player : MonoBehaviour
             // GameManager에 게임 오버를 알립니다.
             GameManager.instance.GameOver();
         }
+    }
+
+    /// <summary>
+    /// 부활 시퀀스 (무적, 체력 회복, 이펙트)를 처리하는 코루틴입니다.
+    /// </summary>
+    IEnumerator ReviveRoutine()
+    {
+        // 1. 무적 상태 시작
+        isInvincible = true;
+
+        // 2. 부활 이펙트 재생
+        GameObject reviveEffect = GameManager.instance.pool.Get("Revive"); // PoolManager에 등록된 태그 사용
+        if (reviveEffect != null)
+        {
+            reviveEffect.transform.position = transform.position;
+            reviveEffect.SetActive(true);
+        }
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp); // 임시 효과음
+
+        // 3. 체력을 절반 회복
+        GameManager.instance.health = GameManager.instance.maxHealth / 2;
+
+        // 4. 일정 시간(예: 2초) 동안 무적 유지
+        yield return new WaitForSeconds(2f);
+
+        // 5. 무적 상태 종료
+        isInvincible = false;
+        // TODO: 무적 시각 효과 종료
+        GameManager.instance.pool.ReturnToPool("Revive", reviveEffect); // 풀에 반환
     }
 }
 

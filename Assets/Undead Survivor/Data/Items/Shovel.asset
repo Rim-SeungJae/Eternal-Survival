@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f88ec3a107a0974e9961effc91da6cb, type: 3}
+  m_Name: Shovel
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponData
+  itemAction: {fileID: 11400000, guid: b85e93bf640244a46a4af3eaeda52c32, type: 2}
+  itemId: 0
+  itemName: "\uC0BD"
+  itemDesc: "\uD68C\uC804\uD558\uB294 \uC0BD \uC18C\uD658"
+  itemIcon: {fileID: -181907988, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
+  maxLevel: 4
+  damages:
+  - 2
+  - 3
+  - 4
+  - 5
+  - 7
+  projectileSpeeds:
+  - 100
+  durations:
+  - -1
+  areas: []
+  cooldowns: []
+  counts: 0100000001000000020000000200000003000000
+  projectileTag: Bullet 0

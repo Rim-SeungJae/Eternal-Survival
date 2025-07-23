@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 976a2c3c352300745a83607a221931cd, type: 3}
+  m_Name: "Blade of Truth-\uC9C4\uC2E4\uC758 \uCE7C\uB0A0"
+  m_EditorClassIdentifier: Assembly-CSharp::BladeofTruthWeaponData
+  itemType: 0
+  itemAction: {fileID: 11400000, guid: ee29c176e1394114ab4a928cfe8097df, type: 2}
+  itemId: 0
+  itemName: "\uC9C4\uC2E4\uC758 \uCE7C\uB0A0"
+  itemDesc: "\uC77C\uC815 \uC2DC\uAC04\uB9C8\uB2E4 \uC8FC\uBCC0 \uC801\uC5D0\uAC8C
+    \uD53C\uD574\uB97C \uC785\uD788\uACE0,\n\uD53C\uD574\uB97C \uC785\uD78C \uB300\uC0C1\uC758
+    \uC218\uC5D0 \uBE44\uB840\uD574 \uC774\uB3D9\uC18D\uB3C4 \uC99D\uAC00"
+  itemIcon: {fileID: -7680591783485175130, guid: 539772f013640ad44aedc589a83cc38c, type: 3}
+  maxLevel: 4
+  damages:
+  - 7
+  - 8
+  - 9
+  - 11
+  - 14
+  projectileSpeeds: []
+  durations: []
+  areas:
+  - 2
+  - 2
+  - 3
+  - 3
+  - 4
+  cooldowns:
+  - 5
+  - 5
+  - 4
+  - 4
+  - 3
+  counts: 
+  projectileTag: Blade of Truth
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  damageDelay: 0.5
+  bonusHasteAmount: 0.2
+  bonusHasteDuration: 1
+  additionalHastePerHit: 0.05
+  maxHasteAmount: 0.5

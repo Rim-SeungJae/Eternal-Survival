@@ -42,11 +42,12 @@ public class MagicLampWeapon : WeaponBase
         // count.Value 만큼의 주먹 투사체를 발사합니다.
         for (int i = 0; i < count.Value; i++)
         {
+            WeaponData weaponData = itemData as WeaponData;
             // 이펙트 풀에서 주먹 투사체 오브젝트를 가져옵니다.
-            GameObject fist = GameManager.instance.pool.Get(itemData.projectileTag);
+            GameObject fist = GameManager.instance.pool.Get(weaponData.projectileTag);
             if (fist == null)
             {
-                Debug.LogWarning($"PoolManager에서 태그 '{itemData.projectileTag}'에 해당하는 이펙트를 가져오지 못했습니다. PoolManager 설정을 확인하세요.");
+                Debug.LogWarning($"PoolManager에서 태그 '{weaponData.projectileTag}'에 해당하는 이펙트를 가져오지 못했습니다. PoolManager 설정을 확인하세요.");
                 continue;
             }
 

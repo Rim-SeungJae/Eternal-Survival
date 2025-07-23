@@ -9,38 +9,42 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e956228538ab014cbc44c70cb816b8b, type: 3}
+  m_Script: {fileID: 11500000, guid: 72ed48f5e02b11f48aa7617bbe079523, type: 3}
   m_Name: "Red Sprite-\uBCBD\uB825"
-  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  m_EditorClassIdentifier: Assembly-CSharp::LightningWeaponData
+  itemType: 0
   itemAction: {fileID: 11400000, guid: bb5f5cb3e569ed5428b730b1e84d6ac7, type: 2}
-  itemId: 5
+  itemId: 0
   itemName: "\uBCBD\uB825"
-  itemDesc: "\uC77C\uC815 \uC2DC\uAC04\uB9C8\uB2E4 \uC0AC\uAC70\uB9AC \uC548\uC758
-    \uC801\uC5D0\uAC8C\n \uBC88\uAC1C \uACF5\uACA9\uC744 \uC2DC\uC804\uD569\uB2C8\uB2E4."
+  itemDesc: "\uC77C\uC815 \uC2DC\uAC04\uB9C8\uB2E4 \uC0AC\uAC70\uB9AC \uB0B4\uC758
+    \uC801\uC744\n\uB0B4\uB9AC\uCE58\uB294 \uBC88\uAC1C\uB85C \uACF5\uACA9\uD55C\uB2E4."
   itemIcon: {fileID: 1950523271641948713, guid: c972904a6eb4c1346b366f17f8c4a169, type: 3}
   maxLevel: 4
   damages:
-  - 5
-  - 6
+  - 2
+  - 3
+  - 4
   - 7
   - 9
-  - 11
-  projectileSpeeds:
-  - 1
-  durations:
-  - 1
+  projectileSpeeds: []
+  durations: []
   areas:
-  - 1
-  - 1
-  - 1.1
-  - 1.2
-  - 1.3
+  - 3
+  - 3
+  - 3
+  - 4
+  - 4
   cooldowns:
-  - 5
   - 4
   - 4
   - 3
   - 3
-  counts: 0100000001000000020000000300000004000000
+  - 2
+  counts: 0100000001000000020000000200000003000000
   projectileTag: Red Sprite
-  hand: {fileID: 0}
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  lightningRange: 10
+  bonusDistanceThreshold: 5
+  bonusDamageMultiplier: 0.5

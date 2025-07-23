@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30d62a7e9ea7a7c45a63519ec2c6844f, type: 3}
+  m_Name: GhostLightData
+  m_EditorClassIdentifier: Assembly-CSharp::GhostLightData
+  itemType: 0
+  itemAction: {fileID: 11400000, guid: ee85c5776b40d04498fb1da7287dd7f4, type: 2}
+  itemId: 0
+  itemName: "\uB3C4\uAE68\uBE44\uBD88"
+  itemDesc: "\uC77C\uC815 \uC2DC\uAC04\uB9C8\uB2E4 \uC0AC\uAC70\uB9AC \uB0B4\uC758
+    \uC801\uC5D0\uAC8C\n\uB3C4\uAE68\uBE44\uBD88\uC774 \uB0A0\uC544\uAC00 \uC801\uC744
+    \uBD88\uD0DC\uC6B0\uB294 \uC601\uC5ED\uC744 \uC0DD\uC131\uD569\uB2C8\uB2E4."
+  itemIcon: {fileID: 7781672176393205854, guid: eea7b6b6cdca5e847a043623f02a3e7f, type: 3}
+  maxLevel: 4
+  damages:
+  - 3
+  - 4
+  - 5
+  - 6
+  - 8
+  projectileSpeeds:
+  - 10
+  durations:
+  - 2
+  - 2
+  - 3
+  - 3
+  - 4
+  areas:
+  - 3
+  - 3
+  - 4
+  - 4
+  - 5
+  cooldowns:
+  - 4
+  - 4
+  - 4
+  - 3
+  - 3
+  counts: 0100000002000000020000000300000003000000
+  projectileTag: GhostLightProjectile
+  groundEffectDuration: 3
+  groundEffectDamagePerSecond: 5
+  groundEffectTickRate: 0.5

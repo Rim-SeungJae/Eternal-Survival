@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d36102c46ab835e4fbe3ca8d17c41c6a, type: 3}
+  m_Name: Revive
+  m_EditorClassIdentifier: Assembly-CSharp::GearData
+  itemType: 1
+  itemAction: {fileID: 11400000, guid: cbc23c8a9fd8e004bbc598a92f2bf6d5, type: 2}
+  itemId: 0
+  itemName: "\uC18C\uC0DD"
+  itemDesc: "\uBD80\uD65C \uD69F\uC218\uAC00 {0} \uC99D\uAC00\uD569\uB2C8\uB2E4."
+  itemIcon: {fileID: 6139657637763227542, guid: cbc0b91dbca88f04ba6f0b9a9977a673, type: 3}
+  maxLevel: 4
+  statValues:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  modifierType: 0

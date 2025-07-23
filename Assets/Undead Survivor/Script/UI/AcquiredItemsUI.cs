@@ -69,8 +69,8 @@ public class AcquiredItemsUI : MonoBehaviour
     {
 
         // 1. 획득한 아이템을 무기와 장비로 분류합니다. (null 체크 추가)
-        List<Item> acquiredWeapons = items.Where(item => item != null && item.data != null && item.data.itemAction is Action_Weapon).ToList();
-        List<Item> acquiredGears = items.Where(item => item != null && item.data != null && item.data.itemAction is Action_StatBoostGear).ToList();
+        List<Item> acquiredWeapons = items.Where(item => item != null && item.data != null && item.data.itemType == ItemData.ItemType.Weapon).ToList();
+        List<Item> acquiredGears = items.Where(item => item != null && item.data != null && item.data.itemType == ItemData.ItemType.Gear).ToList();
 
         // 2. 무기 UI를 갱신합니다.
         for (int i = 0; i < weaponSlots.Count; i++)

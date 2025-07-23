@@ -72,25 +72,20 @@ public class LevelUp : MonoBehaviour
             // 조건 1: 최대 레벨이 아닌 아이템
             if (item.level < item.data.maxLevel)
             {
-                bool isWeapon = item.data.itemAction is Action_Weapon;
-                bool isGear = item.data.itemAction is Action_StatBoostGear;
-
-                // 조건 2: 이미 획득한 아이템은 항상 후보에 포함 (레벨업)
-                if (item.level > 0)
+                // 조건 2: 데이터의 itemType을 확인하여 무기/장비 획득 제한을 검사합니다.
+                switch (item.data.itemType)
                 {
-                    candidates.Add(item);
-                }
-                // 조건 3: 새로운 아이템일 경우, 획득 제한을 확인
-                else
-                {
-                    if (isWeapon && GameManager.instance.player.WeaponCount < Player.MAX_WEAPONS)
-                    {
+                    case ItemData.ItemType.Weapon:
+                        if (item.level == 0 && GameManager.instance.player.WeaponCount >= Player.MAX_WEAPONS) continue;
                         candidates.Add(item);
-                    }
-                    else if (isGear && GameManager.instance.player.GearCount < Player.MAX_GEARS)
-                    {
+                        break;
+                    case ItemData.ItemType.Gear:
+                        if (item.level == 0 && GameManager.instance.player.GearCount >= Player.MAX_GEARS) continue;
                         candidates.Add(item);
-                    }
+                        break;
+                    default: // 소모품 등 기타 아이템은 항상 후보에 포함
+                        candidates.Add(item);
+                        break;
                 }
             }
         }

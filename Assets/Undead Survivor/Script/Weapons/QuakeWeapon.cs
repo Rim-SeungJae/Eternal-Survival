@@ -28,9 +28,9 @@ public class QuakeWeapon : WeaponBase
         // Quake 이펙트가 활성화 중이 아닐 때만 이동 거리를 측정합니다.
         if (!isQuakeActive)
         {
-            distanceTraveled += Vector3.Distance(player.transform.position, lastPosition);
-            lastPosition = player.transform.position;
-
+            float currentDistance = Vector3.Distance(player.transform.position, lastPosition);
+            distanceTraveled += currentDistance;
+            
             // 누적 이동 거리가 최종 계산된 발동 거리(cooldown.Value)를 넘어서면 공격을 실행합니다.
             if (distanceTraveled >= cooldown.Value)
             {
@@ -39,6 +39,9 @@ public class QuakeWeapon : WeaponBase
                 isQuakeActive = true; // Quake 이펙트 활성화 상태로 설정
             }
         }
+        
+        // 매 프레임마다 마지막 위치 갱신 (isQuakeActive 상태와 관계없이)
+        lastPosition = player.transform.position;
     }
 
     public override void Init(ItemData data)
@@ -54,13 +57,14 @@ public class QuakeWeapon : WeaponBase
     /// </summary>
     private void Attack()
     {
+        WeaponData weaponData = itemData as WeaponData;
         // 이펙트 풀에서 이펙트 오브젝트를 가져옵니다.
-        GameObject effect = GameManager.instance.pool.Get(itemData.projectileTag);
+        GameObject effect = GameManager.instance.pool.Get(weaponData.projectileTag);
         if (effect == null)
         {
             // 이펙트 생성에 실패하면 isQuakeActive를 즉시 false로 되돌려 다음 발동을 허용합니다.
             isQuakeActive = false;
-            Debug.LogWarning($"PoolManager에서 태그 '{itemData.projectileTag}'에 해당하는 이펙트를 가져오지 못했습니다. PoolManager 설정을 확인하세요.");
+            Debug.LogWarning($"PoolManager에서 태그 '{weaponData.projectileTag}'에 해당하는 이펙트를 가져오지 못했습니다. PoolManager 설정을 확인하세요.");
             return;
         }
 

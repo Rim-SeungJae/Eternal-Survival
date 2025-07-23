@@ -36,10 +36,12 @@ public class NoxiousAftermathWeapon : WeaponBase
     /// <param name="spawnPosition">독장판이 생성될 위치</param>
     private void SpawnPuddle(Vector3 spawnPosition)
     {
-        GameObject puddle = GameManager.instance.pool.Get(itemData.projectileTag);
+        WeaponData weaponData = itemData as WeaponData;
+
+        GameObject puddle = GameManager.instance.pool.Get(weaponData.projectileTag);
         if (puddle == null)
         {
-            Debug.LogWarning($"PoolManager에서 태그 '{itemData.projectileTag}'에 해당하는 독장판 프리팹을 가져오지 못했습니다. PoolManager 설정을 확인하세요.");
+            Debug.LogWarning($"PoolManager에서 태그 '{weaponData.projectileTag}'에 해당하는 독장판 프리팹을 가져오지 못했습니다. PoolManager 설정을 확인하세요.");
             return;
         }
 
