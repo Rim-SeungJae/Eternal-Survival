@@ -36,19 +36,20 @@ MonoBehaviour:
   - 3
   - 4
   areas:
-  - 3
-  - 3
-  - 4
-  - 4
-  - 5
+  - 1
+  - 1
+  - 2
+  - 2
+  - 2
   cooldowns:
   - 4
   - 4
   - 4
   - 3
   - 3
-  counts: 0100000002000000020000000300000003000000
+  counts: 0200000002000000030000000300000004000000
   projectileTag: GhostLightProjectile
   groundEffectDuration: 3
   groundEffectDamagePerSecond: 5
   groundEffectTickRate: 0.5
+  fireRange: 10

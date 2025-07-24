@@ -226,7 +226,7 @@ public class GameManager : MonoBehaviour
         isTimeStopped = true;
         player.particle.Play(); // 시간 정지 효과 파티클 재생
         // 모든 활성화된 Enemy를 찾아 시간 정지 효과를 적용합니다.
-        Enemy[] enemies = FindObjectsOfType<Enemy>();
+        Enemy[] enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
         foreach (Enemy enemy in enemies)
         {
             if (enemy.gameObject.activeSelf)

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic; // List 사용을 위해 추가
 using DG.Tweening; // DOTween 네임스페이스 추가
 
 /// <summary>
@@ -11,6 +12,9 @@ public class BladeofTruthEffect : MonoBehaviour
     private SpriteRenderer bladeSprite;
     private SpriteRenderer circleSprite;
     private SpriteRenderer swirlSprite;
+    
+    // 다중 swirl 레이어 참조 (프리팹에 미리 설정됨)
+    private SpriteRenderer[] swirlLayers;
 
     private float damage;
     private float damageDelay;
@@ -21,10 +25,37 @@ public class BladeofTruthEffect : MonoBehaviour
     void Awake()
     {
         // 프리팹이 인스턴스화될 때, 이름으로 하위 오브젝트를 찾아 참조를 설정합니다.
-        // 이 로직은 스크립트가 활성화될 때 한 번만 실행되어야 합니다.
         bladeSprite = transform.Find("Blade")?.GetComponent<SpriteRenderer>();
         circleSprite = transform.Find("Circle")?.GetComponent<SpriteRenderer>();
-        swirlSprite = transform.Find("Swirl")?.GetComponent<SpriteRenderer>();
+        swirlSprite = transform.Find("Swirl_Layer1")?.GetComponent<SpriteRenderer>(); // 이름 변경됨
+        
+        // 모든 swirl 레이어들을 찾아서 배열에 저장
+        InitializeSwirlLayers();
+    }
+    
+    /// <summary>
+    /// 프리팹에 미리 설정된 swirl 레이어들을 찾아서 배열에 저장합니다.
+    /// </summary>
+    private void InitializeSwirlLayers()
+    {
+        // 프리팹에 있는 모든 swirl 레이어들을 찾습니다
+        List<SpriteRenderer> foundLayers = new List<SpriteRenderer>();
+        
+        // Swirl_Layer1, Swirl_Layer2, Swirl_Layer3를 순서대로 찾습니다
+        for (int i = 1; i <= 3; i++)
+        {
+            Transform layerTransform = transform.Find($"Swirl_Layer{i}");
+            if (layerTransform != null)
+            {
+                SpriteRenderer layerRenderer = layerTransform.GetComponent<SpriteRenderer>();
+                if (layerRenderer != null)
+                {
+                    foundLayers.Add(layerRenderer);
+                }
+            }
+        }
+        
+        swirlLayers = foundLayers.ToArray();
     }
 
     void Update()
@@ -61,13 +92,28 @@ public class BladeofTruthEffect : MonoBehaviour
             circleSprite.transform.localPosition = Vector3.zero; // 중앙에 위치
         }
 
-        if(swirlSprite != null)
+        // 모든 swirl 레이어에 대해 크기 조정
+        if(swirlSprite != null && swirlLayers != null)
         {
             // swirl은 중앙 pivot 사용 가정, 지름을 기준으로 스케일 계산
             float swirlDiameter = swirlSprite.sprite.bounds.size.x;
-            float swirlScale = (attackRadius * 2) / swirlDiameter;
-            swirlSprite.transform.localScale = new Vector3(swirlScale, swirlScale, 1f);
-            swirlSprite.transform.localPosition = Vector3.zero; // 중앙에 위치
+            float baseSwirScale = (attackRadius * 2) / swirlDiameter;
+            
+            // 각 레이어의 기본 스케일 비율 정의 (프리팹에서 설정된 비율)
+            float[] layerScaleRatios = { 1.0f, 0.8f, 0.6f }; // Layer1: 100%, Layer2: 80%, Layer3: 60%
+            
+            for (int i = 0; i < swirlLayers.Length; i++)
+            {
+                if (swirlLayers[i] != null)
+                {
+                    // 각 레이어마다 정의된 비율을 적용하여 attackRadius에 맞게 조정
+                    float layerRatio = i < layerScaleRatios.Length ? layerScaleRatios[i] : 1.0f;
+                    float layerScale = baseSwirScale * layerRatio;
+                    
+                    swirlLayers[i].transform.localScale = new Vector3(layerScale, layerScale, 1f);
+                    swirlLayers[i].transform.localPosition = Vector3.zero; // 중앙에 위치
+                }
+            }
         }
     }
 
@@ -78,42 +124,109 @@ public class BladeofTruthEffect : MonoBehaviour
 
     private IEnumerator EffectRoutine()
     {
+        // 회전 시작과 동시에 모든 swirl 레이어 활성화
+        if (swirlLayers != null)
+        {
+            for (int i = 0; i < swirlLayers.Length; i++)
+            {
+                if (swirlLayers[i] != null)
+                {
+                    swirlLayers[i].gameObject.SetActive(true);
+                    Color layerColor = swirlLayers[i].color;
+                    layerColor.a = 0; // 투명하게 시작
+                    swirlLayers[i].color = layerColor;
+                }
+            }
+        }
+
         // 칼날 회전 애니메이션 시작 (2바퀴 = 720도)
-        // damageDelay 시간 동안 회전하도록 설정합니다.
         if (bladeSprite != null)
         {
-            // 부모(이펙트 루트)를 중심으로 회전해야 하므로, 이펙트 루트를 회전시킵니다.
-            // 칼날 자체는 이미 localPosition으로 위치가 잡혀있습니다.
             transform.DOLocalRotate(new Vector3(0, 0, -720), damageDelay * 2, RotateMode.FastBeyond360)
                 .SetEase(Ease.InOutQuad);
         }
 
-        // 이펙트 애니메이션(회전)이 끝날 때까지 대기합니다.
-        yield return new WaitForSeconds(damageDelay);
-
-        // 3. 지연 후, 이펙트 위치를 중심으로 원형 범위 내의 모든 적을 찾습니다.
-        Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(transform.position, attackRadius, targetLayer);
-        int hitCount = 0;
-
-        foreach (var enemyCollider in enemiesToDamage)
+        // 회전 진행도에 따른 swirl 강도 조절 및 데미지 타이밍 관리
+        float startTime = Time.time;
+        float rotationDuration = damageDelay * 2;
+        bool damageApplied = false; // 데미지가 이미 적용되었는지 확인
+        
+        while (Time.time - startTime < rotationDuration)
         {
-            Enemy enemy = enemyCollider.GetComponent<Enemy>();
-            if (enemy != null)
+            float progress = (Time.time - startTime) / rotationDuration;
+            
+            // 모든 swirl 레이어의 강도 조절
+            if (swirlLayers != null)
             {
-                enemy.TakeDamage(damage);
-                hitCount++;
+                // 회전 중반까지 강도 증가, 이후 감소 (0.5에서 최대값)
+                float baseIntensity;
+                if (progress <= 0.5f)
+                {
+                    // 0~0.5 구간: 0에서 1로 증가
+                    baseIntensity = progress * 2f;
+                }
+                else
+                {
+                    // 0.5~1.0 구간: 1에서 0으로 감소
+                    baseIntensity = (1f - progress) * 2f;
+                }
+                
+                for (int i = 0; i < swirlLayers.Length; i++)
+                {
+                    if (swirlLayers[i] != null)
+                    {
+                        Color layerColor = swirlLayers[i].color;
+                        // 각 레이어마다 기본 투명도에 맞춰 강도 적용
+                        float originalAlpha = i == 0 ? 1f : (i == 1 ? 0.8f : 0.6f); // 원래 투명도
+                        layerColor.a = baseIntensity * originalAlpha;
+                        swirlLayers[i].color = layerColor;
+                    }
+                }
+            }
+            
+            // 회전 중반(가장 빠른 시점)에서 데미지 적용
+            if (!damageApplied && progress >= 0.5f)
+            {
+                // 이펙트 위치를 중심으로 원형 범위 내의 모든 적을 찾습니다.
+                Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(transform.position, attackRadius, targetLayer);
+                int hitCount = 0;
+
+                foreach (var enemyCollider in enemiesToDamage)
+                {
+                    Enemy enemy = enemyCollider.GetComponent<Enemy>();
+                    if (enemy != null)
+                    {
+                        enemy.TakeDamage(damage);
+                        hitCount++;
+                    }
+                }
+
+                // 피해 처리가 끝난 후, 부모 무기에 적중한 적의 수를 알립니다.
+                if (weaponInstance != null)
+                {
+                    weaponInstance.ApplyHasteEffect(hitCount);
+                }
+                
+                damageApplied = true; // 데미지 적용 완료 표시
+            }
+            
+            yield return null;
+        }
+
+        // 회전 완료 후 모든 swirl 레이어 비활성화
+        if (swirlLayers != null)
+        {
+            for (int i = 0; i < swirlLayers.Length; i++)
+            {
+                if (swirlLayers[i] != null)
+                {
+                    swirlLayers[i].gameObject.SetActive(false);
+                }
             }
         }
 
-        // 4. 피해 처리가 끝난 후, 부모 무기에 적중한 적의 수를 알립니다.
-        if (weaponInstance != null)
-        {
-            weaponInstance.ApplyHasteEffect(hitCount);
-        }
-
-        // 5. 이펙트 오브젝트를 풀에 반환합니다.
-        // 잠시 후 비활성화하여 이펙트가 자연스럽게 사라질 시간을 줍니다.
-        yield return new WaitForSeconds(damageDelay*2 + 0.1f); // 회전 애니메이션과 이펙트 지속 시간 고려
+        // 이펙트 오브젝트를 풀에 반환합니다.
+        yield return new WaitForSeconds(0.1f); // 이펙트가 자연스럽게 사라질 시간
         Poolable poolable = GetComponent<Poolable>();
         if (poolable != null)
         {

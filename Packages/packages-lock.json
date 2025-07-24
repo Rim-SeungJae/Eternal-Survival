@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.justinpbarnett.unity-mcp": {
+      "version": "https://github.com/justinpbarnett/unity-mcp.git?path=/UnityMcpBridge",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.0.2"
+      },
+      "hash": "c0bcfcaab17863bd637ea985624f0739c80998e3"
+    },
     "com.seanba.super-tiled2unity": {
       "version": "file:com.seanba.super-tiled2unity",
       "depth": 0,

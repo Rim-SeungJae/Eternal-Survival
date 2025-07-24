@@ -3,6 +3,7 @@ using UnityEngine;
 /// <summary>
 /// 'Ghost Light' 무기의 주 로직을 관리합니다.
 /// 주기적으로 사거리 내의 랜덤한 적을 향해 유도 투사체를 발사합니다.
+/// 개선: 각 투사체가 일정한 각도 간격을 두고 공전합니다.
 /// </summary>
 public class GhostLightWeapon : WeaponBase
 {
@@ -32,8 +33,11 @@ public class GhostLightWeapon : WeaponBase
         // count.Value 만큼의 투사체를 발사합니다.
         for (int i = 0; i < count.Value; i++)
         {
+            // 각 투사체마다 다른 시작 각도 계산 (360도를 투사체 개수로 나눔)
+            float startAngle = (360f / count.Value) * i;
+            
             // 플레이어 주변 attackArea.Value 반경 내의 무작위 위치를 생성합니다.
-            Vector3 randomTargetPosition = player.transform.position + (Vector3)Random.insideUnitCircle * attackArea.Value;
+            Vector3 randomTargetPosition = player.transform.position + (Vector3)Random.insideUnitCircle * ghostLightData.fireRange;
 
             // 풀에서 투사체를 가져옵니다.
             GameObject projectileObj = GameManager.instance.pool.Get(ghostLightData.projectileTag);
@@ -43,7 +47,7 @@ public class GhostLightWeapon : WeaponBase
             GhostLightProjectile projectile = projectileObj.GetComponent<GhostLightProjectile>();
             if (projectile != null)
             {
-                projectile.Init(damage.Value, duration.Value, projectileSpeed.Value, attackArea.Value, randomTargetPosition, ghostLightData.groundEffectTickRate, player.transform);
+                projectile.Init(damage.Value, duration.Value, projectileSpeed.Value, attackArea.Value, randomTargetPosition, ghostLightData.groundEffectTickRate, player.transform, startAngle);
             }
             projectileObj.SetActive(true);
         }

@@ -16,4 +16,6 @@ public class GhostLightData : WeaponData
 
     [Tooltip("화염 장판의 지속 피해가 적용되는 간격(초). 낮을수록 자주 피해를 줍니다.")]
     public float groundEffectTickRate = 0.5f;
+    [Tooltip("도깨비불의 발사 사거리")]
+    public float fireRange = 10f;
 }

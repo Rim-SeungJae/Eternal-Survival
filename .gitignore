@@ -73,3 +73,6 @@ crashlytics-build.properties
 
 # Tilesets which are related to copyright issues
 /Assets/Undead Survivor/Sprites/Tiled Maps/Tilesets/
+
+# Claude Code documentation (auto-generated)
+CLAUDE.md

@@ -3,6 +3,7 @@ using DG.Tweening; // DOTween 네임스페이스 추가
 
 /// <summary>
 /// Ghost Light 투사체의 이동 및 도착 시 폭발 로직을 관리합니다.
+/// 개선: 각 투사체가 서로 다른 시작 각도에서 공전을 시작합니다.
 /// </summary>
 public class GhostLightProjectile : MonoBehaviour
 {
@@ -14,18 +15,20 @@ public class GhostLightProjectile : MonoBehaviour
     private Vector3 targetPosition;
     private Transform playerTransform; // 플레이어 Transform 참조
 
-    // 공전 관련 변수 (Projectile.cs에서 직접 관리)
+    // 공전 관련 변수 (개선됨)
     [Header("Orbit Settings")]
     [Tooltip("투사체가 플레이어 주위를 공전할 궤도 반지름")]
     public float orbitRadius = 0.5f;
     [Tooltip("투사체가 플레이어 주위를 공전하는 시간")]
     public float orbitDuration = 0.2f;
+    [Tooltip("시작 각도 (도)")]
+    public float startAngle = 0f;
 
     private bool isOrbiting = true; // 공전 중인지 여부
     private float orbitTimer = 0f; // 공전 타이머
     private Vector3 orbitCenterOffset; // 플레이어로부터의 초기 상대 위치
 
-    public void Init(float dmg, float dur, float spd, float area, Vector3 trgtPos, float tickRate, Transform playerTrns)
+    public void Init(float dmg, float dur, float spd, float area, Vector3 trgtPos, float tickRate, Transform playerTrns, float startAng)
     {
         this.damage = dmg;
         this.speed = spd;
@@ -34,13 +37,19 @@ public class GhostLightProjectile : MonoBehaviour
         this.targetPosition = trgtPos;
         this.groundEffectTickRate = tickRate;
         this.playerTransform = playerTrns;
+        this.startAngle = startAng;
 
         // 초기 상태 설정
         isOrbiting = true;
         orbitTimer = 0f;
-        // 플레이어의 현재 위치를 기준으로 초기 상대 위치를 설정합니다.
-        // 투사체가 플레이어의 오른쪽에서 시작하도록 초기 오프셋을 설정합니다.
-        orbitCenterOffset = new Vector3(orbitRadius, 0, 0);
+        
+        // 개선된 초기 위치 설정: 시작 각도를 고려한 위치
+        float startAngleRad = startAngle * Mathf.Deg2Rad;
+        orbitCenterOffset = new Vector3(
+            Mathf.Cos(startAngleRad) * orbitRadius,
+            Mathf.Sin(startAngleRad) * orbitRadius,
+            0
+        );
         transform.position = playerTransform.position + orbitCenterOffset;
 
         // 기존에 실행 중인 트윈이 있다면 모두 제거합니다.
@@ -53,11 +62,13 @@ public class GhostLightProjectile : MonoBehaviour
         {
             orbitTimer += Time.deltaTime;
 
-            // 플레이어의 현재 위치를 중심으로 공전
-            // 초기 상대 위치를 기준으로 플레이어의 회전을 따라가도록 합니다.
-            // 360도 회전 대신 180도 공전 (반바퀴)을 위해 각도 계산을 수정합니다.
-            float currentAngle = (orbitTimer / orbitDuration) * 180f; // 180도 공전
-            Vector3 rotatedOffset = Quaternion.Euler(0, 0, currentAngle) * orbitCenterOffset;
+            // 개선된 공전 로직: 시작 각도를 고려한 공전
+            float currentAngle = (startAngle + (orbitTimer / orbitDuration) * 180f) * Mathf.Deg2Rad; // 180도 공전
+            Vector3 rotatedOffset = new Vector3(
+                Mathf.Cos(currentAngle) * orbitRadius,
+                Mathf.Sin(currentAngle) * orbitRadius,
+                0
+            );
             transform.position = playerTransform.position + rotatedOffset;
 
             if (orbitTimer >= orbitDuration)

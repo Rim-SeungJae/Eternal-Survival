@@ -15045,7 +15045,7 @@ MonoBehaviour:
     prefab: {fileID: 9002066554135692015, guid: 5eb1495e21767d14ea8a8c907cc02f23, type: 3}
     size: 0
   - tag: Blade of Truth
-    prefab: {fileID: 3011917378444590376, guid: 138487eb1124f7c4180771f9a9e1478a, type: 3}
+    prefab: {fileID: 782803200265885763, guid: 10743657d11434e4b8767cb1fd954698, type: 3}
     size: 0
   - tag: Revive
     prefab: {fileID: 881490790951546242, guid: 2b0ebec5fc1f04e418f019d791af7810, type: 3}
