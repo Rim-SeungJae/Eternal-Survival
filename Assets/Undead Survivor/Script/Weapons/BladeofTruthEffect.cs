@@ -188,25 +188,25 @@ public class BladeofTruthEffect : MonoBehaviour
             if (!damageApplied && progress >= 0.5f)
             {
                 // 이펙트 위치를 중심으로 원형 범위 내의 모든 적을 찾습니다.
-                Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(transform.position, attackRadius, targetLayer);
-                int hitCount = 0;
+        Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(transform.position, attackRadius, targetLayer);
+        int hitCount = 0;
 
-                foreach (var enemyCollider in enemiesToDamage)
-                {
-                    Enemy enemy = enemyCollider.GetComponent<Enemy>();
-                    if (enemy != null)
-                    {
-                        enemy.TakeDamage(damage);
-                        hitCount++;
-                    }
-                }
+        foreach (var enemyCollider in enemiesToDamage)
+        {
+            Enemy enemy = enemyCollider.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(damage);
+                hitCount++;
+            }
+        }
 
                 // 피해 처리가 끝난 후, 부모 무기에 적중한 적의 수를 알립니다.
-                if (weaponInstance != null)
-                {
-                    weaponInstance.ApplyHasteEffect(hitCount);
-                }
-                
+        if (weaponInstance != null)
+        {
+            weaponInstance.ApplyHasteEffect(hitCount);
+        }
+
                 damageApplied = true; // 데미지 적용 완료 표시
             }
             

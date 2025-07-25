@@ -1,0 +1,19 @@
+{
+    "asset": "560a20f8ebedafe459989af6da7e0f5d",
+    "fileName": "01984128-ea59-714d-b73a-ed280d86e2fb.png",
+    "prompt": "Meteor strike. Only one Meteor falling.",
+    "negativePrompt": "",
+    "model": "242b56c1-2224-41c4-8949-2ba760bbfc69",
+    "customSeed": -1,
+    "w3CTraceId": "c6355037180402257eafc8da520de0a6",
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0
+}

@@ -1,0 +1,15 @@
+---
+alwaysApply: true
+
+This is a Vampire Survivors like game.
+Always Optimize the code for performance and memory usage awaring the following points and more:
+- This is a 2D game.
+- This is a top-down view game.
+- This is a pixel art game.
+- This is a game with a lot of enemies.
+- This is a game with a lot of weapon effects.
+- This is a game with a lot of items.
+- This is a game with a lot of upgrades.
+- This is a game with a lot of skills.
+
+---

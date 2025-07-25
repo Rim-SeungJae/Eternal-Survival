@@ -1,0 +1,199 @@
+---
+alwaysApply: false
+description: "Vampire Survivors-like 게임에서 새로운 무기를 추가하는 체계적인 가이드라인"
+globs:
+  [
+    "Assets/Undead Survivor/Script/Weapons/*.cs",
+    "Assets/Undead Survivor/Data/Items/*.asset",
+    "Assets/Undead Survivor/Data/Item Actions/*.asset",
+    "Assets/Undead Survivor/Prefabs/*.prefab",
+  ]
+---
+
+# 🗡️ 무기 개발 가이드라인
+
+## 📋 무기 추가 7단계 프로세스
+
+### 1단계: 무기 로직 클래스 생성
+
+- **위치**: `Assets/Undead Survivor/Script/Weapons/`
+- **상속**: `WeaponBase` 클래스 상속 필수
+- **네이밍**: `{WeaponName}Weapon.cs` 형식
+- **구조**:
+  ```csharp
+  public class NewWeapon : WeaponBase
+  {
+      private float timer;
+
+      public override void Awake() { base.Awake(); }
+
+      void Update()
+      {
+          if (!GameManager.instance.isLive) return;
+          timer += Time.deltaTime;
+          if (timer > cooldown.Value)
+          {
+              timer = 0f;
+              Attack();
+          }
+      }
+
+      private void Attack() { /* 무기별 공격 로직 */ }
+  }
+  ```
+
+### 2단계: 무기 데이터 결정
+
+#### A. 기본 WeaponData 사용 (권장)
+
+- **조건**: 기본 능력치만 필요한 단순한 무기
+- **사용 무기**: Gun, Shovel, Magic Lamp 등
+- **필드**: damages[], projectileSpeeds[], durations[], areas[], cooldowns[], counts[], projectileTag
+
+#### B. WeaponData 상속 (특수 무기)
+
+- **조건**: 추가 데이터가 필요한 복잡한 무기
+- **예시**: GhostLightData, BladeofTruthWeaponData
+- **구조**:
+  ```csharp
+  public class SpecialWeaponData : WeaponData
+  {
+      [Header("특수 설정")]
+      public float specialValue;
+      public LayerMask targetLayer;
+  }
+  ```
+
+### 3단계: 무기 데이터 생성
+
+- **위치**: `Assets/Undead Survivor/Data/Items/`
+- **네이밍**: `{WeaponName}.asset` 또는 `{WeaponName}Data.asset`
+- **설정 항목**:
+  - itemAction: Action_Weapon 참조
+  - itemId: 고유 ID
+  - itemName: "무기 이름"
+  - itemDesc: "무기 설명"
+  - itemIcon: 스프라이트
+  - maxLevel: 4
+  - 능력치 배열: damages[], projectileSpeeds[], durations[], areas[], cooldowns[], counts[]
+  - projectileTag: PoolManager 태그
+
+### 4단계: 무기 액션 생성
+
+- **위치**: `Assets/Undead Survivor/Data/Item Actions/`
+- **네이밍**: `Action_{WeaponName}.asset`
+- **설정**:
+  - weaponLogicType: 해당 무기 클래스 선택
+  - OnEquip: 무기 장착 로직
+  - OnLevelUp: 레벨업 로직
+  - GetDescription: UI 설명 생성
+
+### 5단계: 발사체/이펙트 프리팹 생성
+
+- **위치**: `Assets/Undead Survivor/Prefabs/`
+- **네이밍**: `{WeaponName}.prefab` 또는 `{WeaponName}_effect.prefab`
+- **필수 컴포넌트**:
+  - SpriteRenderer (시각적 표현)
+  - Collider2D (충돌 감지)
+  - Rigidbody2D (물리 이동)
+  - Bullet.cs 또는 커스텀 스크립트
+  - Poolable 컴포넌트 (자동 추가)
+- **태그 설정**: PoolManager에서 사용할 태그
+
+### 6단계: PoolManager 등록
+
+- **위치**: SampleScene의 PoolManager
+- **설정**:
+  ```yaml
+  - tag: "{WeaponName}"
+    prefab: {WeaponName} 프리팹 참조
+    size: 20 (초기 풀 크기)
+  ```
+
+### 7단계: 레벨업 UI 등록
+
+- **위치**: `LevelUp.cs`의 items 배열
+- **추가**: 새 무기 아이템을 배열에 추가
+
+## �� 무기 타입별 가이드
+
+### 근접 무기 (회전형)
+
+- **예시**: Shovel, Blade of Truth
+- **특징**: 플레이어 주위 회전, 고정 배치
+- **로직**: `transform.Rotate()` 사용
+
+### 원거리 무기 (발사형)
+
+- **예시**: Gun, Magic Lamp
+- **특징**: 적을 향해 발사, 자동 조준
+- **로직**: `player.scanner.nearestTarget` 사용
+
+### 특수 무기 (고유 메커니즘)
+
+- **예시**: GhostLight, Quake, Lightning
+- **특징**: 복잡한 로직, 추가 데이터 필요
+- **로직**: 무기별 커스텀 구현
+
+## ⚡ 성능 최적화 가이드
+
+### PoolManager 설정
+
+- **풀 크기**: 무기 사용 빈도에 따라 조정 (10-50)
+- **메모리 효율성**: 적절한 풀 크기로 가비지 컬렉션 최소화
+
+### 파티클 시스템
+
+- **사용 제한**: 모바일에서는 파티클 수 제한 (20개 이하)
+- **LOD 시스템**: 거리에 따른 파티클 수 조절
+
+### 코드 최적화
+
+- **캐싱**: 자주 사용하는 컴포넌트 미리 캐싱
+- **비활성화**: 사용하지 않는 오브젝트 즉시 비활성화
+- **태그 비교**: `CompareTag()` 사용 (성능 우수)
+
+## 🧪 테스트 체크리스트
+
+### 기능 테스트
+
+- [ ] 무기가 정상적으로 생성되는가?
+- [ ] 레벨업 시 능력치가 올바르게 증가하는가?
+- [ ] 발사체가 정상적으로 작동하는가?
+- [ ] 충돌 감지가 정확한가?
+
+### 성능 테스트
+
+- [ ] 프레임 드롭이 없는가?
+- [ ] 메모리 사용량이 적절한가?
+- [ ] 가비지 컬렉션이 과도하지 않은가?
+
+### 호환성 테스트
+
+- [ ] 다른 무기와 충돌하지 않는가?
+- [ ] UI에서 정상적으로 표시되는가?
+- [ ] 저장/로드가 정상적인가?
+
+## �� 주의사항
+
+### 필수 확인사항
+
+- **PoolManager 등록**: 프리팹을 반드시 등록
+- **태그 일치**: projectileTag와 PoolManager 태그 일치
+- **컴포넌트 누락**: 필수 컴포넌트 확인
+- **메모리 누수**: Poolable 컴포넌트 확인
+
+### 네이밍 규칙
+
+- **클래스**: PascalCase (예: `FireballWeapon`)
+- **파일**: PascalCase (예: `FireballWeapon.cs`)
+- **태그**: PascalCase (예: `Fireball`)
+- **변수**: camelCase (예: `fireballSpeed`)
+
+### 디버깅 팁
+
+- **로그**: `Debug.Log()` 사용하여 단계별 확인
+- **프로파일러**: Unity Profiler로 성능 분석
+- **브레이크포인트**: 중단점 설정으로 로직 확인
+
+## 📁 파일 구조 예시

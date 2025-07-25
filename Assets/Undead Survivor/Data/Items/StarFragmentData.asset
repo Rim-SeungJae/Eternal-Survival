@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d69a45ae1b14d143990b85397e82db0, type: 3}
+  m_Name: StarFragmentData
+  m_EditorClassIdentifier: Assembly-CSharp::StarFragmentData
+  itemType: 0
+  itemAction: {fileID: 11400000, guid: e92e15408b584c849a410e07460dcfe7, type: 2}
+  itemId: 0
+  itemName: "\uBCC4\uC870\uAC01"
+  itemDesc: "\uC0AC\uC815\uAC70\uB9AC \uB0B4 \uC801 \uC704\uCE58\uC5D0 \uBA54\uD14C\uC624\uB97C\n\uB5A8\uC5B4\uB728\uB824
+    \uAD11\uC5ED \uD53C\uD574\uB97C \uC900\uB2E4"
+  itemIcon: {fileID: -8997992876827162520, guid: c5efbd6b60b1d854f80fdc32140bfb90, type: 3}
+  maxLevel: 4
+  damages:
+  - 30
+  - 40
+  - 50
+  - 60
+  - 70
+  projectileSpeeds:
+  - 1
+  durations:
+  - 3
+  - 3
+  - 2.5
+  - 2.5
+  - 2
+  areas:
+  - 2
+  - 2.5
+  - 3
+  - 3.5
+  - 4
+  cooldowns:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  counts: 0100000001000000020000000200000003000000
+  projectileTag: StarFragmentMeteor
+  warningProjectileTag: StarFragmentWarning
+  warningDurations:
+  - 3
+  - 3
+  - 2.5
+  - 2.5
+  - 2.5
+  attackRange: 8
