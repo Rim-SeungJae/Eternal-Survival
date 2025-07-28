@@ -12,20 +12,27 @@ globs:
 
 # 🗡️ 무기 개발 가이드라인
 
-## 📋 무기 추가 7단계 프로세스
+## 📋 무기 추가 8단계 프로세스
 
 ### 1단계: 무기 로직 클래스 생성
 
 - **위치**: `Assets/Undead Survivor/Script/Weapons/`
 - **상속**: `WeaponBase` 클래스 상속 필수
 - **네이밍**: `{WeaponName}Weapon.cs` 형식
+- **역할**: 이펙트 생성, 초기화, 활성화만 담당 (실제 로직은 Effect 클래스에서)
 - **구조**:
+
   ```csharp
   public class NewWeapon : WeaponBase
   {
       private float timer;
+      private NewWeaponData weaponData;
 
-      public override void Awake() { base.Awake(); }
+      public override void Init(ItemData data)
+      {
+          base.Init(data);
+          this.weaponData = data as NewWeaponData;
+      }
 
       void Update()
       {
@@ -38,11 +45,100 @@ globs:
           }
       }
 
-      private void Attack() { /* 무기별 공격 로직 */ }
+      private void Attack()
+      {
+          // 이펙트 생성 및 초기화만 담당
+          GameObject effect = GameManager.instance.pool.Get(weaponData.projectileTag);
+          if (effect != null)
+          {
+              effect.transform.position = targetPosition;
+              effect.transform.localScale = Vector3.one * attackArea.Value;
+
+              NewWeaponEffect effectLogic = effect.GetComponent<NewWeaponEffect>();
+              if (effectLogic != null)
+              {
+                  effectLogic.Init(damage.Value, attackArea.Value, duration.Value);
+              }
+
+              effect.SetActive(true);
+          }
+      }
   }
   ```
 
-### 2단계: 무기 데이터 결정
+### 2단계: 이펙트 클래스 생성
+
+- **위치**: `Assets/Undead Survivor/Script/Weapons/`
+- **네이밍**: `{WeaponName}Effect.cs` 형식
+- **역할**: 실제 이펙트 로직, 애니메이션, 피해 처리, 풀 반환 담당
+- **구조**:
+
+  ```csharp
+  public class NewWeaponEffect : MonoBehaviour
+  {
+      private float damage;
+      private float area;
+      private float duration;
+      private SpriteRenderer spriteRenderer;
+
+      void Awake()
+      {
+          spriteRenderer = GetComponent<SpriteRenderer>();
+      }
+
+      public void Init(float dmg, float attackArea, float dur)
+      {
+          damage = dmg;
+          area = attackArea;
+          duration = dur;
+
+          // 이펙트 시퀀스 시작
+          StartCoroutine(EffectSequence());
+      }
+
+      private IEnumerator EffectSequence()
+      {
+          // 1. 이펙트 애니메이션
+          yield return StartCoroutine(PlayEffectAnimation());
+
+          // 2. 피해 처리
+          DealDamage();
+
+          // 3. 페이드아웃 후 풀 반환
+          StartFadeOut();
+      }
+
+      private void DealDamage()
+      {
+          // Physics2D.OverlapCircleAll 사용 (Collider 불필요)
+          Collider2D[] targets = Physics2D.OverlapCircleAll(transform.position, area);
+          foreach (Collider2D target in targets)
+          {
+              Enemy enemy = target.GetComponent<Enemy>();
+              if (enemy != null && enemy.gameObject.activeSelf)
+              {
+                  enemy.TakeDamage(damage);
+              }
+          }
+      }
+
+      private void DeactivateEffect()
+      {
+          // 풀에 반환 필수
+          Poolable poolable = GetComponent<Poolable>();
+          if (poolable != null)
+          {
+              GameManager.instance.pool.ReturnToPool(poolable.poolTag, gameObject);
+          }
+          else
+          {
+              gameObject.SetActive(false);
+          }
+      }
+  }
+  ```
+
+### 3단계: 무기 데이터 결정
 
 #### A. 기본 WeaponData 사용 (권장)
 
@@ -53,7 +149,7 @@ globs:
 #### B. WeaponData 상속 (특수 무기)
 
 - **조건**: 추가 데이터가 필요한 복잡한 무기
-- **예시**: GhostLightData, BladeofTruthWeaponData
+- **예시**: GhostLightData, BladeofTruthWeaponData, StarFragmentData
 - **구조**:
   ```csharp
   public class SpecialWeaponData : WeaponData
@@ -61,10 +157,11 @@ globs:
       [Header("특수 설정")]
       public float specialValue;
       public LayerMask targetLayer;
+      public string additionalProjectileTag; // 추가 이펙트용
   }
   ```
 
-### 3단계: 무기 데이터 생성
+### 4단계: 무기 데이터 생성
 
 - **위치**: `Assets/Undead Survivor/Data/Items/`
 - **네이밍**: `{WeaponName}.asset` 또는 `{WeaponName}Data.asset`
@@ -78,7 +175,7 @@ globs:
   - 능력치 배열: damages[], projectileSpeeds[], durations[], areas[], cooldowns[], counts[]
   - projectileTag: PoolManager 태그
 
-### 4단계: 무기 액션 생성
+### 5단계: 무기 액션 생성
 
 - **위치**: `Assets/Undead Survivor/Data/Item Actions/`
 - **네이밍**: `Action_{WeaponName}.asset`
@@ -88,52 +185,217 @@ globs:
   - OnLevelUp: 레벨업 로직
   - GetDescription: UI 설명 생성
 
-### 5단계: 발사체/이펙트 프리팹 생성
+### 6단계: 이펙트 프리팹 생성
 
 - **위치**: `Assets/Undead Survivor/Prefabs/`
-- **네이밍**: `{WeaponName}.prefab` 또는 `{WeaponName}_effect.prefab`
+- **네이밍**: `{WeaponName}_effect.prefab`
 - **필수 컴포넌트**:
+  - Transform (위치 및 스케일)
   - SpriteRenderer (시각적 표현)
-  - Collider2D (충돌 감지)
-  - Rigidbody2D (물리 이동)
-  - Bullet.cs 또는 커스텀 스크립트
+  - {WeaponName}Effect.cs (로직 처리)
   - Poolable 컴포넌트 (자동 추가)
-- **태그 설정**: PoolManager에서 사용할 태그
+- **선택적 컴포넌트**:
+  - Collider2D: OnTriggerEnter2D 사용 시에만 필요
+  - Rigidbody2D: 물리 이동이 필요한 경우에만
+  - Animator: 애니메이션이 있는 경우
 
-### 6단계: PoolManager 등록
+### 7단계: PoolManager 등록
 
 - **위치**: SampleScene의 PoolManager
 - **설정**:
   ```yaml
-  - tag: "{WeaponName}"
-    prefab: {WeaponName} 프리팹 참조
-    size: 20 (초기 풀 크기)
+  - tag: "{WeaponName}_effect"
+    prefab: {WeaponName}_effect 프리팹 참조
+    size: 0 (초기 풀 크기)
   ```
 
-### 7단계: 레벨업 UI 등록
+### 8단계: 레벨업 UI 등록
 
 - **위치**: `LevelUp.cs`의 items 배열
 - **추가**: 새 무기 아이템을 배열에 추가
 
-## �� 무기 타입별 가이드
+## 🎯 이펙트 분리 패턴
+
+### 단일 이펙트 무기
+
+```csharp
+// Weapon.cs - 이펙트 생성만 담당
+private void Attack()
+{
+    GameObject effect = GameManager.instance.pool.Get(weaponData.projectileTag);
+    if (effect != null)
+    {
+        effect.transform.position = targetPosition;
+        effect.transform.localScale = Vector3.one * attackArea.Value;
+
+        WeaponEffect effectLogic = effect.GetComponent<WeaponEffect>();
+        if (effectLogic != null)
+        {
+            effectLogic.Init(damage.Value, attackArea.Value, duration.Value);
+        }
+
+        effect.SetActive(true);
+    }
+}
+```
+
+### 다중 이펙트 무기 (Star Fragment 패턴)
+
+```csharp
+// StarFragmentWeapon.cs - 여러 이펙트를 각각 생성
+private void Attack()
+{
+    Vector3 targetPosition = GetTargetPosition();
+
+    // 1. 첫 번째 이펙트 (경고 표시)
+    GameObject warningEffect = GameManager.instance.pool.Get(starFragmentData.warningProjectileTag);
+    if (warningEffect != null)
+    {
+        warningEffect.transform.position = targetPosition;
+        warningEffect.transform.localScale = Vector3.one * attackArea.Value;
+
+        StarFragmentWarning warningLogic = warningEffect.GetComponent<StarFragmentWarning>();
+        if (warningLogic != null)
+        {
+            warningLogic.Init(attackArea.Value);
+            warningLogic.StartWaveGrowth(duration.Value);
+        }
+
+        warningEffect.SetActive(true);
+    }
+
+    // 2. 두 번째 이펙트 (메테오) - 타이밍 조절
+    StartCoroutine(LaunchMeteorAfterDelay(targetPosition, duration.Value));
+}
+
+private IEnumerator LaunchMeteorAfterDelay(Vector3 targetPosition, float delay)
+{
+    yield return new WaitForSeconds(delay);
+
+    GameObject meteorEffect = GameManager.instance.pool.Get(starFragmentData.projectileTag);
+    if (meteorEffect != null)
+    {
+        meteorEffect.transform.position = targetPosition;
+        meteorEffect.transform.localScale = Vector3.one * attackArea.Value;
+
+        StarFragmentMeteor meteorLogic = meteorEffect.GetComponent<StarFragmentMeteor>();
+        if (meteorLogic != null)
+        {
+            meteorLogic.Init(damage.Value, attackArea.Value, targetPosition);
+        }
+
+        meteorEffect.SetActive(true);
+    }
+}
+```
+
+## 🔧 피해 적용 방식
+
+### Physics2D.OverlapCircleAll 사용 (권장 - Collider 불필요)
+
+```csharp
+private void DealDamage()
+{
+    // 범위 내 모든 적에게 피해 (Collider 불필요)
+    Collider2D[] targets = Physics2D.OverlapCircleAll(transform.position, area);
+    foreach (Collider2D target in targets)
+    {
+        Enemy enemy = target.GetComponent<Enemy>();
+        if (enemy != null && enemy.gameObject.activeSelf)
+        {
+            enemy.TakeDamage(damage);
+        }
+    }
+}
+```
+
+### OnTriggerEnter2D 사용 (투사체형 - Collider 필요)
+
+```csharp
+void OnTriggerEnter2D(Collider2D other)
+{
+    if (other.CompareTag("Enemy"))
+    {
+        Enemy enemy = other.GetComponent<Enemy>();
+        if (enemy != null)
+        {
+            enemy.TakeDamage(damage);
+        }
+    }
+}
+```
+
+## 🚀 풀 관리 필수사항
+
+### 모든 이펙트는 풀에 반환되어야 함
+
+```csharp
+private void DeactivateEffect()
+{
+    // Poolable 컴포넌트를 사용하여 풀에 반납
+    Poolable poolable = GetComponent<Poolable>();
+    if (poolable != null)
+    {
+        GameManager.instance.pool.ReturnToPool(poolable.poolTag, gameObject);
+    }
+    else
+    {
+        gameObject.SetActive(false);
+    }
+}
+```
+
+### 이펙트 시퀀스 완료 후 자동 반환
+
+```csharp
+private IEnumerator EffectSequence()
+{
+    // 1. 이펙트 애니메이션
+    yield return StartCoroutine(PlayEffectAnimation());
+
+    // 2. 피해 처리
+    DealDamage();
+
+    // 3. 페이드아웃 후 풀 반환
+    StartFadeOut(); // 완료 시 DeactivateEffect() 호출
+}
+```
+
+### 경고 이펙트도 자동 반환
+
+```csharp
+// StarFragmentWarning.cs
+private IEnumerator WaveGrowthEffect()
+{
+    // 애니메이션 로직...
+
+    // 애니메이션 완료 후 풀에 반환
+    DeactivateWarning();
+}
+```
+
+## 🎮 무기 타입별 가이드
 
 ### 근접 무기 (회전형)
 
 - **예시**: Shovel, Blade of Truth
 - **특징**: 플레이어 주위 회전, 고정 배치
 - **로직**: `transform.Rotate()` 사용
+- **피해 방식**: Physics2D.OverlapCircleAll
 
 ### 원거리 무기 (발사형)
 
 - **예시**: Gun, Magic Lamp
 - **특징**: 적을 향해 발사, 자동 조준
 - **로직**: `player.scanner.nearestTarget` 사용
+- **피해 방식**: OnTriggerEnter2D
 
 ### 특수 무기 (고유 메커니즘)
 
-- **예시**: GhostLight, Quake, Lightning
+- **예시**: GhostLight, Quake, Lightning, Star Fragment
 - **특징**: 복잡한 로직, 추가 데이터 필요
 - **로직**: 무기별 커스텀 구현
+- **피해 방식**: Physics2D.OverlapCircleAll 또는 복합
 
 ## ⚡ 성능 최적화 가이드
 
@@ -141,6 +403,7 @@ globs:
 
 - **풀 크기**: 무기 사용 빈도에 따라 조정 (10-50)
 - **메모리 효율성**: 적절한 풀 크기로 가비지 컬렉션 최소화
+- **다중 이펙트**: 각 이펙트별로 별도 풀 설정
 
 ### 파티클 시스템
 
@@ -159,14 +422,16 @@ globs:
 
 - [ ] 무기가 정상적으로 생성되는가?
 - [ ] 레벨업 시 능력치가 올바르게 증가하는가?
-- [ ] 발사체가 정상적으로 작동하는가?
-- [ ] 충돌 감지가 정확한가?
+- [ ] 이펙트가 정상적으로 작동하는가?
+- [ ] 피해 적용이 정확한가?
+- [ ] 모든 이펙트가 풀에 반환되는가?
 
 ### 성능 테스트
 
 - [ ] 프레임 드롭이 없는가?
 - [ ] 메모리 사용량이 적절한가?
 - [ ] 가비지 컬렉션이 과도하지 않은가?
+- [ ] 풀에서 오브젝트가 재사용되는가?
 
 ### 호환성 테스트
 
@@ -174,20 +439,29 @@ globs:
 - [ ] UI에서 정상적으로 표시되는가?
 - [ ] 저장/로드가 정상적인가?
 
-## �� 주의사항
+## ⚠️ 주의사항
 
 ### 필수 확인사항
 
-- **PoolManager 등록**: 프리팹을 반드시 등록
+- **PoolManager 등록**: 모든 이펙트 프리팹을 반드시 등록
 - **태그 일치**: projectileTag와 PoolManager 태그 일치
 - **컴포넌트 누락**: 필수 컴포넌트 확인
-- **메모리 누수**: Poolable 컴포넌트 확인
+- **풀 반환**: 모든 이펙트는 반드시 풀에 반환되어야 함
+- **Collider 필요성**: OnTriggerEnter2D 사용 시에만 Collider 필요
+
+### Collider 필요성 가이드
+
+- **필요한 경우**: OnTriggerEnter2D/OnTriggerStay2D 사용하는 투사체
+- **불필요한 경우**: Physics2D.OverlapCircleAll 사용하는 범위 공격
+- **예시**:
+  - Gun, Magic Lamp (투사체) → Collider 필요
+  - Blade of Truth, Star Fragment (범위) → Collider 불필요
 
 ### 네이밍 규칙
 
-- **클래스**: PascalCase (예: `FireballWeapon`)
-- **파일**: PascalCase (예: `FireballWeapon.cs`)
-- **태그**: PascalCase (예: `Fireball`)
+- **클래스**: PascalCase (예: `FireballWeapon`, `FireballEffect`)
+- **파일**: PascalCase (예: `FireballWeapon.cs`, `FireballEffect.cs`)
+- **태그**: PascalCase (예: `Fireball_effect`, `Fireball_warning`)
 - **변수**: camelCase (예: `fireballSpeed`)
 
 ### 디버깅 팁
@@ -195,5 +469,40 @@ globs:
 - **로그**: `Debug.Log()` 사용하여 단계별 확인
 - **프로파일러**: Unity Profiler로 성능 분석
 - **브레이크포인트**: 중단점 설정으로 로직 확인
+- **풀 상태**: PoolManager에서 오브젝트 반환 상태 확인
 
 ## 📁 파일 구조 예시
+
+```
+Assets/Undead Survivor/
+├── Script/Weapons/
+│   ├── FireballWeapon.cs      (무기 로직)
+│   ├── FireballEffect.cs      (이펙트 로직)
+│   ├── StarFragmentWeapon.cs  (다중 이펙트 무기)
+│   ├── StarFragmentMeteor.cs  (메테오 이펙트)
+│   └── StarFragmentWarning.cs (경고 이펙트)
+├── Data/Items/
+│   ├── FireballData.asset
+│   └── Star Fragment-별조각.asset
+├── Data/Item Actions/
+│   ├── Action_Fireball.asset
+│   └── Action_Star Fragment.asset
+├── Prefabs/
+│   ├── Fireball_effect.prefab
+│   ├── StarFragment_effect.prefab
+│   └── StarFragment_warning.prefab
+└── Sprites/
+    ├── fireballIcon.png
+    └── StarFragment-별조각.png
+```
+
+│ └── FireballWeapon.cs
+│ └── FireballEffect.cs
+├── Data/Items/
+│ └── FireballData.asset
+├── Data/Item Actions/
+│ └── Action_Fireball.asset
+├── Prefabs/
+│ └── Fireball.prefab
+└── Sprites/
+└── fireballIcon.png

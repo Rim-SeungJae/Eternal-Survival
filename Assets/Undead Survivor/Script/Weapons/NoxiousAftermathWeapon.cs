@@ -1,40 +1,72 @@
 using UnityEngine;
 
 /// <summary>
-/// 플레이어가 지나간 자리에 독장판을 생성하는 '유독성 발자국' 무기 로직을 처리합니다.
-/// WeaponBase를 상속받아 공통 로직을 재사용합니다.
+/// 플레이어가 지나간 자리에 연속적인 독성 장판을 생성하는 '유독성 발자국' 무기 로직을 처리합니다.
+/// 거리 기반으로 장판을 생성하여 자연스러운 길을 만듭니다.
 /// </summary>
 public class NoxiousAftermathWeapon : WeaponBase
 {
-    private float timer;
+    [Header("독성 장판 설정")]
+    [Tooltip("장판 생성 간격 (거리 기준)")]
+    public float spawnDistance = 0.8f;
+    
+    [Tooltip("장판 겹침 정도 (0~1, 높을수록 더 촘촘)")]
+    public float overlapFactor = 0.3f;
+    
+    [Tooltip("최소 이동 속도 (이보다 느리면 장판 생성 안함)")]
+    public float minMoveSpeed = 0.1f;
+
+    private Vector3 lastPosition;
+    private float accumulatedDistance;
+    private Vector3 lastMoveDirection;
 
     public override void Awake()
     {
-        base.Awake(); // 부모 클래스의 Awake()를 먼저 호출합니다.
+        base.Awake();
     }
 
     void Start()
     {
+        lastPosition = player.transform.position;
+        lastMoveDirection = Vector3.zero;
     }
 
     void Update()
     {
         if (!GameManager.instance.isLive) return;
 
-        timer += Time.deltaTime;
-        if (timer > cooldown.Value)
+        Vector3 currentPosition = player.transform.position;
+        Vector3 moveVector = currentPosition - lastPosition;
+        float moveDistance = moveVector.magnitude;
+        
+        // 최소 이동 거리 체크
+        if (moveDistance > minMoveSpeed * Time.deltaTime)
         {
-            timer = 0f;
-            // 플레이어가 이동한 위치에 독장판을 생성합니다.
-            SpawnPuddle(player.transform.position);
+            accumulatedDistance += moveDistance;
+            lastMoveDirection = moveVector.normalized;
+            
+            // 일정 거리마다 장판 생성
+            while (accumulatedDistance >= spawnDistance)
+            {
+                // 연속적인 배치를 위해 약간 겹치도록 생성
+                Vector3 spawnPos = Vector3.Lerp(lastPosition, currentPosition, 
+                    1f - (accumulatedDistance / moveDistance));
+                
+                SpawnPuddle(spawnPos, lastMoveDirection, moveDistance);
+                accumulatedDistance -= spawnDistance * (1f - overlapFactor);
+            }
         }
+        
+        lastPosition = currentPosition;
     }
 
     /// <summary>
-    /// 독장판을 생성하고 초기화합니다.
+    /// 독성 장판을 생성하고 초기화합니다.
     /// </summary>
-    /// <param name="spawnPosition">독장판이 생성될 위치</param>
-    private void SpawnPuddle(Vector3 spawnPosition)
+    /// <param name="spawnPosition">장판이 생성될 위치</param>
+    /// <param name="moveDirection">플레이어 이동 방향</param>
+    /// <param name="moveSpeed">플레이어 이동 거리</param>
+    private void SpawnPuddle(Vector3 spawnPosition, Vector3 moveDirection, float moveSpeed)
     {
         WeaponData weaponData = itemData as WeaponData;
 
@@ -46,17 +78,21 @@ public class NoxiousAftermathWeapon : WeaponBase
         }
 
         puddle.transform.position = spawnPosition;
-        // attackArea.Value를 독장판의 크기에 적용합니다.
+        puddle.transform.rotation = Quaternion.identity;
         puddle.transform.localScale = Vector3.one * attackArea.Value;
 
         NoxiousAftermathEffect puddleLogic = puddle.GetComponent<NoxiousAftermathEffect>();
         if (puddleLogic != null)
         {
-            // damage, duration과 함께 count를 피해 간격(cooldown)으로 전달합니다.
             puddleLogic.Init(damage.Value, duration.Value);
         }
-        puddle.SetActive(true); // 오브젝트 활성화
+        
+        puddle.SetActive(true);
 
-        AudioManager.instance.PlaySfx(AudioManager.Sfx.Melee); // 효과음 업데이트 예정
+        // 효과음은 너무 자주 재생되지 않도록 확률적으로 재생
+        if (UnityEngine.Random.value < 0.1f) // 10% 확률
+        {
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Melee);
+        }
     }
 }

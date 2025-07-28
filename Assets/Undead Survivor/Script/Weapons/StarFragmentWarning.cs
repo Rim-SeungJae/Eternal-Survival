@@ -3,83 +3,130 @@ using System.Collections;
 
 /// <summary>
 /// Star Fragment 메테오 충돌 예정 위치를 표시하는 경고 이펙트
-/// 깜빡이는 효과로 플레이어에게 위험을 알립니다.
+/// 원형 웨이브가 성장하면서 플레이어에게 위험을 알립니다.
 /// </summary>
 public class StarFragmentWarning : MonoBehaviour
 {
     [Header("경고 표시 설정")]
-    [Tooltip("경고 표시 깜빡임 간격")]
-    public float blinkInterval = 0.2f;
-    
-    [Tooltip("경고 표시 최소 투명도")]
-    [Range(0f, 1f)]
-    public float minAlpha = 0.3f;
-    
-    [Tooltip("경고 표시 최대 투명도")]
-    [Range(0f, 1f)]
-    public float maxAlpha = 1.0f;
+    [Tooltip("웨이브 성장 곡선 (0에서 1까지)")]
+    public AnimationCurve growthCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
-    private SpriteRenderer spriteRenderer;
-    private Coroutine blinkCoroutine;
+    private SpriteRenderer mainSpriteRenderer; // 상위 컴포넌트 (고정된 원)
+    private SpriteRenderer waveRenderer; // 하위 컴포넌트 (성장하는 웨이브)
+    private GameObject waveObject;
+    private Coroutine waveGrowthCoroutine;
+    
+    private float warningDuration; // 웨이브 성장에 걸리는 시간
 
     void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        mainSpriteRenderer = GetComponent<SpriteRenderer>();
+        
+        // 하위 오브젝트에서 웨이브 렌더러 찾기
+        Transform waveTransform = transform.Find("Wave");
+        waveObject = waveTransform.gameObject;
+        waveRenderer = waveObject.GetComponent<SpriteRenderer>();
     }
 
     public void Init(float radius)
     {
-        // 오브젝트 풀에서 재활용될 때마다 스케일을 초기화합니다.
-        if (spriteRenderer != null)
+        // 메인 스프라이트 크기 설정
+        if (mainSpriteRenderer != null)
         {
-            spriteRenderer.transform.localScale = Vector3.one; // 스케일 초기화
-            // 지름을 기준으로 스케일 계산
-            float circleDiameter = spriteRenderer.sprite.bounds.size.x;
-            if (circleDiameter > 0)
+            mainSpriteRenderer.transform.localScale = Vector3.one;
+            float mainDiameter = mainSpriteRenderer.sprite.bounds.size.x;
+            if (mainDiameter > 0)
             {
-                float circleScale = (radius * 2) / circleDiameter;
-                spriteRenderer.transform.localScale = new Vector3(circleScale, circleScale, 1f);
+                float mainScale = (radius * 2) / mainDiameter;
+                mainSpriteRenderer.transform.localScale = new Vector3(mainScale, mainScale, 1f);
             }
         }
+        
+        // 웨이브 스프라이트 초기 설정 (크기 0)
+        if (waveRenderer != null)
+        {
+            waveRenderer.transform.localScale = Vector3.zero;
+            waveObject.SetActive(true);
+        }
+    }
+
+    public void StartWaveGrowth(float duration)
+    {
+        warningDuration = duration;
+        
+        if (waveGrowthCoroutine != null)
+        {
+            StopCoroutine(waveGrowthCoroutine);
+        }
+        waveGrowthCoroutine = StartCoroutine(WaveGrowthEffect());
     }
 
     void OnEnable()
     {
-        // 활성화될 때마다 깜빡임 효과 시작
-        if (blinkCoroutine != null)
+        // 활성화될 때 웨이브 오브젝트 초기화
+        if (waveObject != null)
         {
-            StopCoroutine(blinkCoroutine);
+            waveObject.SetActive(true);
+            waveObject.transform.localScale = Vector3.zero;
         }
-        blinkCoroutine = StartCoroutine(BlinkEffect());
     }
 
     void OnDisable()
     {
-        // 비활성화될 때 깜빡임 효과 중지
-        if (blinkCoroutine != null)
+        // 비활성화될 때 웨이브 성장 효과 중지
+        if (waveGrowthCoroutine != null)
         {
-            StopCoroutine(blinkCoroutine);
-            blinkCoroutine = null;
+            StopCoroutine(waveGrowthCoroutine);
+            waveGrowthCoroutine = null;
+        }
+        
+        if (waveObject != null)
+        {
+            waveObject.SetActive(false);
         }
     }
 
-    private IEnumerator BlinkEffect()
+    private IEnumerator WaveGrowthEffect()
     {
-        if (spriteRenderer == null) yield break;
+        if (waveRenderer == null) yield break;
         
-        while (gameObject.activeSelf)
+        float elapsedTime = 0f;
+        
+        while (elapsedTime < warningDuration && gameObject.activeSelf)
         {
-            // 투명도를 minAlpha에서 maxAlpha 사이로 변경하여 깜빡임 효과
-            Color color = spriteRenderer.color;
-            color.a = minAlpha;
-            spriteRenderer.color = color;
+            float progress = elapsedTime / warningDuration;
+            float curveValue = growthCurve.Evaluate(progress);
             
-            yield return new WaitForSeconds(blinkInterval);
+            // 웨이브 크기를 0에서 1(상위 오브젝트와 같은 크기)까지 성장
+            waveRenderer.transform.localScale = new Vector3(curveValue, curveValue, 1f);
             
-            color.a = maxAlpha;
-            spriteRenderer.color = color;
+            // 성장하면서 점점 투명해지는 효과
+            Color waveColor = waveRenderer.color;
+            waveColor.a = Mathf.Lerp(0.8f, 0.2f, progress);
+            waveRenderer.color = waveColor;
             
-            yield return new WaitForSeconds(blinkInterval);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // 애니메이션 완료 후 풀에 반환
+        DeactivateWarning();
+    }
+
+    /// <summary>
+    /// 경고 표시를 비활성화하고 풀에 반환합니다.
+    /// </summary>
+    private void DeactivateWarning()
+    {
+        // Poolable 컴포넌트를 사용하여 풀에 반납합니다.
+        Poolable poolable = GetComponent<Poolable>();
+        if (poolable != null)
+        {
+            GameManager.instance.pool.ReturnToPool(poolable.poolTag, gameObject);
+        }
+        else
+        {
+            gameObject.SetActive(false);
         }
     }
 } 
