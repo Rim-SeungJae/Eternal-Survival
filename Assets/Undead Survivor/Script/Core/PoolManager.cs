@@ -7,6 +7,9 @@ using UnityEngine;
 /// </summary>
 public class PoolManager : MonoBehaviour
 {
+    // 성능 최적화 상수
+    private const int DYNAMIC_EXPANSION_SIZE = 5; // 동적 확장 시 한 번에 생성할 오브젝트 수
+    
     [System.Serializable]
     public class Pool
     {
@@ -65,11 +68,26 @@ public class PoolManager : MonoBehaviour
             objToReturn = objectQueue.Dequeue();
             // objToReturn.SetActive(true); // 즉시 활성화하지 않음
         }
-        // 큐가 비어있으면 새로 생성합니다.
+        // 큐가 비어있으면 여러 개를 한 번에 생성하여 GC 압박을 줄입니다.
         else
         {
-            objToReturn = Instantiate(prefabDictionary[tag], transform);
-            objToReturn.AddComponent<Poolable>().poolTag = tag; // 새로 만든 오브젝트에도 태그 부여
+            // 동적 확장: 한 번에 여러 개 생성
+            for (int i = 0; i < DYNAMIC_EXPANSION_SIZE; i++)
+            {
+                GameObject newObj = Instantiate(prefabDictionary[tag], transform);
+                newObj.AddComponent<Poolable>().poolTag = tag;
+                newObj.SetActive(false);
+                
+                // 첫 번째 오브젝트는 반환용, 나머지는 플에 추가
+                if (i == 0)
+                {
+                    objToReturn = newObj;
+                }
+                else
+                {
+                    objectQueue.Enqueue(newObj);
+                }
+            }
         }
         
         // 항상 비활성화된 상태로 반환

@@ -9,6 +9,10 @@ public class LightningWeapon : WeaponBase
 {
     private float timer; // 공격 쿨타임 타이머
     private LightningWeaponData lightningWeaponData; // 캐시된 데이터 참조
+    
+    // GC 압박 줄이기 위한 배열 캐시
+    private RaycastHit2D[] cachedTargetsArray = new RaycastHit2D[50]; // 최대 50개의 타겟 배열
+    private Collider2D[] cachedEnemiesArray = new Collider2D[20]; // 최대 20개의 적 배열
 
     public override void Init(ItemData data)
     {
@@ -40,23 +44,25 @@ public class LightningWeapon : WeaponBase
     {
         if (lightningWeaponData == null) return; // 데이터가 없으면 공격 중단
 
-        // 스캐너를 사용하여 사거리 내의 적들을 탐지합니다.
-        RaycastHit2D[] targetsInScanRange = Physics2D.CircleCastAll(player.transform.position, lightningWeaponData.lightningRange, Vector2.zero, 0f, lightningWeaponData.targetLayer);
+        // 스캐너를 사용하여 사거리 내의 적들을 탐지합니다. (캐시된 배열 사용)
+        int targetCount = Physics2D.CircleCastNonAlloc(player.transform.position, lightningWeaponData.lightningRange, Vector2.zero, cachedTargetsArray, 0f, lightningWeaponData.targetLayer);
 
         // 탐지된 적이 없으면 공격하지 않습니다.
-        if (targetsInScanRange.Length == 0) return;
+        if (targetCount == 0) return;
 
         // count.Value 만큼의 번개 공격을 시전합니다.
         for (int i = 0; i < count.Value; i++)
         {
             // 1. 사거리 내의 적들 중에서 랜덤하게 하나의 적을 타겟으로 선택합니다.
-            int randomIndex = Random.Range(0, targetsInScanRange.Length);
-            Transform targetEnemyTransform = targetsInScanRange[randomIndex].transform;
+            int randomIndex = Random.Range(0, targetCount);
+            Transform targetEnemyTransform = cachedTargetsArray[randomIndex].transform;
             Vector3 attackPosition = targetEnemyTransform.position; // 공격이 시전될 위치
 
-            // 2. 선택된 타겟 위치를 중심으로 attackArea.Value 범위 내의 모든 적에게 피해를 줍니다.
-            Collider2D[] enemiesInArea = Physics2D.OverlapCircleAll(attackPosition, attackArea.Value, lightningWeaponData.targetLayer);
-            foreach (Collider2D enemyCollider in enemiesInArea)
+            // 2. 선택된 타겟 위치를 중심으로 attackArea.Value 범위 내의 모든 적에게 피해를 줍니다. (캐시된 배열 사용)
+            int enemyCount = Physics2D.OverlapCircleNonAlloc(attackPosition, attackArea.Value, cachedEnemiesArray, lightningWeaponData.targetLayer);
+            for (int j = 0; j < enemyCount; j++)
+            {
+                Collider2D enemyCollider = cachedEnemiesArray[j];
             {
                 Enemy enemy = enemyCollider.GetComponent<Enemy>();
                 if (enemy != null)

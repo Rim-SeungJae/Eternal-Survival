@@ -133,7 +133,7 @@ public class MagicLampEffect : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy") && !hasDealtDamage)
+        if (other.CompareTag(GameTags.ENEMY) && !hasDealtDamage)
         {
             Enemy enemy = other.GetComponent<Enemy>();
             if (enemy != null)

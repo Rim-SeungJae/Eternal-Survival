@@ -80,7 +80,7 @@ public class Spawner : MonoBehaviour
         }
 
         // 6. 찾은 안전한 위치에 적을 스폰합니다.
-        GameObject enemy = GameManager.instance.pool.Get("Enemy");
+        GameObject enemy = GameManager.instance.pool.Get(GameTags.ENEMY);
         if (enemy == null) return;
 
         enemy.transform.position = spawnPosition;

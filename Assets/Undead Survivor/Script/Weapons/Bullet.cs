@@ -64,13 +64,13 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Destructible"))
+        if (collision.CompareTag(GameTags.DESTRUCTIBLE))
         {
             collision.GetComponent<DestructibleObject>()?.TakeDamage(1);
         }
 
         // 적과 부딪혔을 때
-        if (collision.CompareTag("Enemy"))
+        if (collision.CompareTag(GameTags.ENEMY))
         {
             // Enemy 스크립트의 TakeDamage 함수를 호출하여 피해를 줍니다.
             collision.GetComponent<Enemy>()?.TakeDamage(damage);
@@ -90,7 +90,7 @@ public class Bullet : MonoBehaviour
     void OnTriggerExit2D(Collider2D collision)
     {
         // 화면 밖으로 나갔고, 무한 관통이 아닐 때
-        if (!collision.CompareTag("Area") || per == -100)
+        if (!collision.CompareTag(GameTags.AREA) || per == -100)
         {
             return;
         }

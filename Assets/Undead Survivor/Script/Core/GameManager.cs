@@ -21,11 +21,16 @@ public class GameManager : MonoBehaviour
     public GameObject enemyCleaner; // 게임 승리 시 적을 정리할 오브젝트
     public DayNightController dayNightController; // 낮/밤 컨트롤러 참조 추가
 
+    // 게임 상수들
+    private const float MAX_GAME_TIME_MINUTES = 20f; // 최대 게임 시간 (분)
+    private const float GAME_OVER_DELAY = 0.5f; // 게임 오버/승리 시 UI 표시 지연 시간
+    private const int TARGET_FRAME_RATE = 60; // 목표 프레임레이트
+    
     [Header("# Game Control")]
     public bool isLive; // 게임 진행 상태 (true: 진행 중, false: 정지)
     public bool isTimeStopped = false; // 시간 정지 상태
     public float gameTime; // 현재 게임 시간
-    public float maxGameTime = 2 * 10f; // 최대 게임 시간 (생존 목표 시간)
+    public float maxGameTime = MAX_GAME_TIME_MINUTES * 60f; // 최대 게임 시간 (생존 목표 시간)
 
     [Header("# Player Info")]
     public int playerId; // 현재 플레이어 ID
@@ -42,10 +47,13 @@ public class GameManager : MonoBehaviour
     public float nightEnd = 60f; // 밤이 끝나는 시간
     public float nightTimer = 0f; // 현재 사이클 타이머
 
+    // Enemy 관리용 HashSet (성능 최적화)
+    private HashSet<Enemy> activeEnemies = new HashSet<Enemy>();
+
     private void Awake()
     {
         instance = this; // 싱글톤 인스턴스 할당
-        Application.targetFrameRate = 60; // 프레임 속도 60으로 고정
+        Application.targetFrameRate = TARGET_FRAME_RATE; // 프레임 속도 고정
 
         // 캐릭터 선택 씬에서 선택한 캐릭터 ID를 가져옵니다.
         playerId = GlobalData.selectedCharacterDataSO.characterId;
@@ -93,7 +101,7 @@ public class GameManager : MonoBehaviour
     IEnumerator GameOverRoutine()
     {
         isLive = false;
-        yield return new WaitForSeconds(0.5f); // 잠시 대기 후 UI 표시
+        yield return new WaitForSeconds(GAME_OVER_DELAY); // 잠시 대기 후 UI 표시
 
         uiResult.gameObject.SetActive(true);
         uiResult.Lose(); // 패배 UI 활성화
@@ -119,7 +127,7 @@ public class GameManager : MonoBehaviour
     {
         isLive = false;
         enemyCleaner.SetActive(true); // 화면의 모든 적 제거
-        yield return new WaitForSeconds(0.5f); // 잠시 대기 후 UI 표시
+        yield return new WaitForSeconds(GAME_OVER_DELAY); // 잠시 대기 후 UI 표시
 
         uiResult.gameObject.SetActive(true);
         uiResult.Win(); // 승리 UI 활성화
@@ -225,11 +233,11 @@ public class GameManager : MonoBehaviour
     {
         isTimeStopped = true;
         player.particle.Play(); // 시간 정지 효과 파티클 재생
-        // 모든 활성화된 Enemy를 찾아 시간 정지 효과를 적용합니다.
-        Enemy[] enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
-        foreach (Enemy enemy in enemies)
+        
+        // 등록된 활성 Enemy들에게 시간 정지 효과를 적용합니다.
+        foreach (Enemy enemy in activeEnemies)
         {
-            if (enemy.gameObject.activeSelf)
+            if (enemy != null && enemy.gameObject.activeSelf)
             {
                 enemy.SetTimeStopEffect(true);
             }
@@ -240,13 +248,31 @@ public class GameManager : MonoBehaviour
         isTimeStopped = false;
         player.particle.Stop(); // 시간 정지 효과 파티클 정지
 
-        // 모든 활성화된 Enemy를 다시 찾아 시간 정지 효과를 해제합니다.
-        foreach (Enemy enemy in enemies)
+        // 등록된 활성 Enemy들의 시간 정지 효과를 해제합니다.
+        foreach (Enemy enemy in activeEnemies)
         {
             if (enemy != null && enemy.gameObject.activeSelf)
             {
                 enemy.SetTimeStopEffect(false);
             }
         }
+    }
+
+    /// <summary>
+    /// Enemy를 활성 Enemy 목록에 등록합니다.
+    /// </summary>
+    /// <param name="enemy">등록할 Enemy</param>
+    public void RegisterEnemy(Enemy enemy)
+    {
+        activeEnemies.Add(enemy);
+    }
+
+    /// <summary>
+    /// Enemy를 활성 Enemy 목록에서 제거합니다.
+    /// </summary>
+    /// <param name="enemy">제거할 Enemy</param>
+    public void UnregisterEnemy(Enemy enemy)
+    {
+        activeEnemies.Remove(enemy);
     }
 }

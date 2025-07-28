@@ -133,7 +133,7 @@ public class NoxiousAftermathEffect : MonoBehaviour
     // 이펙트 범위에 들어온 적에게 피해를 줍니다。
     void OnTriggerStay2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag(GameTags.ENEMY))
         {
             Enemy enemy = other.GetComponent<Enemy>();
             if (enemy != null)

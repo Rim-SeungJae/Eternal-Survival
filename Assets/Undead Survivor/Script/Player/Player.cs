@@ -12,6 +12,10 @@ public class Player : MonoBehaviour
 {
     public const int MAX_WEAPONS = 6; // 최대 무기 수
     public const int MAX_GEARS = 6;   // 최대 장비 수
+    
+    // 상수들
+    private const float REVIVE_INVINCIBLE_TIME = 2f; // 부활 후 무적 시간
+    private const float REVIVE_HEALTH_RATIO = 0.5f; // 부활 시 체력 회복 비율
 
     [Tooltip("획득한 아이템 목록")]
     public List<Item> items;
@@ -147,7 +151,7 @@ public class Player : MonoBehaviour
         if (GameManager.instance.isTimeStopped || isInvincible) return;
 
         // 충돌한 오브젝트가 "Enemy" 태그를 가지고 있는지 확인합니다.
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag(GameTags.ENEMY))
         {
             // Enemy 컴포넌트를 가져와서 해당 적의 contactDamage를 사용합니다.
             Enemy enemy = collision.gameObject.GetComponent<Enemy>();
@@ -155,7 +159,8 @@ public class Player : MonoBehaviour
             {
                 // 적과 충돌하고 있는 동안 지속적으로 체력이 감소합니다.
                 // Time.deltaTime을 곱하여 프레임 속도에 관계없이 일정한 피해를 받도록 합니다.
-                GameManager.instance.health -= enemy.contactDamage * (100 / (100 + defense.Value)) * Time.deltaTime;
+                float actualDamage = CalculateDamageAfterDefense(enemy.contactDamage);
+                GameManager.instance.health -= actualDamage * Time.deltaTime;
             }
         }
 
@@ -208,15 +213,25 @@ public class Player : MonoBehaviour
         AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp); // 임시 효과음
 
         // 3. 체력을 절반 회복
-        GameManager.instance.health = GameManager.instance.maxHealth / 2;
+        GameManager.instance.health = GameManager.instance.maxHealth * REVIVE_HEALTH_RATIO;
 
-        // 4. 일정 시간(예: 2초) 동안 무적 유지
-        yield return new WaitForSeconds(2f);
+        // 4. 일정 시간 동안 무적 유지
+        yield return new WaitForSeconds(REVIVE_INVINCIBLE_TIME);
 
         // 5. 무적 상태 종료
         isInvincible = false;
         // TODO: 무적 시각 효과 종료
-        GameManager.instance.pool.ReturnToPool("Revive", reviveEffect); // 풀에 반환
+        GameManager.instance.pool.ReturnToPool("Revive", reviveEffect); // 풀에 반홨
+    }
+    
+    /// <summary>
+    /// 방어력을 적용한 최종 데미지를 계산합니다.
+    /// </summary>
+    /// <param name="baseDamage">기본 데미지</param>
+    /// <returns>방어력이 적용된 최종 데미지</returns>
+    private float CalculateDamageAfterDefense(float baseDamage)
+    {
+        return baseDamage * (100f / (100f + defense.Value));
     }
 }
 

@@ -161,7 +161,7 @@ public class QuakeEffect : MonoBehaviour
     // 이펙트 범위에 들어온 적에게 피해를 줍니다。
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag(GameTags.ENEMY))
         {
             Enemy enemy = other.GetComponent<Enemy>();
             if (enemy != null && !hitEnemies.Contains(enemy)) // 이미 맞춘 적이 아니라면

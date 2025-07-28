@@ -74,7 +74,7 @@ public class Campfire : MonoBehaviour
     private void OnTriggerStay2D(Collider2D other)
     {
         // 게임 진행 중이 아니거나, 플레이어가 아니거나, 회복 횟수를 다 썼으면 무시
-        if (!GameManager.instance.isLive || !other.CompareTag("Player") || currentHealCount <= 0)
+        if (!GameManager.instance.isLive || !other.CompareTag(GameTags.PLAYER) || currentHealCount <= 0)
         {
             return;
         }
@@ -103,7 +103,7 @@ public class Campfire : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         // 플레이어가 범위를 벗어나면 타이머 초기화 및 진행바 비활성화
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag(GameTags.PLAYER))
         {
             currentTimer = 0;
             if (progressHUD != null)

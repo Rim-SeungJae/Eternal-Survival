@@ -30,7 +30,7 @@ public class EnemyController : MonoBehaviour
     void OnTriggerExit2D(Collider2D collision)
     {
         // 'Area' 태그가 없는 다른 콜라이더와의 충돌은 무시합니다.
-        if (!collision.CompareTag("Area"))
+        if (!collision.CompareTag(GameTags.AREA))
         {
             return;
         }
@@ -63,7 +63,7 @@ public class EnemyController : MonoBehaviour
                     transform.Translate(Vector3.up * dirY * groundTranslateDistance);
                 }
                 break;
-            case "Enemy": // 적 재배치
+            case GameTags.ENEMY: // 적 재배치
                 // 콜라이더가 활성화된 적(살아있는 적)만 재배치합니다.
                 if (coll.enabled)
                 {

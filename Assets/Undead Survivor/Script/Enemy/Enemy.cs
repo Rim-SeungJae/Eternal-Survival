@@ -48,6 +48,11 @@ public class Enemy : MonoBehaviour
 
     // 상태 효과(디버프) 관련 변수들
     private float lastNoxiousAftermathDamageTime = -1f; // 마지막으로 '유독성 후유증' 피해를 입은 시간
+    
+    // 성능 최적화를 위한 변수들
+    private float visibilityCheckTimer = 0f;
+    private const float VISIBILITY_CHECK_INTERVAL = 0.1f;
+    private bool isCurrentlyVisible = true;
 
     void Awake()
     {
@@ -100,24 +105,40 @@ public class Enemy : MonoBehaviour
         // 시간 정지 상태일 때는 아래 로직을 실행하지 않습니다.
         if (GameManager.instance.isTimeStopped) return;
 
-        // 밤에는 플레이어의 빛 범위 안에 있을 때만 보이도록 처리
-        if (GameManager.instance.IsNight())
+        // 성능 최적화: 거리 계산을 일정 간격마다 수행
+        visibilityCheckTimer += Time.deltaTime;
+        
+        if (visibilityCheckTimer >= VISIBILITY_CHECK_INTERVAL)
         {
-            Vector3 playerPos = GameManager.instance.player.transform.position;
-            float dist = Vector3.Distance(playerPos, transform.position);
-            // 빛의 반경 내에 있는지 확인
-            // GameManager.instance.dayNightController를 사용하도록 변경합니다.
-            bool isVisible = dist < GameManager.instance.dayNightController.CurrentLightRadius / 2.0f;
-            spriter.enabled = isVisible;
-            if (shadow != null)
-                shadow.gameObject.SetActive(isVisible);
-        }
-        else // 낮에는 항상 보이도록 처리
-        {
-            if (!spriter.enabled)
-                spriter.enabled = true;
-            if (shadow != null && !shadow.gameObject.activeSelf)
-                shadow.gameObject.SetActive(true);
+            visibilityCheckTimer = 0f;
+            
+            // 밤에는 플레이어의 빛 범위 안에 있을 때만 보이도록 처리
+            if (GameManager.instance.IsNight())
+            {
+                Vector3 playerPos = GameManager.instance.player.transform.position;
+                // sqrMagnitude 사용으로 제곱근 연산 제거
+                float sqrDist = (playerPos - transform.position).sqrMagnitude;
+                float lightRadiusHalf = GameManager.instance.dayNightController.CurrentLightRadius / 2.0f;
+                bool isVisible = sqrDist < lightRadiusHalf * lightRadiusHalf;
+                
+                if (isCurrentlyVisible != isVisible)
+                {
+                    isCurrentlyVisible = isVisible;
+                    spriter.enabled = isVisible;
+                    if (shadow != null)
+                        shadow.gameObject.SetActive(isVisible);
+                }
+            }
+            else // 낮에는 항상 보이도록 처리
+            {
+                if (!isCurrentlyVisible)
+                {
+                    isCurrentlyVisible = true;
+                    spriter.enabled = true;
+                    if (shadow != null)
+                        shadow.gameObject.SetActive(true);
+                }
+            }
         }
     }
 
@@ -139,6 +160,13 @@ public class Enemy : MonoBehaviour
         spriter.sortingOrder = 0; // 기본 렌더링 순서
         anim.SetBool("Dead", false);
         health = maxHealth;
+        
+        // 가시성 상태 초기화
+        visibilityCheckTimer = 0f;
+        isCurrentlyVisible = true;
+        
+        // GameManager에 자신을 등록합니다.
+        GameManager.instance.RegisterEnemy(this);
     }
 
     /// <summary>
@@ -234,6 +262,9 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public void Dead()
     {
+        // GameManager에서 자신을 등록 해제합니다.
+        GameManager.instance.UnregisterEnemy(this);
+        
         // Poolable 컴포넌트에서 자신의 태그를 가져와 PoolManager에 반환합니다.
         Poolable poolable = GetComponent<Poolable>();
         if (poolable != null)
