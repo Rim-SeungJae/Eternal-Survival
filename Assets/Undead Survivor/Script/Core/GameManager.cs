@@ -20,12 +20,13 @@ public class GameManager : MonoBehaviour
     public Result uiResult; // 결과 UI 참조
     public GameObject enemyCleaner; // 게임 승리 시 적을 정리할 오브젝트
     public DayNightController dayNightController; // 낮/밤 컨트롤러 참조 추가
+    public WeaponEvolutionManager weaponEvolutionManager; // 무기 진화 매니저 참조
 
     // 게임 상수들
     private const float MAX_GAME_TIME_MINUTES = 20f; // 최대 게임 시간 (분)
     private const float GAME_OVER_DELAY = 0.5f; // 게임 오버/승리 시 UI 표시 지연 시간
     private const int TARGET_FRAME_RATE = 60; // 목표 프레임레이트
-    
+
     [Header("# Game Control")]
     public bool isLive; // 게임 진행 상태 (true: 진행 중, false: 정지)
     public bool isTimeStopped = false; // 시간 정지 상태
@@ -78,13 +79,52 @@ public class GameManager : MonoBehaviour
         health = maxHealth;
 
         player.gameObject.SetActive(true);
-        // 캐릭터 ID에 따라 초기 무기 선택
-        uiLevelUp.Select(playerId % 2);
+        
+        // 무기 진화 매니저 초기화
+        if (weaponEvolutionManager == null)
+        {
+            weaponEvolutionManager = WeaponEvolutionManager.Instance;
+        }
+        
+        // 캐릭터의 기본 무기 자동 장착
+        EquipCharacterDefaultWeapon();
         Resume(); // 게임 재개
 
         // BGM 및 효과음 재생
         AudioManager.instance.PlayBgm(true);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
+    }
+
+    /// <summary>
+    /// 선택된 캐릭터의 기본 무기를 자동으로 장착합니다.
+    /// </summary>
+    private void EquipCharacterDefaultWeapon()
+    {
+        CharacterDataSO characterData = GlobalData.selectedCharacterDataSO;
+        if (characterData != null && characterData.defaultWeapon != null)
+        {
+            // uiLevelUp의 아이템들 중에서 기본 무기와 일치하는 아이템을 찾아서 선택
+            Item[] levelUpItems = uiLevelUp.GetComponentsInChildren<Item>(true);
+            for (int i = 0; i < levelUpItems.Length; i++)
+            {
+                if (levelUpItems[i].data == characterData.defaultWeapon)
+                {
+                    // 해당 아이템을 선택하여 장착
+                    uiLevelUp.Select(i);
+                    Debug.Log($"캐릭터 {characterData.characterName}의 기본 무기 {characterData.defaultWeapon.itemName} 장착 완료");
+                    return;
+                }
+            }
+            
+            // uiLevelUp에서 기본 무기를 찾지 못한 경우 경고
+            Debug.LogWarning($"uiLevelUp에서 기본 무기 {characterData.defaultWeapon.itemName}을 찾을 수 없습니다.");
+        }
+        else
+        {
+            // 기본 무기가 설정되지 않은 경우 기존 방식 사용 (백업)
+            Debug.LogWarning($"캐릭터 ID {playerId}에 기본 무기가 설정되지 않음. 기존 방식 사용.");
+            uiLevelUp.Select(playerId % 2);
+        }
     }
 
     /// <summary>

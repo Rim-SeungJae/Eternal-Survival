@@ -60,7 +60,7 @@ public class PoolManager : MonoBehaviour
         }
 
         Queue<GameObject> objectQueue = poolDictionary[tag];
-        GameObject objToReturn;
+        GameObject objToReturn = null;
 
         // 큐에 사용 가능한 오브젝트가 있으면 꺼내서 사용합니다.
         if (objectQueue.Count > 0)

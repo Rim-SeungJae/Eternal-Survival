@@ -72,19 +72,34 @@ public class Bullet : MonoBehaviour
         // 적과 부딪혔을 때
         if (collision.CompareTag(GameTags.ENEMY))
         {
-            // Enemy 스크립트의 TakeDamage 함수를 호출하여 피해를 줍니다.
-            collision.GetComponent<Enemy>()?.TakeDamage(damage);
-
-            // 무한 관통이 아닐 때만 관통 횟수를 차감합니다.
-            if (per != -100)
+            Enemy enemy = collision.GetComponent<Enemy>();
+            if (enemy != null)
             {
-                per--;
-                if (per < 0)
+                // 가상 메서드 호출로 상속받은 클래스에서 추가 효과 적용 가능
+                OnEnemyHit(enemy);
+
+                // 무한 관통이 아닐 때만 관통 횟수를 차감합니다.
+                if (per != -100)
                 {
-                    Deactivate();
+                    per--;
+                    if (per < 0)
+                    {
+                        Deactivate();
+                    }
                 }
             }
         }
+    }
+    
+    /// <summary>
+    /// 적과 충돌했을 때 호출되는 가상 메서드입니다.
+    /// 상속받은 클래스에서 오버라이드하여 추가 효과를 적용할 수 있습니다.
+    /// </summary>
+    /// <param name="enemy">충돌한 적</param>
+    protected virtual void OnEnemyHit(Enemy enemy)
+    {
+        // 기본 데미지 적용
+        enemy.TakeDamage(damage);
     }
 
     void OnTriggerExit2D(Collider2D collision)

@@ -24,4 +24,8 @@ public class CharacterDataSO : ScriptableObject
     [Header("Visuals")]
     [Tooltip("캐릭터 애니메이터 컨트롤러")]
     public RuntimeAnimatorController animatorController;
+
+    [Header("Default Weapon")]
+    [Tooltip("캐릭터의 기본 무기 데이터")]
+    public ItemData defaultWeapon;
 }

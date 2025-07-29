@@ -21,11 +21,11 @@ MonoBehaviour:
   itemIcon: {fileID: -8997992876827162520, guid: c5efbd6b60b1d854f80fdc32140bfb90, type: 3}
   maxLevel: 4
   damages:
+  - 20
+  - 25
   - 30
+  - 35
   - 40
-  - 50
-  - 60
-  - 70
   projectileSpeeds:
   - 1
   durations:
@@ -41,11 +41,11 @@ MonoBehaviour:
   - 3.5
   - 4
   cooldowns:
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
+  - 10
+  - 9
+  - 8
+  - 7
+  - 6
   counts: 0100000001000000020000000200000003000000
   projectileTag: StarFragmentMeteor
   warningProjectileTag: StarFragmentWarning

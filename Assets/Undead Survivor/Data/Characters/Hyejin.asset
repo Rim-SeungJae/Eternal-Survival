@@ -25,3 +25,4 @@ MonoBehaviour:
   weaponRateMultiplier: 1
   baseHealth: 100
   animatorController: {fileID: 22100000, guid: 8bee532eb54ea7743b250a7927dea153, type: 2}
+  defaultWeapon: {fileID: 11400000, guid: 28615263517918f42a05205d373a0d6d, type: 2}

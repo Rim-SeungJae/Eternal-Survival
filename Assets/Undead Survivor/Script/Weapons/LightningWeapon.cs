@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -10,9 +11,10 @@ public class LightningWeapon : WeaponBase
     private float timer; // 공격 쿨타임 타이머
     private LightningWeaponData lightningWeaponData; // 캐시된 데이터 참조
     
-    // GC 압박 줄이기 위한 배열 캐시
-    private RaycastHit2D[] cachedTargetsArray = new RaycastHit2D[50]; // 최대 50개의 타겟 배열
-    private Collider2D[] cachedEnemiesArray = new Collider2D[20]; // 최대 20개의 적 배열
+    // GC 압박 줄이기 위한 List 캐시 (최신 API 호환)
+    private readonly List<RaycastHit2D> cachedTargetsList = new List<RaycastHit2D>();
+    private readonly List<Collider2D> cachedEnemiesList = new List<Collider2D>();
+    private ContactFilter2D enemyContactFilter;
 
     public override void Init(ItemData data)
     {
@@ -23,6 +25,11 @@ public class LightningWeapon : WeaponBase
         {
             Debug.LogError("LightningWeapon에 할당된 ItemData가 LightningWeaponData 타입이 아닙니다!");
         }
+        
+        // ContactFilter 설정
+        enemyContactFilter = new ContactFilter2D();
+        enemyContactFilter.SetLayerMask(lightningWeaponData.targetLayer);
+        enemyContactFilter.useTriggers = true;
     }
 
     void Update()
@@ -44,8 +51,9 @@ public class LightningWeapon : WeaponBase
     {
         if (lightningWeaponData == null) return; // 데이터가 없으면 공격 중단
 
-        // 스캐너를 사용하여 사거리 내의 적들을 탐지합니다. (캐시된 배열 사용)
-        int targetCount = Physics2D.CircleCastNonAlloc(player.transform.position, lightningWeaponData.lightningRange, Vector2.zero, cachedTargetsArray, 0f, lightningWeaponData.targetLayer);
+        // 스캐너를 사용하여 사거리 내의 적들을 탐지합니다. (캐시된 List 사용)
+        cachedTargetsList.Clear();
+        int targetCount = Physics2D.CircleCast(player.transform.position, lightningWeaponData.lightningRange, Vector2.zero, enemyContactFilter, cachedTargetsList, 0f);
 
         // 탐지된 적이 없으면 공격하지 않습니다.
         if (targetCount == 0) return;
@@ -55,15 +63,15 @@ public class LightningWeapon : WeaponBase
         {
             // 1. 사거리 내의 적들 중에서 랜덤하게 하나의 적을 타겟으로 선택합니다.
             int randomIndex = Random.Range(0, targetCount);
-            Transform targetEnemyTransform = cachedTargetsArray[randomIndex].transform;
+            Transform targetEnemyTransform = cachedTargetsList[randomIndex].transform;
             Vector3 attackPosition = targetEnemyTransform.position; // 공격이 시전될 위치
 
-            // 2. 선택된 타겟 위치를 중심으로 attackArea.Value 범위 내의 모든 적에게 피해를 줍니다. (캐시된 배열 사용)
-            int enemyCount = Physics2D.OverlapCircleNonAlloc(attackPosition, attackArea.Value, cachedEnemiesArray, lightningWeaponData.targetLayer);
+            // 2. 선택된 타겟 위치를 중심으로 attackArea.Value 범위 내의 모든 적에게 피해를 줍니다. (캐시된 List 사용)
+            cachedEnemiesList.Clear();
+            int enemyCount = Physics2D.OverlapCircle(attackPosition, attackArea.Value, enemyContactFilter, cachedEnemiesList);
             for (int j = 0; j < enemyCount; j++)
             {
-                Collider2D enemyCollider = cachedEnemiesArray[j];
-            {
+                Collider2D enemyCollider = cachedEnemiesList[j];
                 Enemy enemy = enemyCollider.GetComponent<Enemy>();
                 if (enemy != null)
                 {

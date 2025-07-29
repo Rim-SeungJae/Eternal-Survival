@@ -27,7 +27,6 @@ public class StarFragmentMeteor : MonoBehaviour
     private Vector3 targetPosition;
     private bool hasDealtDamage = false;
     private bool damageEnabled = false;
-    private bool isFading = false;
     private SpriteRenderer spriteRenderer;
 
     void Awake()
@@ -45,7 +44,6 @@ public class StarFragmentMeteor : MonoBehaviour
         targetPosition = targetPos;
         hasDealtDamage = false;
         damageEnabled = false;
-        isFading = false;
 
         // 스프라이트 렌더러 초기화
         if (spriteRenderer != null)
@@ -141,7 +139,6 @@ public class StarFragmentMeteor : MonoBehaviour
     /// </summary>
     private void StartFadeOut()
     {
-        isFading = true;
         if (spriteRenderer != null)
         {
             // DOTween을 사용하여 알파 값을 0으로 페이드 아웃

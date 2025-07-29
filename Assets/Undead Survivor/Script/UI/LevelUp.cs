@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 레벨업 시 아이템 선택 UI를 관리하는 클래스입니다.
@@ -24,6 +25,7 @@ public class LevelUp : MonoBehaviour
     {
         // 선택할 아이템들을 랜덤하게 준비합니다.
         Next();
+        
         // UI를 화면에 보이게 하고 게임을 정지시킵니다.
         rect.localScale = Vector3.one;
         GameManager.instance.Stop();
@@ -76,6 +78,8 @@ public class LevelUp : MonoBehaviour
                 switch (item.data.itemType)
                 {
                     case ItemData.ItemType.Weapon:
+                        // 진화 무기는 별도 처리하므로 제외
+                        if (IsEvolutionWeapon(item)) continue;
                         if (item.level == 0 && GameManager.instance.player.WeaponCount >= Player.MAX_WEAPONS) continue;
                         candidates.Add(item);
                         break;
@@ -90,13 +94,74 @@ public class LevelUp : MonoBehaviour
             }
         }
 
-        // 2. 후보 목록에서 3개를 랜덤하게 선택하여 활성화합니다.
-        int count = Mathf.Min(candidates.Count, 3); // 후보가 3개 미만일 수 있음
-        for (int i = 0; i < count; i++)
+        // 2. 진화 가능한 무기들을 후보에 추가
+        List<EvolutionCandidate> evolvableWeapons = GetEvolvableWeapons();
+        foreach (EvolutionCandidate evolution in evolvableWeapons)
+        {
+            // 진화 무기를 표시할 아이템 찾기 (진화 무기용 아이템은 별도로 추가되어야 함)
+            Item evolutionItem = FindEvolutionItem(evolution.evolutionData.evolvedWeapon);
+            if (evolutionItem != null)
+            {
+                candidates.Add(evolutionItem);
+            }
+        }
+
+        // 4. 후보 중에서 랜덤하게 3개를 선택합니다.
+        List<Item> selectedItems = new List<Item>();
+        while (candidates.Count > 0 && selectedItems.Count < 3)
         {
             int randomIndex = Random.Range(0, candidates.Count);
-            candidates[randomIndex].gameObject.SetActive(true);
-            candidates.RemoveAt(randomIndex); // 중복 선택 방지
+            selectedItems.Add(candidates[randomIndex]);
+            candidates.RemoveAt(randomIndex);
+        }
+
+        // 5. 선택된 아이템들을 활성화합니다.
+        foreach (Item item in selectedItems)
+        {
+            item.gameObject.SetActive(true);
         }
     }
+    
+    /// <summary>
+    /// 진화 가능한 무기들을 가져옵니다.
+    /// </summary>
+    private List<EvolutionCandidate> GetEvolvableWeapons()
+    {
+        List<EvolutionCandidate> candidates = new List<EvolutionCandidate>();
+        
+        if (WeaponEvolutionManager.Instance != null)
+        {
+            candidates = WeaponEvolutionManager.Instance.GetEvolvableWeapons(GameManager.instance.player);
+        }
+        
+        return candidates;
+    }
+    
+    /// <summary>
+    /// 진화 무기인지 확인합니다.
+    /// </summary>
+    private bool IsEvolutionWeapon(Item item)
+    {
+        if (item.data is WeaponData weaponData)
+        {
+            return WeaponEvolutionManager.Instance.IsEvolvableWeapon(weaponData);
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 진화 무기에 해당하는 아이템을 찾습니다.
+    /// </summary>
+    private Item FindEvolutionItem(WeaponData evolvedWeapon)
+    {
+        foreach (Item item in items)
+        {
+            if (item.data == evolvedWeapon)
+            {
+                return item;
+        }
+    }
+        return null;
+    }
+    
 }
