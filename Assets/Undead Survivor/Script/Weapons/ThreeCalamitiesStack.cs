@@ -83,8 +83,7 @@ public class ThreeCalamitiesStack : MonoBehaviour
         
         currentStacks++;
         stackTimer = duration;
-        
-        Debug.Log($"Three Calamities 스택 추가: {currentStacks}/3");
+
         
         // 스택 시각 효과 업데이트
         UpdateStackVisual();
@@ -146,7 +145,6 @@ public class ThreeCalamitiesStack : MonoBehaviour
     {
         if (currentStackEffect != null)
         {
-            Debug.Log("RemoveCurrentStackEffect");
             Poolable poolable = currentStackEffect.GetComponent<Poolable>();
             if (poolable != null)
             {
@@ -171,8 +169,6 @@ public class ThreeCalamitiesStack : MonoBehaviour
         
         // 시각 효과 제거
         RemoveCurrentStackEffect();
-        
-        Debug.Log("Three Calamities 스택 초기화");
     }
 
     private IEnumerator WaitAndResetStacks(float delay)

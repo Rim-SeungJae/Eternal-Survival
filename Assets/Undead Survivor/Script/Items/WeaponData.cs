@@ -4,7 +4,7 @@ using UnityEngine;
 /// 무기 아이템의 데이터를 정의하는 ScriptableObject 클래스입니다.
 /// ItemData를 상속받아 무기 전용 데이터를 추가로 가집니다.
 /// </summary>
-[CreateAssetMenu(fileName = "WeaponData", menuName = "Scriptable Objects/Weapon Data")]
+[CreateAssetMenu(fileName = "WeaponData", menuName = "Scriptable Objects/Weapon Data/Ordinary Weapon")]
 public class WeaponData : ItemData
 {
     [Header("# Weapon Stats")]

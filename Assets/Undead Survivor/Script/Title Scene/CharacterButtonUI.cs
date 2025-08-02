@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// 캐릭터 선택 화면의 각 캐릭터 버튼 UI를 관리하는 클래스입니다.
@@ -11,8 +12,10 @@ public class CharacterButtonUI : MonoBehaviour
     public Image portraitImage;
     [Tooltip("선택되었을 때 표시될 하이라이트 효과")]
     public Outline highlight;
+    [Tooltip("캐릭터 이름을 표시할 텍스트")]
+    public TextMeshProUGUI nameText;
 
-    private CharacterDataSO data; // CharacterDataSO로 타입 변경
+    private CharacterDataSO data;
     private CharacterSelectManager manager;
 
     /// <summary>
@@ -20,11 +23,12 @@ public class CharacterButtonUI : MonoBehaviour
     /// </summary>
     /// <param name="data">이 버튼에 해당하는 CharacterDataSO</param>
     /// <param name="manager">캐릭터 선택 매니저</param>
-    public void Setup(CharacterDataSO data, CharacterSelectManager manager) // CharacterDataSO로 타입 변경
+    public void Setup(CharacterDataSO data, CharacterSelectManager manager)
     {
         this.data = data;
         this.manager = manager;
         portraitImage.sprite = data.portrait;
+        nameText.text = data.characterName;
         // 초기에는 선택되지 않은 상태로 설정합니다.
         SetSelected(false);
     }

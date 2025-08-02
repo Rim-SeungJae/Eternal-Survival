@@ -1235,6 +1235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterSelectManager
   characterList:
   - {fileID: 11400000, guid: 3185fbf50beca2c4a8bdff0d0d4cd4d6, type: 2}
+  - {fileID: 11400000, guid: 88fbfba26d585fc48ac108ce0eb5e00f, type: 2}
   gridParent: {fileID: 983863613}
   characterButtonPrefab: {fileID: 1542915206865504496, guid: 6437e12ab46e38b4aad10b52f742df18, type: 3}
   descriptionText: {fileID: 1526331934}
@@ -1621,7 +1622,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 326.5, y: -104.5}
+  m_AnchoredPosition: {x: 75, y: -104.5}
   m_SizeDelta: {x: 150, y: 209}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &995003921

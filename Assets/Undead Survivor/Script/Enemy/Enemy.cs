@@ -102,9 +102,6 @@ public class Enemy : MonoBehaviour
         // 시간 정지 상태일 때 애니메이션 속도를 0으로, 아닐 때 1로 설정합니다.
         if (anim != null) anim.speed = GameManager.instance.isTimeStopped && health>0 ? 0 : 1;
 
-        // 시간 정지 상태일 때는 아래 로직을 실행하지 않습니다.
-        if (GameManager.instance.isTimeStopped) return;
-
         // 성능 최적화: 거리 계산을 일정 간격마다 수행
         visibilityCheckTimer += Time.deltaTime;
         
