@@ -18,15 +18,15 @@ MonoBehaviour:
   itemName: "\uC720\uD0A4\uC758 \uBB34\uAE30"
   itemDesc: "\uC0AC\uAC70\uB9AC \uB0B4\uC758 \uAC00\uC7A5 \uAC00\uAE4C\uC6B4 \uC801\uC758\n\uBA38\uB9AC\uB97C
     \uB0B4\uB824\uCCD0 \uD53C\uD574\uB97C \uC900\uB2E4."
-  itemIcon: {fileID: 2639213372986966108, guid: 3c5e33bdd0cefa54baba40845a1d0b2f, type: 3}
+  itemIcon: {fileID: -4068348495617285703, guid: 67a30d8828f86634984bcc3b77bd89b2, type: 3}
   maxLevel: 5
   damages:
+  - 4
+  - 6
+  - 8
+  - 11
+  - 15
   - 20
-  - 25
-  - 30
-  - 35
-  - 40
-  - 45
   projectileSpeeds:
   - 0
   durations:

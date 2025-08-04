@@ -76,3 +76,4 @@ crashlytics-build.properties
 
 # Claude Code documentation (auto-generated)
 CLAUDE.md
+.cursor/

@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f88ec3a107a0974e9961effc91da6cb, type: 3}
+  m_Name: "Yuki Weapon Evo-\uC720\uD0A4\uC758 \uC9C4\uD654 \uBB34\uAE30"
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponData
+  itemType: 0
+  itemAction: {fileID: 11400000, guid: 086e01174da9f5b41aa951b52e310661, type: 2}
+  itemId: 1002
+  itemName: "\uD654\uBB34\uC2ED\uC77C\uD64D(\u82B1\u7121\u5341\u65E5\u7D05)"
+  itemDesc: "\uC0AC\uAC70\uB9AC \uB0B4 \uAC00\uC7A5 \uAC00\uAE4C\uC6B4 \uC801 \uBC29\uD5A5\uC73C\uB85C\n\uBC18\uC6D0
+    \uD615\uD0DC\uC758 \uAC15\uB825\uD55C \uACF5\uACA9\uC744 \uC2DC\uC804\uD569\uB2C8\uB2E4.\n\uB450
+    \uCC28\uB840\uC5D0 \uAC78\uCCD0 \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4."
+  itemIcon: {fileID: 6193593441820973676, guid: 18a260efb00388d45b7ffbc29af62d70, type: 3}
+  maxLevel: 1
+  damages:
+  - 60
+  projectileSpeeds:
+  - 0
+  durations:
+  - 1.5
+  areas:
+  - 5
+  cooldowns:
+  - 2.5
+  counts: 01000000
+  projectileTag: YukiWeaponEvo

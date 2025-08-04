@@ -11,10 +11,6 @@ public class WeaponEvolutionManager : MonoBehaviour
     [Tooltip("모든 무기 진화 데이터 목록")]
     public List<WeaponEvolutionData> evolutionDataList = new List<WeaponEvolutionData>();
     
-    [Header("# Evolution UI")]
-    [Tooltip("진화 UI 프리팹")]
-    public GameObject evolutionUIPrefab;
-    
     private static WeaponEvolutionManager instance;
     public static WeaponEvolutionManager Instance
     {

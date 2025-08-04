@@ -16,6 +16,6 @@ MonoBehaviour:
   evolvedWeapon: {fileID: 11400000, guid: 6e8e4af04a837264bb4a0164cc2c6bd1, type: 2}
   requiredGears: []
   minRequiredGearCount: 0
-  evolutionDescription: "\uD61C\uC9C4\uC758 \uBB34\uAE30\uAC00 \uC9C4\uD654\uD558\uC5EC
-    \uC801\uC5D0\uAC8C\n'\uC0BC\uB9E4' \uC911\uCCA9\uC744 \uC801\uC6A9\uD569\uB2C8\uB2E4."
+  evolutionDescription: "\uD61C\uC9C4\uC758 \uC81C\uC555\uBD80\uAC00 \uC801\uC5D0\uAC8C\n'\uC0BC\uB9E4'
+    \uC911\uCCA9\uC744 \uC801\uC6A9\uD569\uB2C8\uB2E4."
   evolutionIcon: {fileID: 8449710057726092671, guid: 4fb82043b4dd73b4eb6b80fc1cf2a829, type: 3}

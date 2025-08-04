@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b57493210ee3624dadb46fba7f0a82e, type: 3}
+  m_Name: Yuki Weapon Evolution
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponEvolutionData
+  originalWeapon: {fileID: 11400000, guid: 6cbb5d69a31911042be7cffecfdff2ec, type: 2}
+  evolvedWeapon: {fileID: 11400000, guid: f15e9b87341f90a4ea4ef1006e6f5d02, type: 2}
+  requiredGears: []
+  minRequiredGearCount: 0
+  evolutionDescription: "\uC720\uD0A4\uAC00 \uC804\uBC29\uC758 \uC801\uB4E4\uC744
+    \uB300\uC0C1\uC73C\uB85C\n\uD654\uBB34\uC2ED\uC77C\uD64D\uC744 \uC2DC\uC804\uD569\uB2C8\uB2E4."
+  evolutionIcon: {fileID: 6193593441820973676, guid: 18a260efb00388d45b7ffbc29af62d70, type: 3}

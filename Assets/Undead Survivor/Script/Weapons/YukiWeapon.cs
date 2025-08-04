@@ -31,7 +31,7 @@ public class YukiWeapon : WeaponBase
     /// <summary>
     /// 사거리 내 가장 가까운 적을 찾아 즉시 공격합니다.
     /// </summary>
-    private void Attack()
+    protected virtual void Attack()
     {
         // 사거리 내 모든 적 찾기
         Collider2D[] enemiesInRange = Physics2D.OverlapCircleAll(transform.position, attackArea.Value);
