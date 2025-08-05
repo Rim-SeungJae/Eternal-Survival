@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 /// <summary>
 /// 유키 진화 무기의 마크(디버프)를 관리하는 컴포넌트입니다.
@@ -46,7 +47,7 @@ public class YukiWeaponEvoMark : MonoBehaviour
             }
         }
         // 마크 페이드아웃 시작
-        StartCoroutine(FadeOut(markDuration, GetComponent<SpriteRenderer>()));
+        GetComponent<SpriteRenderer>().DOFade(0, markDuration);
 
         // 마크 타이머 시작
         StartCoroutine(MarkTimer());
@@ -72,37 +73,6 @@ public class YukiWeaponEvoMark : MonoBehaviour
         RemoveMark();
     }
 
-        /// <summary>
-    /// 스프라이트를 페이드아웃시킵니다.
-    /// </summary>
-    /// <param name="fadeTime">페이드아웃 시간 (기본값: 0.3초)</param>
-    private IEnumerator FadeOut(float fadeTime = 0.3f, SpriteRenderer renderer = null)
-    {
-        
-        // 초기 알파값을 1로 설정
-        Color startColor = renderer.color;
-        startColor.a = 1.0f;
-        renderer.color = startColor;
-        
-        float elapsedTime = 0f;
-        
-        while (elapsedTime < fadeTime)
-        {
-            elapsedTime += Time.deltaTime;
-            float alpha = Mathf.Lerp(1.0f, 0.0f, elapsedTime / fadeTime);
-            
-            Color newColor = renderer.color;
-            newColor.a = alpha;
-            renderer.color = newColor;
-            
-            yield return null;
-        }
-        
-        // 완전히 투명하게 만들고 비활성화
-        Color finalColor = renderer.color;
-        finalColor.a = 0.0f;
-        renderer.color = finalColor;
-    }
     
     /// <summary>
     /// 마크 폭발을 실행합니다.
@@ -113,7 +83,7 @@ public class YukiWeaponEvoMark : MonoBehaviour
         targetEnemy.TakeDamage(explosionDamage);
 
         explosionEffect.gameObject.SetActive(true);
-        StartCoroutine(FadeOut(0.3f, explosionEffect));
+        explosionEffect.DOFade(0, 0.3f);
         
         // 폭발 효과음 재생
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
@@ -127,6 +97,7 @@ public class YukiWeaponEvoMark : MonoBehaviour
     public void RemoveMark()
     {
         // 풀에 반환
+        targetEnemy = null;
         Poolable poolable = GetComponent<Poolable>();
         if (poolable != null)
         {
@@ -136,5 +107,10 @@ public class YukiWeaponEvoMark : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
+    }
+
+    public void OnDisable()
+    {
+        RemoveMark();
     }
 }

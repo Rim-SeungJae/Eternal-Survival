@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.U2D;
+using DG.Tweening;
 
 /// <summary>
 /// 유키 진화 무기의 반원 공격 이펙트를 관리하는 클래스입니다.
@@ -14,12 +15,16 @@ public class YukiWeaponEvoEffect : MonoBehaviour
     [PoolTagSelector]
     public string markTag;
     
-    [Header("# Components")]
-    private Animator animator;
-    private Transform attackAreaTransform;
-    private GameObject afterImageObject;
-    private SpriteRenderer afterImageRenderer;
+    [Header("# Public Components")]
+    public GameObject effectObject;
+    public GameObject afterImageObject1;
+    public GameObject afterImageObject2;
+
+    [Header("# Private Components")]
+    private SpriteRenderer afterImageRenderer1;
+    private SpriteRenderer afterImageRenderer2;
     private PolygonCollider2D effectCollider;
+    private Animator animator;
     
     [Header("# Attack Settings")]
     private float slashDamage; // 베기 공격의 피해량
@@ -36,18 +41,18 @@ public class YukiWeaponEvoEffect : MonoBehaviour
 
     void Awake()
     {
-        Transform effectTransform = transform.Find("Effect");
-        animator = effectTransform.GetComponent<Animator>();
-        effectCollider = effectTransform.GetComponent<PolygonCollider2D>();
+        animator = effectObject.GetComponent<Animator>();
+        effectCollider = effectObject.GetComponent<PolygonCollider2D>();
         
-        attackAreaTransform = transform.Find("AttackArea");
-        afterImageObject = transform.Find("Afterimage").gameObject;
-        afterImageRenderer = afterImageObject.GetComponent<SpriteRenderer>();
+        afterImageRenderer1 = afterImageObject1.GetComponent<SpriteRenderer>();
+        afterImageRenderer2 = afterImageObject2.GetComponent<SpriteRenderer>();
+
         
         // 초기에는 AfterImage 비활성화
-        if (afterImageObject != null)
+        if (afterImageObject1 != null)
         {
-            afterImageObject.SetActive(false);
+            afterImageObject1.SetActive(false);
+            afterImageObject2.SetActive(false);
         }
         
         // 초기에는 PolygonCollider 비활성화 (베기 공격 시에만 활성화)
@@ -88,14 +93,25 @@ public class YukiWeaponEvoEffect : MonoBehaviour
         markedEnemies.Clear();
         
         // AfterImage 초기화
-        if (afterImageObject != null)
+        if (afterImageObject1 != null)
         {
-            afterImageObject.SetActive(false);
-            if (afterImageRenderer != null)
+            afterImageObject1.SetActive(false);
+            if (afterImageRenderer1 != null)
             {
-                Color resetColor = afterImageRenderer.color;
+                Color resetColor = afterImageRenderer1.color;
                 resetColor.a = 1.0f;
-                afterImageRenderer.color = resetColor;
+                afterImageRenderer1.color = resetColor;
+            }
+        }
+
+        if(afterImageObject2 != null)
+        {
+            afterImageObject2.SetActive(false);
+            if (afterImageRenderer2 != null)
+            {
+                Color resetColor = afterImageRenderer2.color;
+                resetColor.a = 1.0f;
+                afterImageRenderer2.color = resetColor;
             }
         }
         
@@ -109,7 +125,7 @@ public class YukiWeaponEvoEffect : MonoBehaviour
     private IEnumerator AttackSequence()
     {
         
-        // 1. 차오름 애니메이션 시작 및 속도 조절
+        // 1. 차오름 애니메이션 속도 조절 및 시작
         if (animator != null)
         {
             // 현재 애니메이션 클립의 실제 길이를 동적으로 가져오기
@@ -132,15 +148,15 @@ public class YukiWeaponEvoEffect : MonoBehaviour
             float animationSpeed = animationClipLength / chargeDuration;
             animator.speed = animationSpeed;
             
-            animator.SetTrigger("StartCharge");
             
             Debug.Log($"애니메이션 길이: {animationClipLength}초, 목표 시간: {chargeDuration}초, 속도: {animationSpeed}");
         }
+        effectObject.SetActive(true);
         
         // 2. 차오름 지속 시간 동안 대기 (이제 실제 chargeDuration과 동기화됨)
         yield return new WaitForSeconds(chargeDuration);
         
-        // 3. 애니메이션 속도 정상화
+        // 3. 애니메이션 속도 정상화 및 비활성화    
         if (animator != null)
         {
             animator.speed = 1.0f;
@@ -149,8 +165,18 @@ public class YukiWeaponEvoEffect : MonoBehaviour
         // 4. 베기 공격 실행 (즉시 피해 + 마크 부여)
         ExecuteSlashAttack();
         
-        // 5. 이펙트 정리를 위해 잠시 대기
-        yield return new WaitForSeconds(0.5f);
+        // 5. 마크 폭발까지 대기
+        yield return new WaitForSeconds(markDuration);
+
+        // afterImage2 활성화
+        if(afterImageObject2 != null)
+        {
+            afterImageObject2.SetActive(true);
+            afterImageRenderer2.DOFade(0, 0.3f);
+        }
+
+        // afterImage2 페이드아웃 완료까지 대기
+        yield return new WaitForSeconds(0.3f);
         
         // 6. 풀에 반환
         DeactivateEffect();
@@ -162,10 +188,10 @@ public class YukiWeaponEvoEffect : MonoBehaviour
     private void ExecuteSlashAttack()
     {
         // 애니메이션 대신 AfterImage 활성화 및 페이드아웃
-        if (afterImageObject != null)
+        if (afterImageObject1 != null)
         {
-            afterImageObject.SetActive(true);
-            StartCoroutine(FadeOutAfterImage());
+            afterImageObject1.SetActive(true);
+            afterImageRenderer1.DOFade(0, 0.3f);
         }
         
         // 반원 범위 내 모든 적에게 베기 공격
@@ -173,7 +199,10 @@ public class YukiWeaponEvoEffect : MonoBehaviour
         
         // 효과음 재생
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
-        
+
+        // 이펙트 비활성화
+        effectObject.SetActive(false);
+
         Debug.Log($"유키 베기 공격 실행! 마크된 적 수: {markedEnemies.Count}");
     }
 
@@ -252,42 +281,6 @@ public class YukiWeaponEvoEffect : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// AfterImage를 페이드아웃시킵니다.
-    /// </summary>
-    /// <param name="fadeTime">페이드아웃 시간 (기본값: 0.3초)</param>
-    private IEnumerator FadeOutAfterImage(float fadeTime = 0.3f)
-    {
-        if (afterImageRenderer == null) yield break;
-        
-        // 초기 알파값을 1로 설정
-        Color startColor = afterImageRenderer.color;
-        startColor.a = 1.0f;
-        afterImageRenderer.color = startColor;
-        
-        float elapsedTime = 0f;
-        
-        while (elapsedTime < fadeTime)
-        {
-            elapsedTime += Time.deltaTime;
-            float alpha = Mathf.Lerp(1.0f, 0.0f, elapsedTime / fadeTime);
-            
-            Color newColor = afterImageRenderer.color;
-            newColor.a = alpha;
-            afterImageRenderer.color = newColor;
-            
-            yield return null;
-        }
-        
-        // 완전히 투명하게 만들고 비활성화
-        Color finalColor = afterImageRenderer.color;
-        finalColor.a = 0.0f;
-        afterImageRenderer.color = finalColor;
-        
-        afterImageObject.SetActive(false);
-        
-        Debug.Log("AfterImage 페이드아웃 완료");
-    }
 
     /// <summary>
     /// 이펙트를 비활성화하고 풀에 반환합니다.
@@ -311,18 +304,6 @@ public class YukiWeaponEvoEffect : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        // AttackArea 스프라이트 쉐이프 범위 시각화
-        if (attackAreaTransform != null)
-        {
-            SpriteShapeRenderer attackAreaRenderer = attackAreaTransform.GetComponent<SpriteShapeRenderer>();
-            if (attackAreaRenderer != null)
-            {
-                Gizmos.color = Color.red;
-                Bounds bounds = attackAreaRenderer.bounds;
-                Gizmos.DrawWireCube(bounds.center, bounds.size);
-            }
-        }
-        
         // 마크된 적들을 초록색으로 표시
         Gizmos.color = Color.green;
         foreach (Enemy enemy in markedEnemies)

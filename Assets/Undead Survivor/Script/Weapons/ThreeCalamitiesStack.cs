@@ -72,7 +72,7 @@ public class ThreeCalamitiesStack : MonoBehaviour
     {
         weaponRef = weapon;
         
-        // 진행 중인 리셋 코루틴이 있으면 취소
+        // 스택 지속시간 초기화
         if (resetCoroutine != null)
         {
             StopCoroutine(resetCoroutine);
@@ -171,6 +171,9 @@ public class ThreeCalamitiesStack : MonoBehaviour
         RemoveCurrentStackEffect();
     }
 
+    /// <summary>
+    /// 스택 지속시간 관리 코루틴
+    /// </summary>
     private IEnumerator WaitAndResetStacks(float delay)
     {
         yield return new WaitForSeconds(delay);

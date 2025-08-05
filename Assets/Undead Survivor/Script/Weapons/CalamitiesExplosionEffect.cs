@@ -277,9 +277,6 @@ public class CalamitiesExplosionEffect : MonoBehaviour
             Animator activationAnimator = activationEffect.GetComponent<Animator>();
             if (activationAnimator != null)
             {
-                // 애니메이션 재생
-                activationAnimator.SetTrigger("Activate");
-                
                 // 애니메이션 완료 대기
                 yield return new WaitForSeconds(activationDuration);
             }
@@ -350,11 +347,6 @@ public class CalamitiesExplosionEffect : MonoBehaviour
         // 활성화 이펙트 정리
         if (activationEffect != null)
         {
-            Animator activationAnimator = activationEffect.GetComponent<Animator>();
-            if (activationAnimator != null)
-            {
-                activationAnimator.ResetTrigger("Activate");
-            }
             activationEffect.SetActive(false);
         }
         
