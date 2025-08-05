@@ -17,9 +17,9 @@ public class HyejinBulletEvo : Bullet
     [Tooltip("스택 지속 시간")]
     public float stackDuration = 5f;
 
-    [Tooltip("삼매 스택 효과 태그")]
+    [Tooltip("혜진 진화 마크 프리팹 태그")]
     [PoolTagSelector]
-    public string calamitiesStackEffectTag;
+    public string hyejinEvoMarkTag = "HyejinWeaponEvo_Mark";
 
     /// <summary>
     /// 진화 무기 참조를 설정합니다.
@@ -46,20 +46,28 @@ public class HyejinBulletEvo : Bullet
     }
 
     /// <summary>
-    /// 적에게 Three Calamities 스택을 추가합니다.
+    /// 적에게 Three Calamities 마크를 추가합니다.
     /// </summary>
-    /// <param name="enemy">스택을 추가할 적</param>
+    /// <param name="enemy">마크를 추가할 적</param>
     private void AddCalamitiesStack(Enemy enemy)
     {
-        // 적에게 Three Calamities 컴포넌트가 있는지 확인
-        ThreeCalamitiesStack calamitiesComponent = enemy.GetComponent<ThreeCalamitiesStack>();
-        if (calamitiesComponent == null)
+        // 풀에서 마크 프리팹 가져오기
+        GameObject markEffect = GameManager.instance.pool.Get(hyejinEvoMarkTag);
+        if (markEffect != null)
         {
-            calamitiesComponent = enemy.gameObject.AddComponent<ThreeCalamitiesStack>();
-            calamitiesComponent.Init(calamitiesStackEffectTag);
+            // 마크를 적의 위치에 배치
+            markEffect.transform.position = enemy.transform.position;
+            markEffect.transform.SetParent(enemy.transform);
+            markEffect.SetActive(true);
+            
+            // 마크 컴포넌트 초기화
+            HyejinWeaponEvoMark markComponent = markEffect.GetComponent<HyejinWeaponEvoMark>();
+            if (markComponent != null)
+            {
+                markComponent.InitializeMark(weaponRef, weaponRef.calamitiesExplosionDamage, stackDuration);
+            }
+            
+            Debug.Log($"적 {enemy.name}에게 혜진 Three Calamities 마크 추가!");
         }
-        
-        // 스택 추가
-        calamitiesComponent.AddStack(weaponRef, stackDuration);
     }
 } 

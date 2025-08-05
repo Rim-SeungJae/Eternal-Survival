@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8557792001352574932}
   - component: {fileID: 2095490531030666827}
   m_Layer: 0
-  m_Name: ThreeCalamitiesStack
+  m_Name: HyejinWeaponEvo_Mark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -100,12 +100,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 4493281632756077627}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6386d2b45e16ec94f968beb0991a64e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 510c4ee9133ee8c419badcd09d0505b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CalamitiesStackEffect
-  stackSpriteRenderer: {fileID: 8557792001352574932}
   stackSprites:
   - {fileID: 6372113512997005114, guid: ca4f6e8dfe3f7c740881d0ecbd7353a4, type: 3}
   - {fileID: -7898476147541553729, guid: ca4f6e8dfe3f7c740881d0ecbd7353a4, type: 3}
   - {fileID: 6829763521568372732, guid: ca4f6e8dfe3f7c740881d0ecbd7353a4, type: 3}
   stackScale: 1
+  stackOffset: {x: 0, y: 0, z: 0}
+  resetDelay: 1
