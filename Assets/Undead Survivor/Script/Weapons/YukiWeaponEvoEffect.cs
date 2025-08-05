@@ -20,11 +20,15 @@ public class YukiWeaponEvoEffect : MonoBehaviour
     public GameObject afterImageObject1;
     public GameObject afterImageObject2;
 
+    [Tooltip("잔상 지속 시간")]
+    public float afterImageDuration = 0.3f;
+
     [Header("# Private Components")]
     private SpriteRenderer afterImageRenderer1;
     private SpriteRenderer afterImageRenderer2;
     private PolygonCollider2D effectCollider;
     private Animator animator;
+    private YukiChargeEffect chargeEffect;
     
     [Header("# Attack Settings")]
     private float slashDamage; // 베기 공격의 피해량
@@ -43,6 +47,7 @@ public class YukiWeaponEvoEffect : MonoBehaviour
     {
         animator = effectObject.GetComponent<Animator>();
         effectCollider = effectObject.GetComponent<PolygonCollider2D>();
+        chargeEffect = effectObject.GetComponent<YukiChargeEffect>();
         
         afterImageRenderer1 = afterImageObject1.GetComponent<SpriteRenderer>();
         afterImageRenderer2 = afterImageObject2.GetComponent<SpriteRenderer>();
@@ -125,44 +130,49 @@ public class YukiWeaponEvoEffect : MonoBehaviour
     private IEnumerator AttackSequence()
     {
         
-        // 1. 차오름 애니메이션 속도 조절 및 시작
-        if (animator != null)
-        {
-            // 현재 애니메이션 클립의 실제 길이를 동적으로 가져오기
-            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
-            
-            float animationClipLength = 1.0f; // 기본값
-            
-            // 현재 상태의 애니메이션 클립 길이 찾기
-            foreach (AnimationClip clip in clips)
-            {
-                if (clip.name.Contains("Yuki Weapon evo"))
-                {
-                    animationClipLength = clip.length;
-                    break;
-                }
-            }
-            
-            // 애니메이션 속도를 chargeDuration에 맞춰 조절
-            float animationSpeed = animationClipLength / chargeDuration;
-            animator.speed = animationSpeed;
-            
-            
-            Debug.Log($"애니메이션 길이: {animationClipLength}초, 목표 시간: {chargeDuration}초, 속도: {animationSpeed}");
-        }
+        // 1. Effect 오브젝트 먼저 활성화 (코루틴 시작을 위해 필수)
         effectObject.SetActive(true);
         
-        // 2. 차오름 지속 시간 동안 대기 (이제 실제 chargeDuration과 동기화됨)
+        // 2. 새로운 스크립트 기반 차오름 효과 시작
+        if (chargeEffect != null)
+        {
+            chargeEffect.StartCharging(chargeDuration);
+            Debug.Log($"스크립트 기반 차오름 효과 시작! 지속 시간: {chargeDuration}초");
+        }
+        else
+        {
+            // 차오름 효과가 없는 경우 기존 애니메이션 사용
+            if (animator != null)
+            {
+                AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
+                float animationClipLength = 1.0f;
+                
+                foreach (AnimationClip clip in clips)
+                {
+                    if (clip.name.Contains("Yuki Weapon evo"))
+                    {
+                        animationClipLength = clip.length;
+                        break;
+                    }
+                }
+                
+                float animationSpeed = animationClipLength / chargeDuration;
+                animator.speed = animationSpeed;
+                
+                Debug.Log($"기존 애니메이션 사용: 길이 {animationClipLength}초, 속도: {animationSpeed}");
+            }
+        }
+        
+        // 3. 차오름 지속 시간 동안 대기
         yield return new WaitForSeconds(chargeDuration);
         
-        // 3. 애니메이션 속도 정상화 및 비활성화    
+        // 4. 애니메이션 속도 정상화
         if (animator != null)
         {
             animator.speed = 1.0f;
         }
         
-        // 4. 베기 공격 실행 (즉시 피해 + 마크 부여)
+        // 5. 베기 공격 실행 (즉시 피해 + 마크 부여)
         ExecuteSlashAttack();
         
         // 5. 마크 폭발까지 대기
@@ -172,7 +182,7 @@ public class YukiWeaponEvoEffect : MonoBehaviour
         if(afterImageObject2 != null)
         {
             afterImageObject2.SetActive(true);
-            afterImageRenderer2.DOFade(0, 0.3f);
+            afterImageRenderer2.DOFade(0, afterImageDuration);
         }
 
         // afterImage2 페이드아웃 완료까지 대기
@@ -191,7 +201,7 @@ public class YukiWeaponEvoEffect : MonoBehaviour
         if (afterImageObject1 != null)
         {
             afterImageObject1.SetActive(true);
-            afterImageRenderer1.DOFade(0, 0.3f);
+            afterImageRenderer1.DOFade(0, afterImageDuration);
         }
         
         // 반원 범위 내 모든 적에게 베기 공격
@@ -202,8 +212,6 @@ public class YukiWeaponEvoEffect : MonoBehaviour
 
         // 이펙트 비활성화
         effectObject.SetActive(false);
-
-        Debug.Log($"유키 베기 공격 실행! 마크된 적 수: {markedEnemies.Count}");
     }
 
     /// <summary>
@@ -244,15 +252,12 @@ public class YukiWeaponEvoEffect : MonoBehaviour
                     // 3. 마크된 적 목록에 추가
                     markedEnemies.Add(enemy);
                     
-                    Debug.Log($"적 {enemy.name}에게 베기 공격! 위치: {enemy.transform.position}");
                 }
             }
         }
         
         // 충돌 검사 완료 후 PolygonCollider 비활성화
         effectCollider.enabled = false;
-        
-        Debug.Log($"반원 PolygonCollider 공격! 히트 수: {hitCount}, 마크된 적 수: {markedEnemies.Count}");
     }
 
     /// <summary>
@@ -276,8 +281,6 @@ public class YukiWeaponEvoEffect : MonoBehaviour
             {
                 markComponent.InitializeMark(markExplosionDamage, markDuration);
             }
-            
-            Debug.Log($"적 {enemy.name}에게 유키 마크 프리팹 부여!");
         }
     }
 

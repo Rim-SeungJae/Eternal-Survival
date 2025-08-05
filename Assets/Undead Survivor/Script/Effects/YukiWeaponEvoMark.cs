@@ -12,9 +12,15 @@ public class YukiWeaponEvoMark : MonoBehaviour
     private float explosionDamage; // 폭발 시 입힐 피해량
     private float markDuration; // 마크 지속 시간
     private Enemy targetEnemy; // 마크가 적용된 적
+    private bool isBeingRemoved = false; // 제거 중인지 확인하는 플래그
+    private SpriteRenderer spriteRenderer;
 
     public SpriteRenderer explosionEffect;
-    
+
+    void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
     
     /// <summary>
     /// 마크를 초기화하고 타이머를 시작합니다.
@@ -26,6 +32,7 @@ public class YukiWeaponEvoMark : MonoBehaviour
         explosionDamage = damage;
         markDuration = duration;
         explosionEffect.gameObject.SetActive(false);
+        spriteRenderer.color = new Color(1, 1, 1, 1);
         
         // 부모 오브젝트에서 Enemy 컴포넌트 찾기 (프리팹이 적의 자식으로 배치됨)
         targetEnemy = GetComponentInParent<Enemy>();
@@ -47,7 +54,7 @@ public class YukiWeaponEvoMark : MonoBehaviour
             }
         }
         // 마크 페이드아웃 시작
-        GetComponent<SpriteRenderer>().DOFade(0, markDuration);
+        spriteRenderer.DOFade(0, markDuration);
 
         // 마크 타이머 시작
         StartCoroutine(MarkTimer());
@@ -96,8 +103,14 @@ public class YukiWeaponEvoMark : MonoBehaviour
     /// </summary>
     public void RemoveMark()
     {
-        // 풀에 반환
+        // 이미 제거 중이면 중복 호출 방지
+        if (isBeingRemoved) return;
+        isBeingRemoved = true;
+        
+        // 정리 작업
         targetEnemy = null;
+        
+        // 풀에 반환
         Poolable poolable = GetComponent<Poolable>();
         if (poolable != null)
         {
@@ -109,8 +122,10 @@ public class YukiWeaponEvoMark : MonoBehaviour
         }
     }
 
-    public void OnDisable()
+    void OnDisable()
     {
-        RemoveMark();
+        // OnDisable에서는 정리 작업만 수행, RemoveMark 호출하지 않음
+        targetEnemy = null;
+        isBeingRemoved = false; // 다음 사용을 위해 플래그 리셋
     }
 }

@@ -137,22 +137,6 @@ public class HyejinWeaponEvoMark : MonoBehaviour
             if (spriteIndex < stackSprites.Length && stackSprites[spriteIndex] != null)
             {
                 stackSpriteRenderer.sprite = stackSprites[spriteIndex];
-                
-                // 스택 수에 따라 색상 변경 (선택사항)
-                Color stackColor = Color.white;
-                switch (currentStacks)
-                {
-                    case 1:
-                        stackColor = new Color(1f, 1f, 0f, 0.8f); // 노란색
-                        break;
-                    case 2:
-                        stackColor = new Color(1f, 0.5f, 0f, 0.8f); // 주황색
-                        break;
-                    case 3:
-                        stackColor = new Color(1f, 0f, 0f, 0.8f); // 빨간색
-                        break;
-                }
-                stackSpriteRenderer.color = stackColor;
             }
             else
             {

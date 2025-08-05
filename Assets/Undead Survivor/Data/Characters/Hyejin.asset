@@ -17,7 +17,7 @@ MonoBehaviour:
     \uB2E4\uAC00\uC62C \uD070 \uACE0\uBE44\uB97C \uB118\uAE30\uAE30 \uC804\uAE4C\uC9C4
     \uBD88\uC6B4\uC774 \uB530\uB77C\uB2E4\uB2CC\uB2E4\uB294 \uC0AC\uC8FC\uB97C \uAC16\uACE0
     \uD0DC\uC5B4\uB0AC\uB2E4."
-  portrait: {fileID: 1657854958, guid: a6bc1783767327043a4cc65a3a8db5ff, type: 3}
+  portrait: {fileID: -509854622, guid: ca3d8f2ad2fe1fd448edb49ba4f92316, type: 3}
   skillImage: {fileID: 4446597409831710124, guid: b7c62662c89ec594f87371e650a07bbf, type: 3}
   characterId: 1
   speedMultiplier: 4
