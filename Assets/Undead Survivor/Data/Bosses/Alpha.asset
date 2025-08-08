@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b63cf4e23e5905a4fae8ffaee7b33188, type: 3}
+  m_Name: Alpha
+  m_EditorClassIdentifier: Assembly-CSharp::BossDataSO
+  bossName: "\uC54C\uD30C"
+  spriteType: 0
+  health: 100
+  speed: 3
+  contactDamage: 10
+  spawnTime: 0
+  requiredKills: 1
+  requiredLevel: 1
+  specialAttackCooldown: 10
+  specialAttackRange: 5
+  specialAttackDamage: 50
+  expReward: 100
+  lootTable:
+  - itemTag: Combo meal
+    dropChance: 1

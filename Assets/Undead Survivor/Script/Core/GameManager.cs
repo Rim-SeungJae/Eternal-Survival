@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     public GameObject enemyCleaner; // 게임 승리 시 적을 정리할 오브젝트
     public DayNightController dayNightController; // 낮/밤 컨트롤러 참조 추가
     public WeaponEvolutionManager weaponEvolutionManager; // 무기 진화 매니저 참조
+    public BossSpawnManager bossSpawnManager; // 보스 스폰 매니저 참조
 
     // 게임 상수들
     private const float MAX_GAME_TIME_MINUTES = 20f; // 최대 게임 시간 (분)
@@ -141,6 +142,7 @@ public class GameManager : MonoBehaviour
     IEnumerator GameOverRoutine()
     {
         isLive = false;
+        
         yield return new WaitForSeconds(GAME_OVER_DELAY); // 잠시 대기 후 UI 표시
 
         uiResult.gameObject.SetActive(true);
@@ -166,6 +168,7 @@ public class GameManager : MonoBehaviour
     IEnumerator GameVictoryRoutine()
     {
         isLive = false;
+        
         enemyCleaner.SetActive(true); // 화면의 모든 적 제거
         yield return new WaitForSeconds(GAME_OVER_DELAY); // 잠시 대기 후 UI 표시
 

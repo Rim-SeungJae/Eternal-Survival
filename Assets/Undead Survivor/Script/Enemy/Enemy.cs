@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviour
     private const float VISIBILITY_CHECK_INTERVAL = 0.1f;
     private bool isCurrentlyVisible = true;
 
-    void Awake()
+    protected virtual void Awake()
     {
         // 컴포넌트 초기화 및 캐싱
         capsule = GetComponent<CapsuleCollider2D>();
@@ -97,7 +97,7 @@ public class Enemy : MonoBehaviour
         rigid.linearVelocity = Vector2.zero;
     }
 
-    void Update()
+    protected virtual void Update()
     {
         // 시간 정지 상태일 때 애니메이션 속도를 0으로, 아닐 때 1로 설정합니다.
         if (anim != null) anim.speed = GameManager.instance.isTimeStopped && health>0 ? 0 : 1;
@@ -190,7 +190,7 @@ public class Enemy : MonoBehaviour
     /// 외부로부터 피해를 받아 체력을 감소시키고 관련 효과를 처리합니다.
     /// </summary>
     /// <param name="damage">받은 피해량</param>
-    public void TakeDamage(float damage)
+    public virtual void TakeDamage(float damage)
     {
         if (!isLive) return; // 이미 죽었다면 아무것도 하지 않음
 

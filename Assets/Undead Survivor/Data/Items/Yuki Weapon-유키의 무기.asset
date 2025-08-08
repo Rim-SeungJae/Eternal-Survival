@@ -19,7 +19,7 @@ MonoBehaviour:
   itemDesc: "\uC0AC\uAC70\uB9AC \uB0B4\uC758 \uAC00\uC7A5 \uAC00\uAE4C\uC6B4 \uC801\uC758\n\uBA38\uB9AC\uB97C
     \uB0B4\uB824\uCCD0 \uD53C\uD574\uB97C \uC900\uB2E4."
   itemIcon: {fileID: -4068348495617285703, guid: 67a30d8828f86634984bcc3b77bd89b2, type: 3}
-  maxLevel: 5
+  maxLevel: 1
   damages:
   - 4
   - 6
