@@ -18,7 +18,6 @@ public class GameManager : MonoBehaviour
     public PoolManager pool; // 오브젝트 풀링 매니저 참조
     public LevelUp uiLevelUp; // 레벨업 UI 참조
     public Result uiResult; // 결과 UI 참조
-    public GameObject enemyCleaner; // 게임 승리 시 적을 정리할 오브젝트
     public DayNightController dayNightController; // 낮/밤 컨트롤러 참조 추가
     public WeaponEvolutionManager weaponEvolutionManager; // 무기 진화 매니저 참조
     public BossSpawnManager bossSpawnManager; // 보스 스폰 매니저 참조
@@ -169,7 +168,6 @@ public class GameManager : MonoBehaviour
     {
         isLive = false;
         
-        enemyCleaner.SetActive(true); // 화면의 모든 적 제거
         yield return new WaitForSeconds(GAME_OVER_DELAY); // 잠시 대기 후 UI 표시
 
         uiResult.gameObject.SetActive(true);

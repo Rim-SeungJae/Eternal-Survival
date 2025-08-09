@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using DG.Tweening;
 
 /// <summary>
 /// Alpha 보스 몬스터입니다. BossBase를 상속받아 반원 모양의 차징 공격을 구현합니다.
@@ -48,6 +49,7 @@ public class AlphaBoss : BossBase
         // 3. 보스 이동 정지 (차징 중)
         float originalSpeed = speed;
         speed = 0f;
+        anim.SetBool("Special", true);
         
         // 4. 차징 시간만큼 대기
         yield return new WaitForSeconds(chargeDuration);
@@ -57,6 +59,7 @@ public class AlphaBoss : BossBase
         
         // 6. 이동 속도 복구
         speed = originalSpeed;
+        anim.SetBool("Special", false);
         
         // 7. 이펙트 정리
         if (currentChargeEffect != null)
@@ -75,11 +78,6 @@ public class AlphaBoss : BossBase
     /// </summary>
     private GameObject CreateChargeEffect(Vector2 direction)
     {
-        if (GameManager.instance?.pool == null)
-        {
-            Debug.LogWarning("PoolManager가 없습니다!");
-            return null;
-        }
         
         // PoolManager에서 차징 이펙트 가져오기
         GameObject effect = GameManager.instance.pool.Get(chargeEffectPoolTag);
@@ -163,5 +161,22 @@ public class AlphaBoss : BossBase
         }
         
         base.OnBossDeath();
+    }
+
+    public override void Dead()
+    {
+        GameManager.instance.UnregisterEnemy(this);
+        GetComponent<SpriteRenderer>().DOFade(0f, 0.5f).OnComplete(() =>
+        {
+            Poolable poolable = GetComponent<Poolable>();
+            if (poolable != null)
+            {
+                GameManager.instance.pool.ReturnToPool(poolable.poolTag, gameObject);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+        });
     }
 }

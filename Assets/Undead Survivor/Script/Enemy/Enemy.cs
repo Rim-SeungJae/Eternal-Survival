@@ -35,7 +35,7 @@ public class Enemy : MonoBehaviour
     // 컴포넌트 캐싱
     private Rigidbody2D rigid;
     private Collider2D coll;
-    private Animator anim;
+    protected Animator anim;
     private SpriteRenderer spriter;
     private CapsuleCollider2D capsule;
     private WaitForFixedUpdate wait; // 물리 업데이트 프레임 대기용
@@ -257,7 +257,7 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// 사망 애니메이션이 끝난 후 호출되어 오브젝트를 풀에 반환합니다. (Animation Event에서 호출)
     /// </summary>
-    public void Dead()
+    public virtual void Dead()
     {
         // GameManager에서 자신을 등록 해제합니다.
         GameManager.instance.UnregisterEnemy(this);

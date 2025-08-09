@@ -86,8 +86,6 @@ Shader "Custom/RadialFill"
                 float maxFillAngle = 180 * _FillAmount;
                 float alpha = step(fillAngle, maxFillAngle);
                 
-                // 부드러운 경계를 위한 smoothstep (선택사항)
-                // alpha = smoothstep(maxFillAngle + 2, maxFillAngle - 2, fillAngle);
                 
                 // 텍스처 샘플링
                 fixed4 col = tex2D(_MainTex, i.uv) * _Color;

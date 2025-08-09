@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossDataSO
   bossName: "\uC54C\uD30C"
   spriteType: 0
-  health: 100
+  health: 10000
   speed: 3
   contactDamage: 10
   spawnTime: 0

@@ -43,7 +43,7 @@ Material:
     m_Floats:
     - _Clockwise: 0
     - _EnableExternalAlpha: 0
-    - _FillAmount: 0.38755533
+    - _FillAmount: 1
     - _StartAngle: 180
     - _ZWrite: 0
     m_Colors:
