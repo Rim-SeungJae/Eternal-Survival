@@ -356,7 +356,7 @@ GameObject:
   - component: {fileID: 1286072173993892019}
   - component: {fileID: 7754213840892248953}
   - component: {fileID: 446534995745491657}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: AlphaBoss
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -464,6 +464,7 @@ MonoBehaviour:
   healthBar: {fileID: 1035016575685838062}
   chargeEffectPoolTag: AlphaSpecialAttack
   chargeDuration: 3
+  swirlWaitDuration: 0.5
   playerLayer:
     serializedVersion: 2
     m_Bits: 65

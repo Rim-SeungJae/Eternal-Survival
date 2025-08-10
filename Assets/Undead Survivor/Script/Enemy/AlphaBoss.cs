@@ -10,6 +10,7 @@ public class AlphaBoss : BossBase
     [Header("Alpha Boss Settings")]
     [PoolTagSelector] public string chargeEffectPoolTag = "AlphaSpecialAttack"; // 차징 이펙트 풀 태그
     public float chargeDuration = 3f; // 차징 시간
+    public float swirlWaitDuration = 0.1f; // swirl 효과 대기 시간
     public LayerMask playerLayer = 1 << 6; // 플레이어 레이어
     
     private bool isPerformingSpecialAttack = false;
@@ -57,16 +58,15 @@ public class AlphaBoss : BossBase
         // 5. 공격 실행
         ExecuteSemiCircleAttack(playerDirection);
         
-        // 6. 이동 속도 복구
+        // 6. Swirl 효과가 완료될 때까지 대기
+        yield return new WaitForSeconds(swirlWaitDuration);
+        
+        // 7. 이동 속도 복구
         speed = originalSpeed;
         anim.SetBool("Special", false);
         
-        // 7. 이펙트 정리
-        if (currentChargeEffect != null)
-        {
-            currentChargeEffect.StopCharging();
-            currentChargeEffect = null;
-        }
+        // 8. 이펙트는 자동으로 풀로 반환됨 (StopCharging 호출 안 함)
+        currentChargeEffect = null;
         
         isPerformingSpecialAttack = false;
         

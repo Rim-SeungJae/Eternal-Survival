@@ -19,13 +19,21 @@ public class YukiWeaponEvoEffect : MonoBehaviour
     public GameObject effectObject;
     public GameObject afterImageObject1;
     public GameObject afterImageObject2;
+    public GameObject swirlObject;
 
     [Tooltip("잔상 지속 시간")]
     public float afterImageDuration = 0.3f;
+    
+    [Header("# Swirl Effect Settings")]
+    [Tooltip("Swirl 효과 지속 시간")]
+    public float swirlDuration = 0.5f;
+    [Tooltip("Swirl 색상")]
+    public Color swirlColor = Color.white;
 
     [Header("# Private Components")]
     private SpriteRenderer afterImageRenderer1;
     private SpriteRenderer afterImageRenderer2;
+    private SpriteRenderer swirlRenderer;
     private PolygonCollider2D effectCollider;
     private Animator animator;
     private YukiChargeEffect chargeEffect;
@@ -51,13 +59,23 @@ public class YukiWeaponEvoEffect : MonoBehaviour
         
         afterImageRenderer1 = afterImageObject1.GetComponent<SpriteRenderer>();
         afterImageRenderer2 = afterImageObject2.GetComponent<SpriteRenderer>();
-
         
-        // 초기에는 AfterImage 비활성화
+        // SwirlObject에서 SpriteRenderer 가져오기
+        if (swirlObject != null)
+        {
+            swirlRenderer = swirlObject.GetComponent<SpriteRenderer>();
+        }
+        
+        // 초기에는 AfterImage와 Swirl 비활성화
         if (afterImageObject1 != null)
         {
             afterImageObject1.SetActive(false);
             afterImageObject2.SetActive(false);
+        }
+        
+        if (swirlObject != null)
+        {
+            swirlObject.SetActive(false);
         }
         
         // 초기에는 PolygonCollider 비활성화 (베기 공격 시에만 활성화)
@@ -65,6 +83,7 @@ public class YukiWeaponEvoEffect : MonoBehaviour
         {
             effectCollider.enabled = false;
         }
+
     }
 
     void Update()
@@ -174,6 +193,9 @@ public class YukiWeaponEvoEffect : MonoBehaviour
         
         // 5. 베기 공격 실행 (즉시 피해 + 마크 부여)
         ExecuteSlashAttack();
+        
+        // 6. Swirl 효과 시작 (베기 공격 직후)
+        StartCoroutine(PlaySwirlEffect());
         
         // 5. 마크 폭발까지 대기
         yield return new WaitForSeconds(markDuration);
@@ -302,6 +324,82 @@ public class YukiWeaponEvoEffect : MonoBehaviour
         else
         {
             gameObject.SetActive(false);
+        }
+    }
+    
+    /// <summary>
+    /// Swirl 공격 효과를 재생합니다. (Alpha 보스와 유사한 방식)
+    /// </summary>
+    private IEnumerator PlaySwirlEffect()
+    {
+        if (swirlRenderer == null || swirlObject == null) yield break;
+        
+        // Swirl 활성화
+        swirlObject.SetActive(true);
+        
+        // 기존 머티리얼 활용 - radial fill 초기화
+        Material swirlMaterial = swirlRenderer.material;
+        if (swirlMaterial != null)
+        {
+            swirlMaterial.SetFloat("_FillAmount", 0f);
+            swirlMaterial.SetFloat("_Clockwise", 0f); // 시계방향 (유키는 시계방향)
+            swirlMaterial.SetColor("_Color", swirlColor);
+        }
+        else
+        {
+            swirlRenderer.color = swirlColor;
+        }
+        
+        float elapsed = 0f;
+        
+        // 1단계: 빠른 채움 효과 (휘두르는 효과)
+        float fillDuration = swirlDuration * 0.3f; // 전체 시간의 30%로 빠르게 채움
+        while (elapsed < fillDuration)
+        {
+            elapsed += Time.deltaTime;
+            float progress = elapsed / fillDuration;
+            
+            if (swirlMaterial != null)
+            {
+                // 빠르게 채우기 (0에서 1까지)
+                swirlMaterial.SetFloat("_FillAmount", progress);
+            }
+            
+            yield return null;
+        }
+        
+        // 2단계: 페이드아웃하면서 사라지기
+        elapsed = 0f;
+        float fadeOutDuration = swirlDuration * 0.7f; // 나머지 70% 시간으로 페이드아웃
+        
+        while (elapsed < fadeOutDuration)
+        {
+            elapsed += Time.deltaTime;
+            float progress = elapsed / fadeOutDuration;
+            
+            // 점진적 페이드아웃
+            Color currentColor = swirlColor;
+            currentColor.a = Mathf.Lerp(1f, 0f, progress);
+            
+            if (swirlMaterial != null && swirlMaterial.HasProperty("_Color"))
+            {
+                swirlMaterial.SetColor("_Color", currentColor);
+            }
+            else
+            {
+                swirlRenderer.color = currentColor;
+            }
+            
+            yield return null;
+        }
+        
+        // Swirl 비활성화
+        swirlObject.SetActive(false);
+        
+        // 머티리얼 초기 색상 복구
+        if (swirlMaterial != null && swirlMaterial.HasProperty("_Color"))
+        {
+            swirlMaterial.SetColor("_Color", swirlColor);
         }
     }
 

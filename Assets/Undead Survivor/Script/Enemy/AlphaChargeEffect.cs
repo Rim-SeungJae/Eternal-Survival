@@ -15,11 +15,16 @@ public class AlphaChargeEffect : MonoBehaviour
     public Material radialFillMaterial; // 라디얼 필 머티리얼 (public으로 변경)
     public Sprite baseSemiCircleSprite; // 기본 반원 스프라이트
     public Sprite fillSemiCircleSprite; // 채움용 반원 스프라이트
+    public SpriteRenderer swirlSprite;
     
     [Header("Effect Parameters")]
     [SerializeField] private float chargeEffectScale = 3f; // 이펙트 크기
     [SerializeField] private Color baseColor = Color.red; // 기본 색상
     [SerializeField] private Color fillColor = Color.darkRed; // 채워지는 색상
+    
+    [Header("Swirl Effect Settings")]
+    [SerializeField] private float swirlRotationSpeed = 720f; // swirl 회전 속도 (도/초)
+    [SerializeField] private float swirlDuration = 0.1f; // swirl 지속 시간
     
     [Header("Debug Settings (Editor Only)")]
     [SerializeField] private bool enableEditorDebug = false; // 에디터 디버깅 활성화
@@ -29,7 +34,6 @@ public class AlphaChargeEffect : MonoBehaviour
     [SerializeField] private float debugChargeDuration = 3f; // 디버그 차징 시간
     [SerializeField] private Vector2 debugDirection = Vector2.up; // 디버그 방향
     
-    private Material materialInstance;
     private bool isCharging = false;
     
     void Awake()
@@ -45,12 +49,6 @@ public class AlphaChargeEffect : MonoBehaviour
     {
         // 풀에서 재사용될 때마다 상태 초기화
         isCharging = false;
-        
-        if (materialInstance != null)
-        {
-            DestroyImmediate(materialInstance);
-            materialInstance = null;
-        }
     }
     
     void Update()
@@ -77,9 +75,9 @@ public class AlphaChargeEffect : MonoBehaviour
         }
         
         // 수동 fill 값 조정
-        if (!isCharging && materialInstance != null)
+        if (!isCharging && fillSprite != null && fillSprite.material != null)
         {
-            materialInstance.SetFloat("_FillAmount", debugFillAmount * 0.5f); // 반원이므로 0.5 곱함
+            fillSprite.material.SetFloat("_FillAmount", debugFillAmount * 0.5f); // 반원이므로 0.5 곱함
         }
         
         // 에디터에서 gameObject가 비활성화된 상태라면 강제로 활성화하고 설정
@@ -112,9 +110,9 @@ public class AlphaChargeEffect : MonoBehaviour
         }
         
         // Fill Amount가 변경되면 머티리얼 업데이트
-        if (materialInstance != null && !isCharging)
+        if (fillSprite != null && fillSprite.material != null && !isCharging)
         {
-            materialInstance.SetFloat("_FillAmount", debugFillAmount * 0.5f);
+            fillSprite.material.SetFloat("_FillAmount", debugFillAmount * 0.5f);
         }
     }
     
@@ -149,9 +147,21 @@ public class AlphaChargeEffect : MonoBehaviour
     private void ResetFillAmount()
     {
         debugFillAmount = 0f;
-        if (materialInstance != null)
+        if (fillSprite != null && fillSprite.material != null)
         {
-            materialInstance.SetFloat("_FillAmount", 0f);
+            fillSprite.material.SetFloat("_FillAmount", 0f);
+        }
+    }
+    
+    /// <summary>
+    /// 에디터 컨텍스트 메뉴: Swirl 테스트
+    /// </summary>
+    [ContextMenu("Test Swirl Effect")]
+    private void TestSwirlEffect()
+    {
+        if (Application.isPlaying)
+        {
+            StartCoroutine(PlaySwirlEffect());
         }
     }
 #endif
@@ -201,39 +211,44 @@ public class AlphaChargeEffect : MonoBehaviour
             fillSprite.color = fillColor;
             fillSprite.sortingOrder = 6;
             
-            // 라디얼 필 머티리얼 설정
-            if (radialFillMaterial != null)
+            // 기존 라디얼 필 머티리얼 직접 사용 (이미 에디터에서 설정됨)
+            Material fillMaterial = fillSprite.material;
+            if (fillMaterial != null)
             {
-                materialInstance = new Material(radialFillMaterial);
-                fillSprite.material = materialInstance;
-                
                 // 초기 fill 값 설정
-                materialInstance.SetFloat("_FillAmount", 0f);
+                fillMaterial.SetFloat("_FillAmount", 0f);
                 
-                // 중심점을 스프라이트 아래쪽으로 설정 (반원의 중심)
+                // 중심점을 스프라이트 pivot으로 설정
                 if (fillSprite.sprite != null)
                 {
                     Vector2 pivot = GetPivotAsUV(fillSprite.sprite);
-                    materialInstance.SetVector("_CenterPoint", pivot);
+                    fillMaterial.SetVector("_CenterPoint", pivot);
                 }
                 
                 // 시계방향 설정
-                materialInstance.SetFloat("_Clockwise", 1f);
+                fillMaterial.SetFloat("_Clockwise", 1f);
                 
                 // 머티리얼에 색상 직접 설정
-                if (materialInstance.HasProperty("_Color"))
+                if (fillMaterial.HasProperty("_Color"))
                 {
-                    materialInstance.SetColor("_Color", fillColor);
+                    fillMaterial.SetColor("_Color", fillColor);
                 }
-                else if (materialInstance.HasProperty("_MainColor"))
+                else if (fillMaterial.HasProperty("_MainColor"))
                 {
-                    materialInstance.SetColor("_MainColor", fillColor);
+                    fillMaterial.SetColor("_MainColor", fillColor);
                 }
-                else if (materialInstance.HasProperty("_TintColor"))
+                else if (fillMaterial.HasProperty("_TintColor"))
                 {
-                    materialInstance.SetColor("_TintColor", fillColor);
+                    fillMaterial.SetColor("_TintColor", fillColor);
                 }
             }
+        }
+        
+        // Swirl 스프라이트 설정
+        if (swirlSprite != null)
+        {
+            swirlSprite.sortingOrder = 7; // 가장 앞에 표시
+            swirlSprite.gameObject.SetActive(false); // 처음에는 비활성화
         }
     }
     
@@ -264,10 +279,10 @@ public class AlphaChargeEffect : MonoBehaviour
             elapsed += Time.deltaTime;
             float progress = elapsed / duration;
             
-            // 라디얼 필 업데이트
-            if (materialInstance != null)
+            // 라디얼 필 업데이트 (기존 머티리얼 직접 사용)
+            if (fillSprite != null && fillSprite.material != null)
             {
-                materialInstance.SetFloat("_FillAmount", progress);
+                fillSprite.material.SetFloat("_FillAmount", progress);
             }
             
             yield return null;
@@ -276,8 +291,87 @@ public class AlphaChargeEffect : MonoBehaviour
         // 차징 완료
         isCharging = false;
         
+        // Swirl 효과 시작 (공격 순간)
+        yield return StartCoroutine(PlaySwirlEffect());
+        
         // 이펙트 종료 - Pool로 반환
         ReturnToPool();
+    }
+    
+    /// <summary>
+    /// Swirl 공격 효과를 재생합니다.
+    /// </summary>
+    private IEnumerator PlaySwirlEffect()
+    {
+        if (swirlSprite == null) yield break;
+        
+        // 차징 스프라이트들 숨김
+        if (baseSprite != null) baseSprite.gameObject.SetActive(false);
+        if (fillSprite != null) fillSprite.gameObject.SetActive(false);
+        
+        // Swirl 활성화
+        swirlSprite.gameObject.SetActive(true);
+        
+        // 초기 설정
+        float elapsed = 0f;
+        float initialRotation = swirlSprite.transform.eulerAngles.z;
+        
+        // 기존 머티리얼 활용 - radial fill 초기화
+        Material swirlMaterial = swirlSprite.material;
+        if (swirlMaterial != null)
+        {
+            swirlMaterial.SetFloat("_FillAmount", 0f);
+            swirlMaterial.SetFloat("_Clockwise", 1f); // 반시계방향
+            swirlMaterial.SetColor("_Color", fillColor);
+        }
+        
+        // 1단계: 빠른 채움 효과 (휘두르는 효과)
+        float fillDuration = swirlDuration * 0.3f; // 전체 시간의 30%로 빠르게 채움
+        while (elapsed < fillDuration)
+        {
+            elapsed += Time.deltaTime;
+            float progress = elapsed / fillDuration;
+            
+            if (swirlMaterial != null)
+            {
+                // 빠르게 채우기 (0에서 1까지)
+                swirlMaterial.SetFloat("_FillAmount", progress);
+            }
+            
+            yield return null;
+        }
+        
+        // 2단계: 페이드아웃하면서 사라지기
+        elapsed = 0f;
+        float fadeOutDuration = swirlDuration * 0.7f; // 나머지 70% 시간으로 페이드아웃
+        
+        while (elapsed < fadeOutDuration)
+        {
+            elapsed += Time.deltaTime;
+            float progress = elapsed / fadeOutDuration;
+            
+            // 점진적 페이드아웃
+            Color currentColor = swirlMaterial.GetColor("_Color");
+            currentColor.a = Mathf.Lerp(1f, 0f, progress);
+            
+            if (swirlMaterial != null && swirlMaterial.HasProperty("_Color"))
+            {
+                swirlMaterial.SetColor("_Color", currentColor);
+            }
+            else
+            {
+                swirlSprite.color = currentColor;
+            }
+            
+            yield return null;
+        }
+        
+        // Swirl 비활성화
+        swirlSprite.gameObject.SetActive(false);
+        
+        // 차징 스프라이트들 다시 활성화 (정리용)
+        if (baseSprite != null) baseSprite.gameObject.SetActive(true);
+        if (fillSprite != null) fillSprite.gameObject.SetActive(true);
     }
     
     /// <summary>
@@ -291,6 +385,12 @@ public class AlphaChargeEffect : MonoBehaviour
             isCharging = false;
         }
         
+        // Swirl 정리
+        if (swirlSprite != null)
+        {
+            swirlSprite.gameObject.SetActive(false);
+        }
+        
         ReturnToPool();
     }
     
@@ -299,13 +399,6 @@ public class AlphaChargeEffect : MonoBehaviour
     /// </summary>
     private void ReturnToPool()
     {
-        // 머티리얼 정리
-        if (materialInstance != null)
-        {
-            DestroyImmediate(materialInstance);
-            materialInstance = null;
-        }
-        
         // Pool로 반환 (Poolable 컴포넌트 사용)
         Poolable poolable = GetComponent<Poolable>();
         if (poolable != null && GameManager.instance?.pool != null)
@@ -324,13 +417,6 @@ public class AlphaChargeEffect : MonoBehaviour
         // 코루틴 정리
         StopAllCoroutines();
         isCharging = false;
-        
-        // 머티리얼 정리
-        if (materialInstance != null)
-        {
-            DestroyImmediate(materialInstance);
-            materialInstance = null;
-        }
     }
 
 }
