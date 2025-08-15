@@ -41,4 +41,6 @@ public class BossDataSO : ScriptableObject
     public int expReward = 100;
     [Tooltip("드롭 가능한 아이템 목록과 각 아이템의 드롭 확률")]
     public LootItem[] lootTable;
+    [Tooltip("보스 아이콘")]
+    public Sprite bossIcon;
 }

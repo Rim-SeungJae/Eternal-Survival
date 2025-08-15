@@ -22,19 +22,29 @@ public class AlphaChargeEffect : MonoBehaviour
     [SerializeField] private Color baseColor = Color.red; // 기본 색상
     [SerializeField] private Color fillColor = Color.darkRed; // 채워지는 색상
     
+    [Header("Range Settings")]
+    public Transform rangeIndicator; // 공격 범위 지시자 (에디터에서 연결)
+    
     [Header("Swirl Effect Settings")]
-    [SerializeField] private float swirlRotationSpeed = 720f; // swirl 회전 속도 (도/초)
     [SerializeField] private float swirlDuration = 0.1f; // swirl 지속 시간
     
-    [Header("Debug Settings (Editor Only)")]
-    [SerializeField] private bool enableEditorDebug = false; // 에디터 디버깅 활성화
-    [Range(0f, 1f)]
-    [SerializeField] private float debugFillAmount = 0f; // 디버그용 fill 값
-    [SerializeField] private bool debugAutoPlay = false; // 자동 재생
-    [SerializeField] private float debugChargeDuration = 3f; // 디버그 차징 시간
-    [SerializeField] private Vector2 debugDirection = Vector2.up; // 디버그 방향
-    
     private bool isCharging = false;
+    
+    /// <summary>
+    /// RangeIndicator를 기준으로 실제 공격 범위를 계산합니다. (Scale 고려)
+    /// </summary>
+    public float GetActualAttackRange()
+    {
+        if (rangeIndicator == null) return 5f; // 기본값
+        
+        // 로컬 거리 계산
+        float localDistance = rangeIndicator.localPosition.magnitude;
+        
+        // 현재 스케일 적용 (chargeEffectScale)
+        float actualRange = localDistance * chargeEffectScale;
+        
+        return actualRange;
+    }
     
     void Awake()
     {
@@ -50,121 +60,6 @@ public class AlphaChargeEffect : MonoBehaviour
         // 풀에서 재사용될 때마다 상태 초기화
         isCharging = false;
     }
-    
-    void Update()
-    {
-#if UNITY_EDITOR
-        // 에디터 디버깅 기능
-        if (enableEditorDebug && Application.isPlaying)
-        {
-            HandleEditorDebug();
-        }
-#endif
-    }
-    
-#if UNITY_EDITOR
-    /// <summary>
-    /// 에디터 디버깅 기능 처리
-    /// </summary>
-    private void HandleEditorDebug()
-    {
-        // 자동 재생 기능
-        if (debugAutoPlay && !isCharging)
-        {
-            StartCharging(debugChargeDuration, debugDirection.normalized);
-        }
-        
-        // 수동 fill 값 조정
-        if (!isCharging && fillSprite != null && fillSprite.material != null)
-        {
-            fillSprite.material.SetFloat("_FillAmount", debugFillAmount * 0.5f); // 반원이므로 0.5 곱함
-        }
-        
-        // 에디터에서 gameObject가 비활성화된 상태라면 강제로 활성화하고 설정
-        if (!gameObject.activeInHierarchy)
-        {
-            gameObject.SetActive(true);
-            SetupSprites();
-            
-            // 디버그 방향에 따른 회전
-            float angle = Mathf.Atan2(debugDirection.y, debugDirection.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
-            
-            // 크기 설정
-            transform.localScale = Vector3.one * chargeEffectScale;
-        }
-    }
-    
-    /// <summary>
-    /// 에디터에서 값이 변경될 때 호출
-    /// </summary>
-    private void OnValidate()
-    {
-        if (!Application.isPlaying || !enableEditorDebug) return;
-        
-        // 디버그 방향이 변경되면 회전 업데이트
-        if (debugDirection != Vector2.zero)
-        {
-            float angle = Mathf.Atan2(debugDirection.y, debugDirection.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
-        }
-        
-        // Fill Amount가 변경되면 머티리얼 업데이트
-        if (fillSprite != null && fillSprite.material != null && !isCharging)
-        {
-            fillSprite.material.SetFloat("_FillAmount", debugFillAmount * 0.5f);
-        }
-    }
-    
-    /// <summary>
-    /// 에디터 컨텍스트 메뉴: 차징 테스트
-    /// </summary>
-    [ContextMenu("Test Charging")]
-    private void TestCharging()
-    {
-        if (Application.isPlaying)
-        {
-            StartCharging(debugChargeDuration, debugDirection.normalized);
-        }
-    }
-    
-    /// <summary>
-    /// 에디터 컨텍스트 메뉴: 차징 중단
-    /// </summary>
-    [ContextMenu("Stop Charging")]
-    private void TestStopCharging()
-    {
-        if (Application.isPlaying)
-        {
-            StopCharging();
-        }
-    }
-    
-    /// <summary>
-    /// 에디터 컨텍스트 메뉴: Fill Amount 리셋
-    /// </summary>
-    [ContextMenu("Reset Fill Amount")]
-    private void ResetFillAmount()
-    {
-        debugFillAmount = 0f;
-        if (fillSprite != null && fillSprite.material != null)
-        {
-            fillSprite.material.SetFloat("_FillAmount", 0f);
-        }
-    }
-    
-    /// <summary>
-    /// 에디터 컨텍스트 메뉴: Swirl 테스트
-    /// </summary>
-    [ContextMenu("Test Swirl Effect")]
-    private void TestSwirlEffect()
-    {
-        if (Application.isPlaying)
-        {
-            StartCoroutine(PlaySwirlEffect());
-        }
-    }
-#endif
     
     /// <summary>
     /// 차징 이펙트를 시작합니다.

@@ -29,11 +29,11 @@ public class Enemy : MonoBehaviour
     public Transform shadow;
 
     // 내부 상태 변수
-    private bool isLive; // 생존 여부
+    protected bool isLive; // 생존 여부
     private bool isKnockBack; // 넉백 상태 여부
 
     // 컴포넌트 캐싱
-    private Rigidbody2D rigid;
+    protected Rigidbody2D rigid;
     private Collider2D coll;
     protected Animator anim;
     private SpriteRenderer spriter;
@@ -81,7 +81,14 @@ public class Enemy : MonoBehaviour
         }
 
         // 게임이 진행 중이 아니거나, 적이 살아있지 않거나, 피격/넉백 중일 때는 이동 로직을 실행하지 않습니다.
-        if (!GameManager.instance.isLive || !isLive || isKnockBack || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
+        // 보스의 경우 특수 공격 중에도 이동하지 않습니다.
+        bool isSpecialAttacking = false;
+        if (this is BossBase boss)
+        {
+            isSpecialAttacking = boss.IsPerformingSpecialAttack();
+        }
+        
+        if (!GameManager.instance.isLive || !isLive || isKnockBack || isSpecialAttacking || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
         {
             return;
         }
@@ -196,8 +203,14 @@ public class Enemy : MonoBehaviour
 
         health -= damage;
 
-        // 시간 정지 중이 아닐 때만 넉백 효과를 적용합니다.
-        if (!GameManager.instance.isTimeStopped) StartCoroutine(KnockBack());
+        // 시간 정지 중이 아니고 보스의 특수 공격 중이 아닐 때만 넉백 효과를 적용합니다.
+        bool canKnockback = !GameManager.instance.isTimeStopped;
+        if (this is BossBase boss && boss.IsPerformingSpecialAttack())
+        {
+            canKnockback = false;
+        }
+        
+        if (canKnockback) StartCoroutine(KnockBack());
 
         if (health > 0)
         {
@@ -241,7 +254,7 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// 피격 시 넉백 효과를 처리하는 코루틴입니다.
     /// </summary>
-    IEnumerator KnockBack()
+    protected virtual IEnumerator KnockBack()
     {
         isKnockBack = true;
         yield return wait; // 다음 물리 프레임까지 대기

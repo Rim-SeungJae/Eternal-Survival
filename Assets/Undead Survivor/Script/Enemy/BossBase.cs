@@ -13,10 +13,20 @@ public abstract class BossBase : Enemy
     protected float specialAttackTimer;
     protected bool isDead = false;
     
+    // Special attack immobilization system
+    protected bool isPerformingSpecialAttack = false;
+    private RigidbodyConstraints2D originalConstraints;
+    
     protected override void Awake()
     {
         base.Awake();
         healthBar = GetComponentInChildren<BossHealthBar>();
+        
+        // Store original rigidbody constraints
+        if (rigid != null)
+        {
+            originalConstraints = rigid.constraints;
+        }
     }
     
     protected virtual void Start()
@@ -145,7 +155,7 @@ public abstract class BossBase : Enemy
     {
         if (BossNotificationUI.Instance != null)
         {
-            BossNotificationUI.Instance.ShowBossAppearance(bossData.bossName);
+            BossNotificationUI.Instance.ShowBossAppearance(bossData.bossName, bossData.bossIcon);
         }
         else
         {
@@ -160,7 +170,7 @@ public abstract class BossBase : Enemy
     {
         if (BossNotificationUI.Instance != null)
         {
-            BossNotificationUI.Instance.ShowBossDefeated(bossData.bossName);
+            BossNotificationUI.Instance.ShowBossDefeated(bossData.bossName, bossData.bossIcon);
         }
         else
         {
@@ -187,5 +197,48 @@ public abstract class BossBase : Enemy
         
         Vector2 direction = GameManager.instance.player.transform.position - transform.position;
         return direction.normalized;
+    }
+    
+    /// <summary>
+    /// 특수 공격 중 보스를 완전히 고정시킵니다.
+    /// Rigidbody constraints를 사용하여 위치를 고정하고 모든 외부 힘을 차단합니다.
+    /// </summary>
+    protected virtual void StartSpecialAttackImmobilization()
+    {
+        if (rigid == null) return;
+        
+        isPerformingSpecialAttack = true;
+        
+        // 현재 속도를 0으로 설정
+        rigid.linearVelocity = Vector2.zero;
+        rigid.angularVelocity = 0f;
+        
+        // 위치와 회전을 고정 (모든 축)
+        rigid.constraints = RigidbodyConstraints2D.FreezeAll;
+        
+        Debug.Log($"{gameObject.name}: Special attack immobilization started");
+    }
+    
+    /// <summary>
+    /// 특수 공격이 끝난 후 보스의 이동을 복구합니다.
+    /// </summary>
+    protected virtual void EndSpecialAttackImmobilization()
+    {
+        if (rigid == null) return;
+        
+        isPerformingSpecialAttack = false;
+        
+        // 원래 제약 조건으로 복구
+        rigid.constraints = originalConstraints;
+        
+        Debug.Log($"{gameObject.name}: Special attack immobilization ended");
+    }
+    
+    /// <summary>
+    /// 특수 공격 상태 확인
+    /// </summary>
+    public bool IsPerformingSpecialAttack()
+    {
+        return isPerformingSpecialAttack;
     }
 }
