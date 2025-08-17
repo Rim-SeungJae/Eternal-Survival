@@ -111,9 +111,6 @@ public abstract class BossBase : Enemy
         // 경험치 보상
         GameManager.instance.GetExp(bossData.expReward);
         
-        // 특별한 드롭 처리 (기존 DropLoot 대신)
-        DropBossLoot();
-        
         // 체력바 숨김
         if (healthBar != null)
         {
@@ -122,30 +119,6 @@ public abstract class BossBase : Enemy
         
         // 보스 처치 알림
         ShowBossDefeatedNotification();
-    }
-    
-    /// <summary>
-    /// 보스 전용 드롭 시스템 (일반 적보다 높은 확률)
-    /// </summary>
-    protected virtual void DropBossLoot()
-    {
-        if (bossData.lootTable.Length == 0) return;
-        
-        foreach (var loot in bossData.lootTable)
-        {
-            // 보스는 더 높은 확률로 아이템을 드롭 (1.5배)
-            float adjustedChance = Mathf.Min(loot.dropChance * 1.5f, 1f);
-            
-            if (Random.value <= adjustedChance)
-            {
-                GameObject item = GameManager.instance.pool.Get(loot.itemTag);
-                if (item != null)
-                {
-                    item.transform.position = transform.position;
-                    item.SetActive(true);
-                }
-            }
-        }
     }
     
     /// <summary>

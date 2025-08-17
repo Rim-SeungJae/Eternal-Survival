@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossDataSO
   bossName: "\uC54C\uD30C"
   spriteType: 0
-  health: 10000
+  health: 100
   speed: 3
   contactDamage: 10
   spawnTime: 0
@@ -25,5 +25,6 @@ MonoBehaviour:
   specialAttackDamage: 50
   expReward: 100
   lootTable:
-  - itemTag: Combo meal
+  - itemTag: AirSupply
     dropChance: 1
+  bossIcon: {fileID: 21300000, guid: 803811fb079afd347b3a323b1d2d7431, type: 3}

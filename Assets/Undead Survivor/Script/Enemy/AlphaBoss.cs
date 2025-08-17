@@ -13,8 +13,6 @@ public class AlphaBoss : BossBase
     public float swirlWaitDuration = 0.1f; // swirl 효과 대기 시간
     public LayerMask playerLayer = 1 << 6; // 플레이어 레이어
     
-    [Header("Debug Settings")]
-    [SerializeField] private bool enableAnimationDebug = true; // 애니메이션 디버깅 활성화
     
     private AlphaChargeEffect currentChargeEffect;
     
@@ -52,16 +50,11 @@ public class AlphaBoss : BossBase
         
         // 4. 애니메이션 상태 설정
         anim.SetBool("Special", true);
-        DebugAnimationState("Special Bool 설정됨");
         
         // 5. 차징 시간만큼 대기 (애니메이션 상태 모니터링)
         float elapsed = 0f;
         while (elapsed < chargeDuration)
         {
-            if (enableAnimationDebug)
-            {
-                DebugAnimationState($"차징 중 ({elapsed:F1}s)");
-            }
             elapsed += Time.deltaTime;
             yield return null;
         }
@@ -74,7 +67,6 @@ public class AlphaBoss : BossBase
         
         // 8. 애니메이션 상태 복구
         anim.SetBool("Special", false);
-        DebugAnimationState("Special Bool 해제됨");
         
         // 9. 이펙트는 자동으로 풀로 반환됨 (StopCharging 호출 안 함)
         currentChargeEffect = null;
@@ -82,7 +74,6 @@ public class AlphaBoss : BossBase
         // 10. 보스 이동 복구 (마지막에 호출)
         EndSpecialAttackImmobilization();
         
-        Debug.Log($"{bossData.bossName}이(가) 반원 공격을 완료했습니다!");
     }
     
     /// <summary>
@@ -144,7 +135,6 @@ public class AlphaBoss : BossBase
                         playerRb.AddForce(knockbackDirection * 10f, ForceMode2D.Impulse);
                     }
                     
-                    Debug.Log("Alpha 보스의 반원 공격이 플레이어를 명중했습니다!");
                 }
             }
         }
@@ -171,53 +161,14 @@ public class AlphaBoss : BossBase
                 currentChargeEffect.StopCharging();
                 currentChargeEffect = null;
             }
+
+            anim.SetBool("Special", false);
             
             // 고정 상태 해제
             EndSpecialAttackImmobilization();
         }
         
         base.OnBossDeath();
-    }
-    
-    /// <summary>
-    /// 특수 공격 중에는 Hit 애니메이션을 방지하기 위해 TakeDamage를 오버라이드합니다.
-    /// </summary>
-    public override void TakeDamage(float damage)
-    {
-        if (!isLive) return;
-
-        health -= damage;
-
-        // 특수 공격 중에는 넉백과 Hit 애니메이션을 방지
-        bool canPlayHitAnimation = !IsPerformingSpecialAttack();
-        
-        // 시간 정지 중이 아니고 특수 공격 중이 아닐 때만 넉백 효과를 적용
-        bool canKnockback = !GameManager.instance.isTimeStopped && !IsPerformingSpecialAttack();
-        
-        if (canKnockback) StartCoroutine(KnockBack());
-
-        if (health > 0)
-        {
-            // 특수 공격 중이 아닐 때만 Hit 애니메이션 재생
-            if (canPlayHitAnimation)
-            {
-                anim.SetTrigger("Hit");
-            }
-            AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
-        }
-        else
-        {
-            // 사망 처리
-            isLive = false;
-            isDead = true;
-            OnBossDeath();
-        }
-        
-        // 체력바 업데이트 (BossBase에서 처리하지 않으므로 여기서 직접 처리)
-        if (healthBar != null)
-        {
-            healthBar.UpdateHealth(health, maxHealth);
-        }
     }
 
     public override void Dead()
@@ -236,68 +187,5 @@ public class AlphaBoss : BossBase
             }
         });
     }
-    
-    /// <summary>
-    /// 애니메이션 상태를 디버깅용으로 출력합니다.
-    /// </summary>
-    private void DebugAnimationState(string context)
-    {
-        if (!enableAnimationDebug || anim == null) return;
-        
-        // 현재 애니메이터 상태 정보
-        AnimatorStateInfo currentState = anim.GetCurrentAnimatorStateInfo(0);
-        
-        // 모든 Bool 파라미터 확인
-        bool specialBool = anim.GetBool("Special");
-        bool deadBool = anim.GetBool("Dead");
-        
-        // 현재 재생 중인 애니메이션 이름
-        string stateName = GetAnimationStateName(currentState.fullPathHash);
-        
-        // 정규화된 시간 (0~1, 1 이상이면 루프)
-        float normalizedTime = currentState.normalizedTime;
-        
-        // 애니메이션 길이와 속도
-        float animationLength = currentState.length;
-        float animatorSpeed = anim.speed;
-        
-        // 전환 정보
-        bool isInTransition = anim.IsInTransition(0);
-        string transitionInfo = "";
-        if (isInTransition)
-        {
-            AnimatorTransitionInfo transition = anim.GetAnimatorTransitionInfo(0);
-            transitionInfo = $"Transitioning (Progress: {transition.normalizedTime:F3})";
-        }
-        
-        // 로그 출력
-        Debug.Log($"[Alpha Animation Debug] {context}\n" +
-                 $"- State: {stateName}\n" +
-                 $"- Special Bool: {specialBool}\n" +
-                 $"- Dead Bool: {deadBool}\n" +
-                 $"- Normalized Time: {normalizedTime:F3}\n" +
-                 $"- Length: {animationLength:F2}s\n" +
-                 $"- Animator Speed: {animatorSpeed}\n" +
-                 $"- Is Looping: {currentState.loop}\n" +
-                 $"- Is In Transition: {isInTransition}\n" +
-                 $"- {transitionInfo}");
-    }
-    
-    /// <summary>
-    /// 애니메이션 상태 해시를 이름으로 변환 (대략적)
-    /// </summary>
-    private string GetAnimationStateName(int stateHash)
-    {
-        // 주요 상태들의 해시값을 확인 (디버깅용)
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Special"))
-            return "Special";
-        else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Walk"))
-            return "Walk";
-        else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Hit"))
-            return "Hit";
-        else if (anim.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Dead"))
-            return "Dead";
-        else
-            return $"Unknown (Hash: {stateHash})";
-    }
+
 }
