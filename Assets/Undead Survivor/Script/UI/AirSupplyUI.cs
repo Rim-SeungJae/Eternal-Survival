@@ -23,6 +23,7 @@ public class AirSupplyUI : MonoBehaviour
     [Header("Box Animation")]
     [SerializeField] private Sprite closedBoxSprite; // 닫힌 상자 스프라이트
     [SerializeField] private Sprite openBoxSprite; // 열린 상자 스프라이트
+    [SerializeField] private Animator anim;
     
     private static AirSupplyUI instance;
     public static AirSupplyUI Instance => instance;
@@ -50,7 +51,7 @@ public class AirSupplyUI : MonoBehaviour
             rewardPanel.gameObject.SetActive(false);
         }
     }
-    
+
     /// <summary>
     /// AirSupply 보상 획득 애니메이션을 재생합니다.
     /// </summary>
@@ -82,8 +83,11 @@ public class AirSupplyUI : MonoBehaviour
         // 2단계: 상자 열기
         OpenBox();
         
+        // 애니메이션 완료까지 대기
+        yield return StartCoroutine(WaitForAnimationComplete());
+        
         // 3단계: 빛 효과 (화면을 가림)
-        yield return StartCoroutine(LightEffectAnimation());
+        // yield return StartCoroutine(LightEffectAnimation());
         
         // 4단계: 아이템 아이콘 표시
         yield return StartCoroutine(ShowItemIcon());
@@ -108,6 +112,15 @@ public class AirSupplyUI : MonoBehaviour
     {
         // 캔버스 활성화
         rewardPanel.gameObject.SetActive(true);
+
+        if(anim != null)
+        {
+            anim.enabled = true;
+            anim.updateMode = AnimatorUpdateMode.UnscaledTime;
+            anim.Play("OpenAirSupply", 0, 0f); // 닫힌 상태 애니메이션의 첫 프레임으로 초기화
+            anim.speed = 0;
+            
+        }
         
         // 상자 이미지 설정 (닫힌 상태)
         if (boxImage != null && closedBoxSprite != null)
@@ -133,22 +146,52 @@ public class AirSupplyUI : MonoBehaviour
     }
     
     /// <summary>
-    /// 상자 흔들기 애니메이션을 실행합니다.
+    /// 상자 꿈틀거리기 애니메이션을 실행합니다.
     /// </summary>
     private IEnumerator ShakeBoxAnimation()
     {
         if (boxImage == null) yield break;
         
         Vector3 originalPosition = boxImage.transform.localPosition;
+        Vector3 originalScale = boxImage.transform.localScale;
         
-        // DOTween을 사용한 흔들기 애니메이션
-        boxImage.transform.DOShakePosition(shakeDuration, shakeIntensity, 10, 90f, false, true)
-            .SetUpdate(true); // Time.timeScale에 영향받지 않도록 설정
+        float elapsed = 0f;
         
-        yield return new WaitForSecondsRealtime(shakeDuration);
+        // 꿈틀거리는 효과: 불규칙한 간격으로 살짝 움직임과 크기 변화
+        while (elapsed < shakeDuration)
+        {
+            // 0.2~0.8초 간격으로 불규칙하게 움직임
+            float waitTime = Random.Range(0.2f, 0.8f);
+            yield return new WaitForSecondsRealtime(waitTime);
+            
+            if (elapsed >= shakeDuration) break;
+            
+            // 작은 위치 변화 (살짝 움찔)
+            Vector3 moveDirection = new Vector3(
+                Random.Range(-1f, 1f), 
+                Random.Range(-1f, 1f), 
+                0f
+            ).normalized;
+            
+            Vector3 targetPos = originalPosition + moveDirection * Random.Range(3f, 8f);
+            
+            // 작은 크기 변화 (팽창하는 듯한 느낌)
+            Vector3 targetScale = originalScale * Random.Range(1.02f, 1.08f);
+            
+            // 빠르게 움직였다가 다시 돌아오기
+            var sequence = DOTween.Sequence();
+            sequence.Append(boxImage.transform.DOLocalMove(targetPos, 0.1f).SetEase(Ease.OutQuad))
+                   .Join(boxImage.transform.DOScale(targetScale, 0.1f).SetEase(Ease.OutQuad))
+                   .Append(boxImage.transform.DOLocalMove(originalPosition, 0.15f).SetEase(Ease.InOutQuad))
+                   .Join(boxImage.transform.DOScale(originalScale, 0.15f).SetEase(Ease.InOutQuad))
+                   .SetUpdate(true);
+            
+            elapsed += waitTime + 0.25f; // 애니메이션 시간도 포함
+        }
         
-        // 원래 위치로 복귀
+        // 최종적으로 원래 상태로 복구
         boxImage.transform.localPosition = originalPosition;
+        boxImage.transform.localScale = originalScale;
     }
     
     /// <summary>
@@ -156,10 +199,33 @@ public class AirSupplyUI : MonoBehaviour
     /// </summary>
     private void OpenBox()
     {
-        if (boxImage != null && openBoxSprite != null)
+        if(anim != null)
         {
-            boxImage.sprite = openBoxSprite;
+            Debug.Log("OpenBox - Starting Animation");
+            anim.speed = 1;
         }
+    }
+    
+    /// <summary>
+    /// 애니메이션 완료까지 대기합니다.
+    /// </summary>
+    private IEnumerator WaitForAnimationComplete()
+    {
+        if (anim == null) yield break;
+        
+        Debug.Log("Waiting for animation to complete...");
+        
+        // 애니메이션이 재생 중인지 확인하고 완료될 때까지 대기
+        yield return new WaitForSecondsRealtime(0.1f); // 애니메이션 시작을 위한 짧은 대기
+        
+        while (anim.GetCurrentAnimatorStateInfo(0).IsName("OpenAirSupply") && 
+               anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        {
+            Debug.Log($"Animation progress: {anim.GetCurrentAnimatorStateInfo(0).normalizedTime:F2}");
+            yield return new WaitForSecondsRealtime(0.1f);
+        }
+        
+        Debug.Log("Animation completed!");
     }
     
     /// <summary>
@@ -172,6 +238,12 @@ public class AirSupplyUI : MonoBehaviour
         // 빛이 화면을 가리도록 페이드인
         lightOverlay.DOFade(1f, lightFadeDuration * 0.3f).SetUpdate(true);
         yield return new WaitForSecondsRealtime(lightFadeDuration * 0.3f);
+
+        // 열린 상자 스프라이트가 보이도록 설정
+        if(anim != null)
+        {
+            boxImage.sprite = openBoxSprite;
+        }
         
         // 잠시 대기 (완전히 가려진 상태)
         yield return new WaitForSecondsRealtime(lightFadeDuration * 0.4f);
