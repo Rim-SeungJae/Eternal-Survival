@@ -87,7 +87,7 @@ public class AirSupplyUI : MonoBehaviour
         yield return StartCoroutine(WaitForAnimationComplete());
         
         // 3단계: 빛 효과 (화면을 가림)
-        // yield return StartCoroutine(LightEffectAnimation());
+        yield return StartCoroutine(LightEffectAnimation());
         
         // 4단계: 아이템 아이콘 표시
         yield return StartCoroutine(ShowItemIcon());
@@ -146,52 +146,54 @@ public class AirSupplyUI : MonoBehaviour
     }
     
     /// <summary>
-    /// 상자 꿈틀거리기 애니메이션을 실행합니다.
+    /// 상자 갸우뚱거리기 애니메이션을 실행합니다. (고전적인 상자 흔들림 연출)
     /// </summary>
     private IEnumerator ShakeBoxAnimation()
     {
         if (boxImage == null) yield break;
         
-        Vector3 originalPosition = boxImage.transform.localPosition;
-        Vector3 originalScale = boxImage.transform.localScale;
-        
         float elapsed = 0f;
         
-        // 꿈틀거리는 효과: 불규칙한 간격으로 살짝 움직임과 크기 변화
+        // 갸우뚱거리는 효과: 중심축을 기준으로 좌우 회전
         while (elapsed < shakeDuration)
         {
-            // 0.2~0.8초 간격으로 불규칙하게 움직임
-            float waitTime = Random.Range(0.2f, 0.8f);
+            // 0.3~0.7초 간격으로 불규칙하게 움직임
+            float waitTime = Random.Range(0.3f, 0.7f);
             yield return new WaitForSecondsRealtime(waitTime);
             
             if (elapsed >= shakeDuration) break;
             
-            // 작은 위치 변화 (살짝 움찔)
-            Vector3 moveDirection = new Vector3(
-                Random.Range(-1f, 1f), 
-                Random.Range(-1f, 1f), 
-                0f
-            ).normalized;
+            // 좌우 회전 각도 (살짝 갸우뚱)
+            float rotationAngle = Random.Range(5f, 15f); // 5~15도 범위
+            bool rotateLeft = Random.value > 0.5f;
+            float targetRotation = rotateLeft ? -rotationAngle : rotationAngle;
             
-            Vector3 targetPos = originalPosition + moveDirection * Random.Range(3f, 8f);
-            
-            // 작은 크기 변화 (팽창하는 듯한 느낌)
-            Vector3 targetScale = originalScale * Random.Range(1.02f, 1.08f);
-            
-            // 빠르게 움직였다가 다시 돌아오기
+            // 빠르게 기울어졌다가 다시 돌아오기
             var sequence = DOTween.Sequence();
-            sequence.Append(boxImage.transform.DOLocalMove(targetPos, 0.1f).SetEase(Ease.OutQuad))
-                   .Join(boxImage.transform.DOScale(targetScale, 0.1f).SetEase(Ease.OutQuad))
-                   .Append(boxImage.transform.DOLocalMove(originalPosition, 0.15f).SetEase(Ease.InOutQuad))
-                   .Join(boxImage.transform.DOScale(originalScale, 0.15f).SetEase(Ease.InOutQuad))
+            sequence.Append(boxImage.transform.DORotate(new Vector3(0, 0, targetRotation), 0.08f).SetEase(Ease.OutQuad))
+                   .Append(boxImage.transform.DORotate(Vector3.zero, 0.12f).SetEase(Ease.InOutQuad))
                    .SetUpdate(true);
             
-            elapsed += waitTime + 0.25f; // 애니메이션 시간도 포함
+            // 가끔씩 연속으로 2-3번 빠르게 갸우뚱거리기
+            if (Random.value > 0.5f)
+            {
+                yield return new WaitForSecondsRealtime(0.2f);
+                
+                // 반대 방향으로 한 번 더
+                float secondRotation = rotateLeft ? rotationAngle * 0.7f : -rotationAngle * 0.7f;
+                var secondSequence = DOTween.Sequence();
+                secondSequence.Append(boxImage.transform.DORotate(new Vector3(0, 0, secondRotation), 0.06f).SetEase(Ease.OutQuad))
+                             .Append(boxImage.transform.DORotate(Vector3.zero, 0.1f).SetEase(Ease.InOutQuad))
+                             .SetUpdate(true);
+                
+                elapsed += 0.3f; // 추가 애니메이션 시간
+            }
+            
+            elapsed += waitTime + 0.2f; // 기본 애니메이션 시간 포함
         }
         
-        // 최종적으로 원래 상태로 복구
-        boxImage.transform.localPosition = originalPosition;
-        boxImage.transform.localScale = originalScale;
+        // 최종적으로 원래 회전 상태로 복구
+        boxImage.transform.rotation = Quaternion.identity;
     }
     
     /// <summary>
@@ -239,11 +241,7 @@ public class AirSupplyUI : MonoBehaviour
         lightOverlay.DOFade(1f, lightFadeDuration * 0.3f).SetUpdate(true);
         yield return new WaitForSecondsRealtime(lightFadeDuration * 0.3f);
 
-        // 열린 상자 스프라이트가 보이도록 설정
-        if(anim != null)
-        {
-            boxImage.sprite = openBoxSprite;
-        }
+        anim.SetTrigger("FullOpen");
         
         // 잠시 대기 (완전히 가려진 상태)
         yield return new WaitForSecondsRealtime(lightFadeDuration * 0.4f);
