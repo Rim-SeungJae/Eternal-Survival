@@ -1,9 +1,11 @@
 using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 /// <summary>
 /// 유키 무기의 차오름 효과를 시계방향으로 점진적으로 채워지는 방식으로 구현하는 컴포넌트입니다.
 /// 어두운 스프라이트 위에 밝은 스프라이트가 시계방향으로 점진적으로 드러나는 효과를 제공합니다.
+/// Static RadialFillUtils를 사용하여 구현되었습니다.
 /// </summary>
 public class YukiChargeEffect : MonoBehaviour
 {
@@ -21,10 +23,10 @@ public class YukiChargeEffect : MonoBehaviour
     [Tooltip("채워짐 방향 (true = 시계방향, false = 반시계방향)")]
     public bool clockwise = true;
     
-    [Tooltip("스프라이트 pivot을 중심점으로 사용")]
-    public bool usePivotAsCenter = true;
+    [Tooltip("중심점 계산 방식")]
+    public CenterPointType centerPointType = CenterPointType.SpritePivot;
     
-    [Tooltip("수동 중심점 (usePivotAsCenter가 false일 때 사용)")]
+    [Tooltip("수동 중심점 (centerPointType이 Manual일 때 사용)")]
     public Vector2 manualCenterPoint = new Vector2(0.5f, 0.5f);
     
     [Header("# Animation Settings")]
@@ -40,6 +42,9 @@ public class YukiChargeEffect : MonoBehaviour
     private float currentFillAmount = 0f;
     private bool isCharging = false;
     
+    // DOTween 애니메이션 참조
+    private Tween currentChargeTween;
+
     void Awake()
     {
         InitializeComponents();
@@ -64,51 +69,10 @@ public class YukiChargeEffect : MonoBehaviour
     
         
         // 렌더링 순서 설정
-        darkSprite.sortingOrder = 0;
-        brightSprite.sortingOrder = 1;
-    }
-    
-    /// <summary>
-    /// 스프라이트의 pivot을 UV 좌표계로 변환합니다.
-    /// </summary>
-    /// <param name="sprite">변환할 스프라이트</param>
-    /// <returns>UV 좌표계의 pivot 위치</returns>
-    private Vector2 GetPivotAsUV(Sprite sprite)
-    {
-        if (sprite == null) return new Vector2(0.5f, 0.5f);
-        
-        // 스프라이트의 pivot을 텍스처 크기로 나누어 0~1 범위의 UV 좌표로 변환
-        Vector2 pivot = sprite.pivot;
-        Vector2 textureSize = new Vector2(sprite.texture.width, sprite.texture.height);
-        
-        // 스프라이트 rect 고려
-        Rect spriteRect = sprite.rect;
-        
-        // pivot을 스프라이트 rect 내에서의 상대적 위치로 계산
-        Vector2 relativePivot = new Vector2(
-            (pivot.x - spriteRect.x) / spriteRect.width,
-            (pivot.y - spriteRect.y) / spriteRect.height
-        );
-        
-        return relativePivot;
-    }
-    
-    /// <summary>
-    /// 현재 설정에 따라 중심점을 가져옵니다.
-    /// </summary>
-    /// <returns>사용할 중심점</returns>
-    private Vector2 GetCenterPoint()
-    {
-        if (usePivotAsCenter && brightSprite != null && brightSprite.sprite != null)
+        if (darkSprite != null && brightSprite != null)
         {
-            Vector2 pivotUV = GetPivotAsUV(brightSprite.sprite);
-        
-            
-            return pivotUV;
-        }
-        else
-        {
-            return manualCenterPoint;
+            darkSprite.sortingOrder = 0;
+            brightSprite.sortingOrder = 1;
         }
     }
     
@@ -119,12 +83,12 @@ public class YukiChargeEffect : MonoBehaviour
     {
         
         // 에디터에서 할당한 머티리얼이 있으면 사용
-        if (brightSpriteMaterial != null)
+        if (brightSpriteMaterial != null && brightSprite != null)
         {
             brightSprite.material = brightSpriteMaterial;
             Debug.Log("에디터에서 할당한 RadialFill 머티리얼을 사용합니다.");
         }
-        else
+        else if (brightSprite != null)
         {
             // 머티리얼이 할당되지 않은 경우 기본 머티리얼 사용
             brightSpriteMaterial = brightSprite.material;
@@ -146,6 +110,7 @@ public class YukiChargeEffect : MonoBehaviour
         if (isCharging)
         {
             StopAllCoroutines();
+            currentChargeTween?.Kill();
         }
         
         StartCoroutine(ChargeSequence());
@@ -157,8 +122,14 @@ public class YukiChargeEffect : MonoBehaviour
     public void StopCharging()
     {
         StopAllCoroutines();
+        currentChargeTween?.Kill();
         isCharging = false;
-        SetFillAmount(0f);
+        
+        // Fill Amount 리셋
+        if (brightSpriteMaterial != null)
+        {
+            RadialFillUtils.SetFillAmount(brightSpriteMaterial, 0f);
+        }
     }
     
     /// <summary>
@@ -168,6 +139,49 @@ public class YukiChargeEffect : MonoBehaviour
     {
         isCharging = true;
         
+        // RadialFillUtils를 사용한 차오름 효과
+        if (brightSpriteMaterial != null && brightSpriteMaterial.HasProperty("_FillAmount"))
+        {
+            // RadialFill 설정
+            RadialFillUtils.SetupRadialFill(
+                brightSpriteMaterial,
+                centerPointType,
+                brightSprite?.sprite,
+                manualCenterPoint,
+                clockwise,
+                startAngle
+            );
+            
+            // DOTween 애니메이션 실행
+            bool chargeCompleted = false;
+            currentChargeTween = RadialFillUtils.PlayChargingEffect(brightSpriteMaterial, chargeDuration, () =>
+            {
+                chargeCompleted = true;
+            });
+            
+            // 차오름 완료까지 대기
+            yield return new WaitUntil(() => chargeCompleted);
+        }
+        else
+        {
+            // 기존 방식 fallback
+            yield return StartCoroutine(LegacyChargeSequence());
+        }
+        
+        // 완료 후 유지
+        if (holdDuration > 0)
+        {
+            yield return new WaitForSeconds(holdDuration);
+        }
+        
+        isCharging = false;
+    }
+    
+    /// <summary>
+    /// 레거시 차오름 방식 (RadialFill 셰이더가 없을 때)
+    /// </summary>
+    private IEnumerator LegacyChargeSequence()
+    {
         // 초기화
         SetFillAmount(0f);
         
@@ -184,43 +198,26 @@ public class YukiChargeEffect : MonoBehaviour
         
         // 완료 상태로 설정
         SetFillAmount(1f);
-        
-        // 완료 후 유지
-        if (holdDuration > 0)
-        {
-            yield return new WaitForSeconds(holdDuration);
-        }
-        
-        isCharging = false;
     }
     
     /// <summary>
-    /// 채우기 진행도를 설정합니다.
+    /// 채우기 진행도를 설정합니다. (레거시 방식)
     /// </summary>
     /// <param name="fillAmount">0~1 사이의 채우기 진행도</param>
     private void SetFillAmount(float fillAmount)
     {
         currentFillAmount = Mathf.Clamp01(fillAmount);
         
-        if (brightSpriteMaterial != null)
+        if (brightSpriteMaterial != null && brightSpriteMaterial.HasProperty("_FillAmount"))
         {
-            // 방사형 채우기 셰이더 사용
-            if (brightSpriteMaterial.HasProperty("_FillAmount"))
-            {
-                Vector2 centerPoint = GetCenterPoint(); // 동적으로 중심점 계산
-                
-                brightSpriteMaterial.SetFloat("_FillAmount", currentFillAmount);
-                brightSpriteMaterial.SetFloat("_StartAngle", startAngle);
-                brightSpriteMaterial.SetFloat("_Clockwise", clockwise ? 1f : 0f);
-                brightSpriteMaterial.SetVector("_CenterPoint", new Vector4(centerPoint.x, centerPoint.y, 0, 0));
-            }
-            else
-            {
-                // 셰이더가 없는 경우 간단한 알파 페이드 사용
-                Color color = brightSprite.color;
-                color.a = currentFillAmount;
-                brightSprite.color = color;
-            }
+            RadialFillUtils.SetFillAmount(brightSpriteMaterial, currentFillAmount);
+        }
+        else if (brightSpriteMaterial != null)
+        {
+            // 셰이더가 없는 경우 간단한 알파 페이드 사용
+            Color color = brightSprite.color;
+            color.a = currentFillAmount;
+            brightSprite.color = color;
         }
     }
     
@@ -242,8 +239,8 @@ public class YukiChargeEffect : MonoBehaviour
     
     void OnDestroy()
     {
-        // 에디터에서 할당한 머티리얼은 정리하지 않음
-        // Unity가 자동으로 관리함
+        // DOTween 정리
+        currentChargeTween?.Kill();
     }
     
     /// <summary>
@@ -266,14 +263,13 @@ public class YukiChargeEffect : MonoBehaviour
         // 에디터에서 실시간으로 값을 변경할 수 있도록
         if (Application.isEditor && brightSpriteMaterial != null)
         {
-            if (brightSpriteMaterial.HasProperty("_CenterPoint"))
-            {
-                Vector2 centerPoint = GetCenterPoint(); // 동적으로 중심점 계산
-                
-                brightSpriteMaterial.SetVector("_CenterPoint", new Vector4(centerPoint.x, centerPoint.y, 0, 0));
+            // 실시간으로 중심점 및 설정 업데이트
+            RadialFillUtils.UpdateCenterPoint(brightSpriteMaterial, centerPointType, brightSprite?.sprite, manualCenterPoint);
+            
+            if (brightSpriteMaterial.HasProperty("_StartAngle"))
                 brightSpriteMaterial.SetFloat("_StartAngle", startAngle);
+            if (brightSpriteMaterial.HasProperty("_Clockwise"))
                 brightSpriteMaterial.SetFloat("_Clockwise", clockwise ? 1f : 0f);
-            }
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using DG.Tweening;
 
 /// <summary>
 /// Alpha 보스의 반원 모양 차징 공격 이펙트를 관리하는 클래스입니다.
@@ -29,6 +30,11 @@ public class AlphaChargeEffect : MonoBehaviour
     [SerializeField] private float swirlDuration = 0.1f; // swirl 지속 시간
     
     private bool isCharging = false;
+    
+    // DOTween 애니메이션 참조
+    private Tween currentChargeTween;
+    private Sequence currentSwirlSequence;
+    
     
     /// <summary>
     /// RangeIndicator를 기준으로 실제 공격 범위를 계산합니다. (Scale 고려)
@@ -113,12 +119,8 @@ public class AlphaChargeEffect : MonoBehaviour
                 // 초기 fill 값 설정
                 fillMaterial.SetFloat("_FillAmount", 0f);
                 
-                // 중심점을 스프라이트 pivot으로 설정
-                if (fillSprite.sprite != null)
-                {
-                    Vector2 pivot = GetPivotAsUV(fillSprite.sprite);
-                    fillMaterial.SetVector("_CenterPoint", pivot);
-                }
+                // RadialFillUtils로 중심점 설정
+                RadialFillUtils.SetupRadialFill(fillMaterial, CenterPointType.SpritePivot, fillSprite.sprite);
                 
                 // 시계방향 설정
                 fillMaterial.SetFloat("_Clockwise", 1f);
@@ -147,19 +149,6 @@ public class AlphaChargeEffect : MonoBehaviour
         }
     }
     
-    /// <summary>
-    /// 스프라이트의 피벗을 UV 좌표로 변환합니다.
-    /// </summary>
-    private Vector2 GetPivotAsUV(Sprite sprite)
-    {
-        Vector2 pivot = sprite.pivot;
-        Rect spriteRect = sprite.rect;
-        Vector2 relativePivot = new Vector2(
-            (pivot.x - spriteRect.x) / spriteRect.width,
-            (pivot.y - spriteRect.y) / spriteRect.height
-        );
-        return relativePivot;
-    }
     
     /// <summary>
     /// 차징 코루틴
@@ -167,6 +156,42 @@ public class AlphaChargeEffect : MonoBehaviour
     private IEnumerator ChargingCoroutine(float duration)
     {
         isCharging = true;
+        
+        // RadialFillUtils를 사용한 차징 효과
+        if (fillSprite != null && fillSprite.material != null && fillSprite.material.HasProperty("_FillAmount"))
+        {
+            // RadialFill 설정
+            RadialFillUtils.SetupRadialFill(
+                fillSprite.material,
+                CenterPointType.SpritePivot,
+                fillSprite.sprite,
+                null,
+                true, // 시계방향
+                0f
+            );
+            
+            // DOTween 애니메이션 실행
+            currentChargeTween = RadialFillUtils.PlayChargingEffect(fillSprite.material, duration, () =>
+            {
+                isCharging = false;
+                // Swirl 효과 시작 (공격 순간)
+                StartCoroutine(PlaySwirlEffectWithUtils());
+            });
+        }
+        else
+        {
+            // 기존 방식 fallback
+            yield return StartCoroutine(LegacyChargingCoroutine(duration));
+        }
+        
+        yield return new WaitUntil(() => !isCharging);
+    }
+    
+    /// <summary>
+    /// 레거시 차징 방식 (RadialFillController가 없을 때)
+    /// </summary>
+    private IEnumerator LegacyChargingCoroutine(float duration)
+    {
         float elapsed = 0f;
         
         while (elapsed < duration)
@@ -267,6 +292,71 @@ public class AlphaChargeEffect : MonoBehaviour
         // 차징 스프라이트들 다시 활성화 (정리용)
         if (baseSprite != null) baseSprite.gameObject.SetActive(true);
         if (fillSprite != null) fillSprite.gameObject.SetActive(true);
+        
+        // 이펙트 종료 - Pool로 반환
+        ReturnToPool();
+    }
+    
+    /// <summary>
+    /// RadialFillUtils를 사용한 Swirl 효과를 재생합니다.
+    /// </summary>
+    private IEnumerator PlaySwirlEffectWithUtils()
+    {
+        if (swirlSprite == null) 
+        {
+            ReturnToPool();
+            yield break;
+        }
+        
+        // 차징 스프라이트들 숨김
+        if (baseSprite != null) baseSprite.gameObject.SetActive(false);
+        if (fillSprite != null) fillSprite.gameObject.SetActive(false);
+        
+        // Swirl 활성화
+        swirlSprite.gameObject.SetActive(true);
+        
+        // RadialFillUtils를 사용한 Swirl 효과
+        if (swirlSprite.material != null && swirlSprite.material.HasProperty("_FillAmount"))
+        {
+            // RadialFill 설정
+            RadialFillUtils.SetupRadialFill(
+                swirlSprite.material,
+                CenterPointType.BottomCenter,
+                swirlSprite.sprite,
+                null,
+                false, // 반시계방향
+                0f
+            );
+            
+            // 색상 설정
+            if (swirlSprite.material.HasProperty("_Color"))
+            {
+                swirlSprite.material.SetColor("_Color", fillColor);
+            }
+            
+            // DOTween Swirl 애니메이션
+            currentSwirlSequence = RadialFillUtils.PlaySwirlEffect(
+                swirlSprite.material, 
+                swirlSprite, 
+                swirlDuration, 
+                0.3f, 
+                () =>
+                {
+                    // Swirl 완료 후 정리
+                    swirlSprite.gameObject.SetActive(false);
+                    if (baseSprite != null) baseSprite.gameObject.SetActive(true);
+                    if (fillSprite != null) fillSprite.gameObject.SetActive(true);
+                    
+                    // 이펙트 종료 - Pool로 반환
+                    ReturnToPool();
+                }
+            );
+        }
+        else
+        {
+            // 기존 방식 fallback
+            yield return StartCoroutine(PlaySwirlEffect());
+        }
     }
     
     /// <summary>

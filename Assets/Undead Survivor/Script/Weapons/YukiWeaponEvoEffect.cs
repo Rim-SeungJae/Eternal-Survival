@@ -50,6 +50,9 @@ public class YukiWeaponEvoEffect : MonoBehaviour
     
     [Header("# State")]
     private List<Enemy> markedEnemies = new List<Enemy>(); // 마크가 부여된 적들
+    
+    // DOTween 애니메이션 참조
+    private Sequence currentSwirlSequence;
 
     void Awake()
     {
@@ -64,6 +67,7 @@ public class YukiWeaponEvoEffect : MonoBehaviour
         if (swirlObject != null)
         {
             swirlRenderer = swirlObject.GetComponent<SpriteRenderer>();
+            
         }
         
         // 초기에는 AfterImage와 Swirl 비활성화
@@ -328,7 +332,7 @@ public class YukiWeaponEvoEffect : MonoBehaviour
     }
     
     /// <summary>
-    /// Swirl 공격 효과를 재생합니다. (Alpha 보스와 유사한 방식)
+    /// RadialFillController를 사용한 Swirl 공격 효과를 재생합니다.
     /// </summary>
     private IEnumerator PlaySwirlEffect()
     {
@@ -337,6 +341,55 @@ public class YukiWeaponEvoEffect : MonoBehaviour
         // Swirl 활성화
         swirlObject.SetActive(true);
         
+        // RadialFillUtils를 사용한 Swirl 효과
+        if (swirlRenderer != null && swirlRenderer.material != null && swirlRenderer.material.HasProperty("_FillAmount"))
+        {
+            // 색상 설정
+            if (swirlRenderer.material.HasProperty("_Color"))
+            {
+                swirlRenderer.material.SetColor("_Color", swirlColor);
+            }
+            
+            // 시계방향 설정 (유키는 시계방향)
+            swirlRenderer.material.SetFloat("_Clockwise", 0f);
+            
+            // DOTween 애니메이션 실행
+            bool effectCompleted = false;
+            currentSwirlSequence = RadialFillUtils.PlaySwirlEffect(
+                swirlRenderer.material, 
+                swirlRenderer, 
+                swirlDuration, 
+                0.3f, 
+                () =>
+                {
+                    // Swirl 완료 후 정리
+                    swirlObject.SetActive(false);
+                    
+                    // 머티리얼 초기 색상 복구
+                    if (swirlRenderer.material != null && swirlRenderer.material.HasProperty("_Color"))
+                    {
+                        swirlRenderer.material.SetColor("_Color", swirlColor);
+                    }
+                    
+                    effectCompleted = true;
+                }
+            );
+            
+            // 완료까지 대기
+            yield return new WaitUntil(() => effectCompleted);
+        }
+        else
+        {
+            // 기존 방식 fallback
+            yield return StartCoroutine(PlaySwirlEffectLegacy());
+        }
+    }
+    
+    /// <summary>
+    /// 레거시 Swirl 효과 (RadialFillController가 없을 때)
+    /// </summary>
+    private IEnumerator PlaySwirlEffectLegacy()
+    {
         // 기존 머티리얼 활용 - radial fill 초기화
         Material swirlMaterial = swirlRenderer.material;
         if (swirlMaterial != null)
