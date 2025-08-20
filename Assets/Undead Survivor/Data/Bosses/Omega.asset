@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b63cf4e23e5905a4fae8ffaee7b33188, type: 3}
-  m_Name: Alpha
+  m_Name: Omega
   m_EditorClassIdentifier: Assembly-CSharp::BossDataSO
-  bossName: "\uC54C\uD30C"
+  bossName: "\uC624\uBA54\uAC00"
   spriteType: 0
   health: 100
   speed: 3
   contactDamage: 10
-  spawnTime: 111
-  requiredKills: 111
-  requiredLevel: 111
-  specialAttackCooldown: 10
+  spawnTime: 1
+  requiredKills: 1
+  requiredLevel: 1
+  specialAttackCooldown: 15
   specialAttackRange: 5
   specialAttackDamage: 50
   expReward: 100
   lootTable:
   - itemTag: AirSupply
     dropChance: 1
-  bossIcon: {fileID: 21300000, guid: 803811fb079afd347b3a323b1d2d7431, type: 3}
+  bossIcon: {fileID: 21300000, guid: 02a6dcc7f72b25343af288dc145840de, type: 3}

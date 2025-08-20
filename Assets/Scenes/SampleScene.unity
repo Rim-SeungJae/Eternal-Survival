@@ -4267,7 +4267,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1591536492}
   m_Father: {fileID: 177383958}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -4910,7 +4911,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.1593628, y: -0.35809326}
+  m_AnchoredPosition: {x: -0.40100098, y: -1.2769775}
   m_SizeDelta: {x: 0.00139, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &586518690
@@ -15474,6 +15475,12 @@ MonoBehaviour:
     canRespawn: 0
     respawnInterval: 0
     lastSpawnTime: 0
+  - bossPrefab: {fileID: 5615476525660764216, guid: 180b29a0246d9844a923e6c994173b5f, type: 3}
+    bossData: {fileID: 11400000, guid: 9d11f5ba7c3b48b41a817313d85fe8ad, type: 2}
+    bossId: 1
+    canRespawn: 0
+    respawnInterval: 0
+    lastSpawnTime: 0
   bossSpawnPoints: []
   spawnDistanceFromPlayer: 15
 --- !u!4 &1261949741
@@ -16988,11 +16995,14 @@ MonoBehaviour:
   - tag: YukiWeaponEvo_Mark
     prefab: {fileID: 660077246139586993, guid: 1c9530f9ce5a0734b87dd40ab0590d5b, type: 3}
     size: 0
-  - tag: AlphaSpecialAttack
+  - tag: ArcBlade
     prefab: {fileID: 1630328731203396647, guid: d3f8cde300dc7da44b5197db015d62d3, type: 3}
     size: 0
   - tag: AirSupply
     prefab: {fileID: 1940111994253978681, guid: 6907dc2ded9c0474495e4cc0bb67d15a, type: 3}
+    size: 0
+  - tag: VFPulse
+    prefab: {fileID: 3280519133390621005, guid: 551ab07f50c72b842be44e28b460ee0b, type: 3}
     size: 0
 --- !u!4 &1446405080
 Transform:
@@ -18501,6 +18511,92 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 5865535255468057936, guid: e35a029c10dbf3b49a4f71d84b2e938e, type: 3}
   m_PrefabInstance: {fileID: 1581900710}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1591536491
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 447718023}
+    m_Modifications:
+    - target: {fileID: 1652143759095011289, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_Name
+      value: CFXR2 Shiny Item (Loop)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652143759095011302, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652143759095011302, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652143759095011302, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652143759095011302, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652143759095011302, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652143759095011302, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652143759095011302, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652143759095011302, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652143759095011302, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652143759095011302, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652143759095011302, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652143759095011302, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1652143759095011303, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3827264115780404086, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7831740662026284754, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_Intensity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8797081065329041583, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+--- !u!4 &1591536492 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1652143759095011302, guid: e2c1ac940434a5242b54d72b66654687, type: 3}
+  m_PrefabInstance: {fileID: 1591536491}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1607685236
 GameObject:

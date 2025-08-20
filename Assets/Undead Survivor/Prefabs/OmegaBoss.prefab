@@ -407,7 +407,7 @@ GameObject:
   - component: {fileID: 7754213840892248953}
   - component: {fileID: 446534995745491657}
   m_Layer: 3
-  m_Name: AlphaBoss
+  m_Name: OmegaBoss
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -429,6 +429,7 @@ Transform:
   - {fileID: 2233362570861191361}
   - {fileID: 5715986493333904816}
   - {fileID: 5140652368879066558}
+  - {fileID: 4580993289991023299}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7316472328115600480
@@ -478,7 +479,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 483325286792400162, guid: 1a95a83397f5b6e42a62cae9bcfe6260, type: 3}
+  m_Sprite: {fileID: 3040797258114334908, guid: 2e9117ad7b2d0c1409ae2ac73f36768e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -597,7 +598,7 @@ Animator:
   m_GameObject: {fileID: 5615476525660764216}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a37f43242d701034882d2d472b6de462, type: 2}
+  m_Controller: {fileID: 22100000, guid: fdf29153692054a4e83a4469bca51908, type: 2}
   m_CullingMode: 2
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -806,6 +807,93 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &7105170865305030719
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4580993289991023299}
+  - component: {fileID: 1503161653515190443}
+  m_Layer: 3
+  m_Name: VFPulse
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4580993289991023299
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7105170865305030719}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5931699524927669959}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1503161653515190443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7105170865305030719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdd889d3a3a662840b215dcbc13612b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OmegaVFPulseAttack
+  attackData:
+    attackName: Special Attack
+    cooldown: 5
+    priority: 1
+    minDistanceToPlayer: 0
+    maxDistanceToPlayer: 3.4028235e+38
+    minHealthPercentage: 0
+    maxHealthPercentage: 1
+    canBeInterrupted: 0
+    requiresLineOfSight: 0
+  isExecuting: 0
+  vfPulseEffectPoolTag: VFPulse
+  warningDuration: 2
+  explosionDuration: 0.5
+  attackRadius: 4
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  damage: 50
+  pulseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7904663329514506202
 GameObject:
   m_ObjectHideFlags: 0

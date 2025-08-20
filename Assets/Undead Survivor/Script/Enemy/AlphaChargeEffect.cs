@@ -3,12 +3,12 @@ using UnityEngine;
 using DG.Tweening;
 
 /// <summary>
-/// Alpha 보스의 반원 모양 차징 공격 이펙트를 관리하는 클래스입니다.
+/// Alpha 보스의 Arc Blade 공격 이펙트를 관리하는 클래스입니다.
 /// PoolManager와 호환됩니다.
 /// </summary>
 public class AlphaChargeEffect : MonoBehaviour
 {
-    [Header("Charge Effect Settings")]
+    [Header("Arc Blade Effect Settings")]
     [SerializeField] private SpriteRenderer baseSprite; // 기본 반원 스프라이트
     [SerializeField] private SpriteRenderer fillSprite; // 채워지는 반원 스프라이트
     
@@ -19,7 +19,7 @@ public class AlphaChargeEffect : MonoBehaviour
     public SpriteRenderer swirlSprite;
     
     [Header("Effect Parameters")]
-    [SerializeField] private float chargeEffectScale = 3f; // 이펙트 크기
+    [SerializeField] private float arcBladeEffectScale = 1f; // 이펙트 크기
     [SerializeField] private Color baseColor = Color.red; // 기본 색상
     [SerializeField] private Color fillColor = Color.darkRed; // 채워지는 색상
     
@@ -29,10 +29,10 @@ public class AlphaChargeEffect : MonoBehaviour
     [Header("Swirl Effect Settings")]
     [SerializeField] private float swirlDuration = 0.1f; // swirl 지속 시간
     
-    private bool isCharging = false;
+    private bool isArcBladeCharging = false;
     
     // DOTween 애니메이션 참조
-    private Tween currentChargeTween;
+    private Tween currentArcBladeTween;
     private Sequence currentSwirlSequence;
     
     
@@ -46,8 +46,8 @@ public class AlphaChargeEffect : MonoBehaviour
         // 로컬 거리 계산
         float localDistance = rangeIndicator.localPosition.magnitude;
         
-        // 현재 스케일 적용 (chargeEffectScale)
-        float actualRange = localDistance * chargeEffectScale;
+        // 현재 스케일 적용 (arcBladeEffectScale)
+        float actualRange = localDistance * arcBladeEffectScale;
         
         return actualRange;
     }
@@ -64,17 +64,17 @@ public class AlphaChargeEffect : MonoBehaviour
     void OnEnable()
     {
         // 풀에서 재사용될 때마다 상태 초기화
-        isCharging = false;
+        isArcBladeCharging = false;
     }
     
     /// <summary>
-    /// 차징 이펙트를 시작합니다.
+    /// Arc Blade 이펙트를 시작합니다.
     /// </summary>
-    /// <param name="chargeDuration">차징 시간</param>
+    /// <param name="chargeDuration">Arc Blade 차징 시간</param>
     /// <param name="direction">공격 방향</param>
-    public void StartCharging(float chargeDuration, Vector2 direction)
+    public void StartArcBladeCharging(float chargeDuration, Vector2 direction)
     {
-        if (isCharging) return;
+        if (isArcBladeCharging) return;
         
         // 오브젝트 활성화
         gameObject.SetActive(true);
@@ -84,13 +84,13 @@ public class AlphaChargeEffect : MonoBehaviour
         transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward); // 위쪽 기준이므로 -90도 보정
         
         // 크기 설정
-        transform.localScale = Vector3.one * chargeEffectScale;
+        transform.localScale = Vector3.one * arcBladeEffectScale;
         
         // 스프라이트 설정
         SetupSprites();
         
-        // 차징 시작
-        StartCoroutine(ChargingCoroutine(chargeDuration));
+        // Arc Blade 차징 시작
+        StartCoroutine(ArcBladeChargingCoroutine(chargeDuration));
     }
     
     /// <summary>
@@ -151,13 +151,13 @@ public class AlphaChargeEffect : MonoBehaviour
     
     
     /// <summary>
-    /// 차징 코루틴
+    /// Arc Blade 차징 코루틴
     /// </summary>
-    private IEnumerator ChargingCoroutine(float duration)
+    private IEnumerator ArcBladeChargingCoroutine(float duration)
     {
-        isCharging = true;
+        isArcBladeCharging = true;
         
-        // RadialFillUtils를 사용한 차징 효과
+        // RadialFillUtils를 사용한 Arc Blade 차징 효과
         if (fillSprite != null && fillSprite.material != null && fillSprite.material.HasProperty("_FillAmount"))
         {
             // RadialFill 설정
@@ -171,9 +171,9 @@ public class AlphaChargeEffect : MonoBehaviour
             );
             
             // DOTween 애니메이션 실행
-            currentChargeTween = RadialFillUtils.PlayChargingEffect(fillSprite.material, duration, () =>
+            currentArcBladeTween = RadialFillUtils.PlayChargingEffect(fillSprite.material, duration, () =>
             {
-                isCharging = false;
+                isArcBladeCharging = false;
                 // Swirl 효과 시작 (공격 순간)
                 StartCoroutine(PlaySwirlEffectWithUtils());
             });
@@ -181,16 +181,16 @@ public class AlphaChargeEffect : MonoBehaviour
         else
         {
             // 기존 방식 fallback
-            yield return StartCoroutine(LegacyChargingCoroutine(duration));
+            yield return StartCoroutine(LegacyArcBladeChargingCoroutine(duration));
         }
         
-        yield return new WaitUntil(() => !isCharging);
+        yield return new WaitUntil(() => !isArcBladeCharging);
     }
     
     /// <summary>
-    /// 레거시 차징 방식 (RadialFillController가 없을 때)
+    /// 레거시 Arc Blade 차징 방식 (RadialFillController가 없을 때)
     /// </summary>
-    private IEnumerator LegacyChargingCoroutine(float duration)
+    private IEnumerator LegacyArcBladeChargingCoroutine(float duration)
     {
         float elapsed = 0f;
         
@@ -208,8 +208,8 @@ public class AlphaChargeEffect : MonoBehaviour
             yield return null;
         }
         
-        // 차징 완료
-        isCharging = false;
+        // Arc Blade 차징 완료
+        isArcBladeCharging = false;
         
         // Swirl 효과 시작 (공격 순간)
         yield return StartCoroutine(PlaySwirlEffect());
@@ -240,9 +240,17 @@ public class AlphaChargeEffect : MonoBehaviour
         Material swirlMaterial = swirlSprite.material;
         if (swirlMaterial != null)
         {
-            swirlMaterial.SetFloat("_FillAmount", 0f);
-            swirlMaterial.SetFloat("_Clockwise", 1f); // 반시계방향
-            swirlMaterial.SetColor("_Color", fillColor);
+            // 프로퍼티 존재 확인 후 설정
+            if (swirlMaterial.HasProperty("_FillAmount"))
+                swirlMaterial.SetFloat("_FillAmount", 0f);
+            
+            if (swirlMaterial.HasProperty("_Clockwise"))
+                swirlMaterial.SetFloat("_Clockwise", 1f); // 반시계방향
+            else
+                Debug.LogWarning($"Material {swirlMaterial.name} does not have _Clockwise property");
+            
+            if (swirlMaterial.HasProperty("_Color"))
+                swirlMaterial.SetColor("_Color", fillColor);
         }
         
         // 1단계: 빠른 채움 효과 (휘두르는 효과)
@@ -324,7 +332,7 @@ public class AlphaChargeEffect : MonoBehaviour
                 CenterPointType.BottomCenter,
                 swirlSprite.sprite,
                 null,
-                false, // 반시계방향
+                true, // 시계방향
                 0f
             );
             
@@ -360,14 +368,14 @@ public class AlphaChargeEffect : MonoBehaviour
     }
     
     /// <summary>
-    /// 차징을 중단합니다.
+    /// Arc Blade 차징을 중단합니다.
     /// </summary>
-    public void StopCharging()
+    public void StopArcBladeCharging()
     {
-        if (isCharging)
+        if (isArcBladeCharging)
         {
             StopAllCoroutines();
-            isCharging = false;
+            isArcBladeCharging = false;
         }
         
         // Swirl 정리
@@ -401,7 +409,7 @@ public class AlphaChargeEffect : MonoBehaviour
     {
         // 코루틴 정리
         StopAllCoroutines();
-        isCharging = false;
+        isArcBladeCharging = false;
     }
 
 }

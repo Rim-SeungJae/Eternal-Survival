@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: af715618670b1384fa235b87f40f1882
+guid: 02a6dcc7f72b25343af288dc145840de
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -69228392967884597
-    second: New Sprite_0
+      213: 5393621465215759764
+    second: Omega_mini_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 1024
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: New Sprite_0
+      name: Omega_mini_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1024
-        height: 1024
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bc037c4b42d0a0ff0800000000000000
-      internalID: -69228392967884597
+      spriteID: 4957b1f552ef9da40800000000000000
+      internalID: 5393621465215759764
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      New Sprite_0: -69228392967884597
+      Omega_mini_0: 5393621465215759764
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

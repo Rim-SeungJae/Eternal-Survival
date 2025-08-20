@@ -78,3 +78,7 @@ crashlytics-build.properties
 CLAUDE.md
 .cursor/
 .claude/
+
+# Third-party assets (Brackeys and JMO)
+/Assets/Brackeys/
+/Assets/JMO Assets/

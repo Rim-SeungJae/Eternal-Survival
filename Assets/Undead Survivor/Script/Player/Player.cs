@@ -171,6 +171,22 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void TakeDamage(float damage)
+    {
+        // 무적 상태가 아니면 데미지를 받습니다.
+        if (!isInvincible)
+        {
+            float actualDamage = CalculateDamageAfterDefense(damage);
+            GameManager.instance.health -= actualDamage;
+            
+            // 체력이 0 미만으로 떨어지면 부활을 시도합니다.
+            if (GameManager.instance.health <= 0)
+            {
+                TryRevive();
+            }
+        }
+    }
+
     /// <summary>
     /// 부활을 시도하고, 가능하면 부활 코루틴을 시작합니다. 불가능하면 게임 오버를 호출합니다.
     /// </summary>

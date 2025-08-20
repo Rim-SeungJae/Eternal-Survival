@@ -76,8 +76,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 78017609
-  m_SortingLayer: -1
+  m_SortingLayerID: -1061814263
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 7cfa01d6896e2454198abe9760d72057, type: 3}
   m_Color: {r: 0.9622642, g: 0.41304737, b: 0.92394674, a: 1}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 5681369379667759810}
   - component: {fileID: 8582959287322289327}
   m_Layer: 0
-  m_Name: AlphaSpecialAttack
+  m_Name: ArcBlade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -144,17 +144,11 @@ MonoBehaviour:
   baseSemiCircleSprite: {fileID: 21300000, guid: 7cfa01d6896e2454198abe9760d72057, type: 3}
   fillSemiCircleSprite: {fileID: 21300000, guid: 7cfa01d6896e2454198abe9760d72057, type: 3}
   swirlSprite: {fileID: 8779370292145137630}
-  chargeEffectScale: 1
+  arcBladeEffectScale: 1
   baseColor: {r: 0.9607843, g: 0.4117647, b: 0.9254902, a: 1}
   fillColor: {r: 0.8113208, g: 0.21813813, b: 0.775249, a: 1}
   rangeIndicator: {fileID: 82792735071964587}
-  swirlRotationSpeed: 720
   swirlDuration: 0.5
-  enableEditorDebug: 0
-  debugFillAmount: 0
-  debugAutoPlay: 0
-  debugChargeDuration: 3
-  debugDirection: {x: 0, y: 1}
 --- !u!1 &2587126543451312560
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,8 +225,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 78017609
-  m_SortingLayer: -1
+  m_SortingLayerID: -1061814263
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 7cfa01d6896e2454198abe9760d72057, type: 3}
   m_Color: {r: 0.8396226, g: 0.25743148, b: 0.802196, a: 1}
