@@ -71,7 +71,7 @@ public class OmegaVFPulseAttack : SpecialAttackBase
                 yield break;
             }
             
-            // 3. 경고 단계 시작
+            // 3. 경고 단계 시작 (원래 스케일 그대로 사용)
             currentPulseEffect.StartWarningPhase(warningDuration, attackRadius, pulseCurve);
             
             // 4. 경고 시간 대기
@@ -84,7 +84,7 @@ public class OmegaVFPulseAttack : SpecialAttackBase
             float actualRange = currentPulseEffect.GetActualAttackRange();
             ExecuteDamageCheck(targetPosition, actualRange);
             
-            // 7. 폭발 애니메이션 대기
+            // 7. 폭발 이펙트 완료 대기
             yield return new WaitForSeconds(explosionDuration);
             
             // 8. 이펙트 정리

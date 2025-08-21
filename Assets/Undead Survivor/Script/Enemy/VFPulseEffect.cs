@@ -12,24 +12,19 @@ public class VFPulseEffect : MonoBehaviour
     [SerializeField] private SpriteRenderer warningRangeRenderer; // 경고 범위 표시용 스프라이트
     [SerializeField] private ParticleSystem explosionParticles1; // 폭발 파티클 시스템 1
     [SerializeField] private ParticleSystem explosionParticles2; // 폭발 파티클 시스템 2
-    [SerializeField] private SpriteRenderer explosionSprite; // 폭발 스프라이트 (선택사항)
+    [SerializeField] private ParticleSystem chargeParticles; // 충전 파티클 시스템
     
     [Header("Range Settings")]
     public Transform rangeIndicator; // 공격 범위 지시자 (에디터에서 연결)
     
     [Header("Warning Phase Settings")]
-    [SerializeField] private float warningPulseSpeed = 2f; // 경고 펄스 속도
-    [SerializeField] private float warningScaleMin = 0.8f; // 경고 최소 크기
-    [SerializeField] private float warningScaleMax = 1.2f; // 경고 최대 크기
+    [SerializeField] private float warningPulseSpeed = 0.6f; // 경고 펄스 속도 (한 번의 깜빡임 주기)
     
     [Header("Explosion Settings")]
-    [SerializeField] private float explosionForceMultiplier = 10f; // 폭발 힘 배수
-    [SerializeField] private AnimationCurve velocityCurve = AnimationCurve.EaseInOut(0, 0, 1, 1); // 속도 커브
+    // 파티클 시스템 자체 설정을 사용하므로 런타임 조작 불필요
     
     private Sequence warningSequence;
     private Sequence explosionSequence;
-    private ParticleSystem.VelocityOverLifetimeModule velocityModule1;
-    private ParticleSystem.VelocityOverLifetimeModule velocityModule2;
     private bool isInitialized = false;
     private Vector3 originalWarningScale; // 경고 스프라이트의 원래 스케일 저장
     
@@ -43,14 +38,11 @@ public class VFPulseEffect : MonoBehaviour
     /// </summary>
     public float GetActualAttackRange()
     {
-        if (rangeIndicator == null) return 4f; // 기본값
-        
-        // 로컬 거리 계산
+        // RangeIndicator의 로컬 거리 계산
         float localDistance = rangeIndicator.localPosition.magnitude;
         
-        // 현재 스케일 적용 (경고 스프라이트의 스케일)
-        float currentScale = warningRangeRenderer != null ? warningRangeRenderer.transform.localScale.x : 1f;
-        float actualRange = localDistance * currentScale;
+        // 원래 스케일을 그대로 사용하여 실제 범위 계산
+        float actualRange = localDistance;
         
         return actualRange;
     }
@@ -68,58 +60,26 @@ public class VFPulseEffect : MonoBehaviour
             originalWarningScale = warningRangeRenderer.transform.localScale;
         }
         
+        if (chargeParticles != null)
+        {
+            chargeParticles.gameObject.SetActive(false);
+        }
+
         // 파티클 시스템 초기 설정
         if (explosionParticles1 != null)
         {
             explosionParticles1.gameObject.SetActive(false);
-            velocityModule1 = explosionParticles1.velocityOverLifetime;
-            velocityModule1.enabled = true;
         }
         
         if (explosionParticles2 != null)
         {
             explosionParticles2.gameObject.SetActive(false);
-            velocityModule2 = explosionParticles2.velocityOverLifetime;
-            velocityModule2.enabled = true;
         }
-        
-        // 폭발 스프라이트 초기 설정
-        if (explosionSprite != null)
-        {
-            explosionSprite.gameObject.SetActive(false);
-        }
+
         
         isInitialized = true;
     }
     
-    /// <summary>
-    /// 원하는 반지름에 맞는 스케일을 계산합니다.
-    /// </summary>
-    private float CalculateScaleForRadius(float targetRadius)
-    {
-        if (rangeIndicator == null) 
-        {
-            // RangeIndicator가 없으면 기본 방식 사용 (지름 방식)
-            return targetRadius * 2f;
-        }
-        
-        // RangeIndicator의 로컬 거리를 기준으로 스케일 계산
-        float baseDistance = rangeIndicator.localPosition.magnitude;
-        
-        if (baseDistance <= 0f)
-        {
-            Debug.LogWarning("VFPulseEffect: RangeIndicator distance is zero or negative");
-            return targetRadius * 2f; // fallback
-        }
-        
-        // 목표 반지름을 달성하기 위해 필요한 스케일
-        float requiredScale = targetRadius / baseDistance;
-        
-        // 원래 스케일을 고려하여 최종 스케일 계산
-        float finalScale = requiredScale * originalWarningScale.x;
-        
-        return finalScale;
-    }
     
     /// <summary>
     /// 경고 단계를 시작합니다.
@@ -140,18 +100,27 @@ public class VFPulseEffect : MonoBehaviour
             Debug.LogWarning("VFPulseEffect: Cannot start warning phase - GameObject is inactive");
             return;
         }
+
+        if(chargeParticles == null)
+        {
+            Debug.LogWarning("VFPulseEffect: Charge particles are not assigned");
+            return;
+        }
         
-        // 경고 스프라이트 활성화
+        // 경고 스프라이트 활성화 (원래 스케일 그대로 사용)
         warningRangeRenderer.gameObject.SetActive(true);
+        chargeParticles.gameObject.SetActive(true);
         
-        // 범위 크기 설정 (RangeIndicator 기준으로 조정)
-        float targetScale = CalculateScaleForRadius(radius);
-        warningRangeRenderer.transform.localScale = Vector3.one * targetScale;
+        
+        // 초기 투명도 설정 (깜빡임 시작값)
+        Color initialColor = warningRangeRenderer.color;
+        initialColor.a = 0.3f;
+        warningRangeRenderer.color = initialColor;
         
         // 펄스 애니메이션 시작
         StartWarningPulseAnimation(duration, pulseCurve);
         
-        Debug.Log($"VFPulse Warning Phase started - Duration: {duration}s, Radius: {radius}");
+        Debug.Log($"VFPulse Warning Phase started - Duration: {duration}s, Using original scale: {originalWarningScale}");
     }
     
     /// <summary>
@@ -167,26 +136,26 @@ public class VFPulseEffect : MonoBehaviour
         // 펄스 애니메이션 시퀀스 생성
         warningSequence = DOTween.Sequence();
         
-        // 크기 펄스 효과
+        // 투명도 깜빡임 효과 (0.3 → 1.0 → 0.3)
         warningSequence.Append(
-            warningRangeRenderer.transform.DOScale(warningScaleMax, warningPulseSpeed / 2f)
+            warningRangeRenderer.DOFade(1f, warningPulseSpeed / 2f)
                 .SetEase(Ease.InOutSine)
         );
         warningSequence.Append(
-            warningRangeRenderer.transform.DOScale(warningScaleMin, warningPulseSpeed / 2f)
+            warningRangeRenderer.DOFade(0.3f, warningPulseSpeed / 2f)
                 .SetEase(Ease.InOutSine)
         );
         
-        // 반복 설정
-        int loopCount = Mathf.CeilToInt(duration / warningPulseSpeed);
-        warningSequence.SetLoops(loopCount);
+        // 무한 반복 설정 (duration 기간 동안 계속 깜빡임)
+        warningSequence.SetLoops(-1);
         
-        // 투명도 페이드 (마지막 0.2초 동안)
-        DOTween.To(() => warningRangeRenderer.color.a, a => {
-            Color color = warningRangeRenderer.color;
-            color.a = a;
-            warningRangeRenderer.color = color;
-        }, 0f, 0.2f).SetDelay(duration - 0.2f);
+        // duration 후에 시퀀스 정지하고 페이드 아웃
+        DOTween.Sequence()
+            .AppendInterval(duration - 0.2f)
+            .AppendCallback(() => {
+                warningSequence?.Kill(); // 깜빡임 정지
+                warningRangeRenderer.DOFade(0f, 0.2f); // 페이드 아웃
+            });
     }
     
     /// <summary>
@@ -201,21 +170,24 @@ public class VFPulseEffect : MonoBehaviour
         
         // 폭발 이펙트들 시작
         StartExplosionParticles(duration);
-        StartExplosionSprite(duration);
         
         Debug.Log($"VFPulse Explosion Phase started - Duration: {duration}s");
     }
-    
+
     /// <summary>
     /// 경고 단계를 중단합니다.
     /// </summary>
     private void StopWarningPhase()
     {
         warningSequence?.Kill();
-        
+
         if (warningRangeRenderer != null)
         {
             warningRangeRenderer.gameObject.SetActive(false);
+        }
+        if (chargeParticles != null)
+        {
+            chargeParticles.gameObject.SetActive(false);
         }
     }
     
@@ -245,94 +217,49 @@ public class VFPulseEffect : MonoBehaviour
             explosionParticles2.Play();
         }
         
-        // Velocity over Lifetime 모듈로 폭발 효과 구현
-        StartCoroutine(AnimateParticleVelocity(duration));
+        // 폭발 효과: 파티클 재생 후 fade out
+        StartCoroutine(AnimateParticleExplosion(duration));
     }
     
     /// <summary>
-    /// 파티클들의 속도를 애니메이션으로 제어하여 폭발 효과를 만듭니다.
+    /// 파티클 폭발 효과: 파티클 재생 후 천천히 fade out
     /// </summary>
-    private IEnumerator AnimateParticleVelocity(float duration)
+    private IEnumerator AnimateParticleExplosion(float duration)
     {
-        bool hasParticles = (explosionParticles1 != null && velocityModule1.enabled) || 
-                           (explosionParticles2 != null && velocityModule2.enabled);
+        if (explosionParticles1 == null && explosionParticles2 == null) yield break;
         
-        if (!hasParticles) yield break;
+        // fade out 시작 시점 설정 (30% 지점부터)
+        float fadeStartTime = duration * 0.3f;
+        yield return new WaitForSeconds(fadeStartTime);
         
-        float elapsed = 0f;
-        float halfDuration = duration * 0.5f;
+        // 파티클 시스템에 fade out 효과 적용
+        SetupParticleFadeOut(explosionParticles1, duration - fadeStartTime);
+        SetupParticleFadeOut(explosionParticles2, duration - fadeStartTime);
         
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float normalizedTime = elapsed / duration;
-            
-            // 0 → 1 → 0으로 변화하는 Y축 속도
-            float velocityY;
-            if (elapsed < halfDuration)
-            {
-                // 첫 번째 절반: 0에서 1로 증가
-                velocityY = (elapsed / halfDuration) * explosionForceMultiplier;
-            }
-            else
-            {
-                // 두 번째 절반: 1에서 0으로 감소
-                velocityY = ((duration - elapsed) / halfDuration) * explosionForceMultiplier;
-            }
-            
-            // 커브 적용
-            velocityY *= velocityCurve.Evaluate(normalizedTime);
-            
-            // 두 파티클 시스템에 동일하게 적용
-            if (explosionParticles1 != null && velocityModule1.enabled)
-            {
-                velocityModule1.y = new ParticleSystem.MinMaxCurve(velocityY);
-            }
-            
-            if (explosionParticles2 != null && velocityModule2.enabled)
-            {
-                velocityModule2.y = new ParticleSystem.MinMaxCurve(velocityY);
-            }
-            
-            yield return null;
-        }
-        
-        // 최종적으로 두 시스템 다 속도를 0으로 설정
-        if (explosionParticles1 != null && velocityModule1.enabled)
-        {
-            velocityModule1.y = new ParticleSystem.MinMaxCurve(0f);
-        }
-        
-        if (explosionParticles2 != null && velocityModule2.enabled)
-        {
-            velocityModule2.y = new ParticleSystem.MinMaxCurve(0f);
-        }
+        // 나머지 시간 대기
+        yield return new WaitForSeconds(duration - fadeStartTime);
     }
     
     /// <summary>
-    /// 폭발 스프라이트 효과를 시작합니다.
+    /// 파티클 시스템에 fade out 효과를 적용합니다.
     /// </summary>
-    private void StartExplosionSprite(float duration)
+    private void SetupParticleFadeOut(ParticleSystem particles, float fadeDuration)
     {
-        if (explosionSprite == null) return;
+        if (particles == null) return;
         
-        // 폭발 스프라이트 활성화
-        explosionSprite.gameObject.SetActive(true);
+        var colorOverLifetime = particles.colorOverLifetime;
+        colorOverLifetime.enabled = true;
         
-        // 폭발 애니메이션 시퀀스
-        explosionSequence?.Kill();
-        explosionSequence = DOTween.Sequence();
-        
-        // 크기 확대 + 페이드 아웃
-        explosionSequence.Append(
-            explosionSprite.transform.DOScale(Vector3.one * 2f, duration * 0.3f)
-                .SetEase(Ease.OutQuad)
+        // 알파 값을 1에서 0으로 fade out하는 그라디언트 생성
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+            new GradientColorKey[] { new GradientColorKey(Color.white, 0.0f), new GradientColorKey(Color.white, 1.0f) },
+            new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(0.0f, 1.0f) }
         );
-        explosionSequence.Join(
-            explosionSprite.DOFade(0f, duration)
-                .SetEase(Ease.OutQuad)
-        );
+        
+        colorOverLifetime.color = gradient;
     }
+
     
     /// <summary>
     /// 이펙트를 정리하고 풀에 반환합니다.
@@ -392,39 +319,16 @@ public class VFPulseEffect : MonoBehaviour
             warningRangeRenderer.color = color;
         }
         
-        // 폭발 스프라이트 초기화
-        if (explosionSprite != null)
-        {
-            explosionSprite.gameObject.SetActive(false);
-            explosionSprite.transform.localScale = Vector3.one;
-            
-            // 색상 초기화 (알파값 복구)
-            Color color = explosionSprite.color;
-            color.a = 1f;
-            explosionSprite.color = color;
-        }
         
         // 파티클 시스템 초기화
         if (explosionParticles1 != null)
         {
             explosionParticles1.gameObject.SetActive(false);
-            
-            // Velocity Over Lifetime 초기화
-            if (velocityModule1.enabled)
-            {
-                velocityModule1.y = new ParticleSystem.MinMaxCurve(0f);
-            }
         }
         
         if (explosionParticles2 != null)
         {
             explosionParticles2.gameObject.SetActive(false);
-            
-            // Velocity Over Lifetime 초기화
-            if (velocityModule2.enabled)
-            {
-                velocityModule2.y = new ParticleSystem.MinMaxCurve(0f);
-            }
         }
     }
     
