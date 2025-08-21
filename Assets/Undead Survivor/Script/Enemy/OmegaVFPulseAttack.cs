@@ -85,7 +85,7 @@ public class OmegaVFPulseAttack : SpecialAttackBase
             ExecuteDamageCheck(targetPosition, actualRange);
             
             // 7. 폭발 이펙트 완료 대기
-            yield return new WaitForSeconds(explosionDuration);
+            yield return new WaitForSeconds(explosionDuration + 1f);
             
             // 8. 이펙트 정리
             if (currentPulseEffect != null)

@@ -241,23 +241,45 @@ public class VFPulseEffect : MonoBehaviour
     }
     
     /// <summary>
-    /// 파티클 시스템에 fade out 효과를 적용합니다.
+    /// 파티클 시스템의 start color를 조절하여 fade out 효과를 만듭니다.
     /// </summary>
     private void SetupParticleFadeOut(ParticleSystem particles, float fadeDuration)
     {
         if (particles == null) return;
         
-        var colorOverLifetime = particles.colorOverLifetime;
-        colorOverLifetime.enabled = true;
+        StartCoroutine(FadeOutParticleStartColor(particles, fadeDuration));
+    }
+    
+    /// <summary>
+    /// 파티클 시스템의 start color 알파값을 서서히 감소시킵니다.
+    /// </summary>
+    private IEnumerator FadeOutParticleStartColor(ParticleSystem particles, float fadeDuration)
+    {
+        if (particles == null) yield break;
         
-        // 알파 값을 1에서 0으로 fade out하는 그라디언트 생성
-        Gradient gradient = new Gradient();
-        gradient.SetKeys(
-            new GradientColorKey[] { new GradientColorKey(Color.white, 0.0f), new GradientColorKey(Color.white, 1.0f) },
-            new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(0.0f, 1.0f) }
-        );
+        var main = particles.main;
+        Color startColor = main.startColor.color;
+        float initialAlpha = startColor.a;
         
-        colorOverLifetime.color = gradient;
+        float elapsed = 0f;
+        
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            float normalizedTime = elapsed / fadeDuration;
+            
+            // 알파값을 1에서 0으로 선형 감소
+            float currentAlpha = Mathf.Lerp(initialAlpha, 0f, normalizedTime);
+            startColor.a = currentAlpha;
+            
+            main.startColor = startColor;
+            
+            yield return null;
+        }
+        
+        // 최종적으로 완전히 투명하게
+        startColor.a = 0f;
+        main.startColor = startColor;
     }
 
     
