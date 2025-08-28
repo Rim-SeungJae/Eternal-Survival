@@ -72,7 +72,7 @@ public class OmegaVFPulseAttack : SpecialAttackBase
             }
             
             // 3. 경고 단계 시작 (원래 스케일 그대로 사용)
-            currentPulseEffect.StartWarningPhase(warningDuration, attackRadius, pulseCurve);
+            currentPulseEffect.StartWarningPhase(warningDuration, pulseCurve);
             
             // 4. 경고 시간 대기
             yield return new WaitForSeconds(warningDuration);

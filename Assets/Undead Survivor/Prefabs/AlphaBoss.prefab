@@ -402,10 +402,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5931699524927669959}
   - component: {fileID: 7316472328115600480}
-  - component: {fileID: 3587850557959302930}
   - component: {fileID: 1286072173993892019}
   - component: {fileID: 7754213840892248953}
   - component: {fileID: 446534995745491657}
+  - component: {fileID: 828139227954131545}
   m_Layer: 3
   m_Name: AlphaBoss
   m_TagString: Enemy
@@ -489,40 +489,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3587850557959302930
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5615476525660764216}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd282adc2e5b11749955f959187ac13b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AlphaBoss
-  speed: 0
-  health: 0
-  maxHealth: 0
-  contactDamage: 0
-  lootTable: []
-  animCon: []
-  target: {fileID: 0}
-  shadow: {fileID: 0}
-  knockbackForce: 3
-  knockbackDuration: 0.1
-  bossData: {fileID: 11400000, guid: 5d98d444afe5ab142ab9b83e7b09fa70, type: 2}
-  healthBar: {fileID: 1035016575685838062}
-  specialAttacks: []
-  globalSpecialAttackTimer: 0
-  minTimeBetweenAttacks: 1
-  useLegacySystem: 0
-  chargeEffectPoolTag: Enemy
-  chargeDuration: 3
-  swirlWaitDuration: 0.5
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 1
 --- !u!70 &1286072173993892019
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -609,6 +575,33 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &828139227954131545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5615476525660764216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd4e80ae8c0cdde448a56acfcf7d81c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossBase
+  speed: 0
+  health: 0
+  maxHealth: 0
+  contactDamage: 0
+  lootTable: []
+  animCon: []
+  target: {fileID: 0}
+  shadow: {fileID: 0}
+  knockbackForce: 3
+  knockbackDuration: 0.1
+  bossData: {fileID: 11400000, guid: 5d98d444afe5ab142ab9b83e7b09fa70, type: 2}
+  healthBar: {fileID: 1035016575685838062}
+  specialAttacks: []
+  globalSpecialAttackTimer: 0
+  minTimeBetweenAttacks: 1
 --- !u!1 &6417712004413233128
 GameObject:
   m_ObjectHideFlags: 0

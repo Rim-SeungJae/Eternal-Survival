@@ -15,11 +15,11 @@ MonoBehaviour:
   bossName: "\uC54C\uD30C"
   spriteType: 0
   health: 100
-  speed: 3
+  speed: 2
   contactDamage: 10
-  spawnTime: 111
-  requiredKills: 111
-  requiredLevel: 111
+  spawnTime: 60
+  requiredKills: 10
+  requiredLevel: 10
   specialAttackCooldown: 10
   specialAttackRange: 5
   specialAttackDamage: 50

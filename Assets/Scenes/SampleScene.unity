@@ -3259,7 +3259,6 @@ MonoBehaviour:
   boxImage: {fileID: 2006790410}
   itemIcon: {fileID: 447718024}
   lightOverlay: {fileID: 0}
-  shakeIntensity: 30
   shakeDuration: 3
   lightFadeDuration: 1
   itemShowDelay: 0.5
@@ -4911,7 +4910,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.40100098, y: -1.2769775}
+  m_AnchoredPosition: {x: -1.2672043, y: -2.0123978}
   m_SizeDelta: {x: 0.00139, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &586518690
@@ -15481,6 +15480,12 @@ MonoBehaviour:
     canRespawn: 0
     respawnInterval: 0
     lastSpawnTime: 0
+  - bossPrefab: {fileID: 5615476525660764216, guid: 511165f3e9701444692b3212423d56fe, type: 3}
+    bossData: {fileID: 11400000, guid: 4a715219a43bbea4ebdc7d6a6835b825, type: 2}
+    bossId: 2
+    canRespawn: 0
+    respawnInterval: 0
+    lastSpawnTime: 0
   bossSpawnPoints: []
   spawnDistanceFromPlayer: 15
 --- !u!4 &1261949741
@@ -17003,6 +17008,12 @@ MonoBehaviour:
     size: 0
   - tag: VFPulse
     prefab: {fileID: 3280519133390621005, guid: 551ab07f50c72b842be44e28b460ee0b, type: 3}
+    size: 0
+  - tag: TripletCodeProjectile
+    prefab: {fileID: 8286641888055140679, guid: 2bf97adc0a261f1479ef20b52735cc67, type: 3}
+    size: 0
+  - tag: TrajectoryIndicator
+    prefab: {fileID: 8490588890702643637, guid: 9538963896c10cc42aa95a71be508c71, type: 3}
     size: 0
 --- !u!4 &1446405080
 Transform:

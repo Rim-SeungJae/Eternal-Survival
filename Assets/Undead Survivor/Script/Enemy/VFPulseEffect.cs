@@ -84,7 +84,7 @@ public class VFPulseEffect : MonoBehaviour
     /// <summary>
     /// 경고 단계를 시작합니다.
     /// </summary>
-    public void StartWarningPhase(float duration, float radius, AnimationCurve pulseCurve)
+    public void StartWarningPhase(float duration, AnimationCurve pulseCurve)
     {
         if (!isInitialized) InitializeComponents();
         

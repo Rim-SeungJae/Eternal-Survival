@@ -5,8 +5,9 @@ using UnityEngine;
 
 /// <summary>
 /// 보스 몬스터의 기본 클래스입니다. Enemy를 상속받아 기본 기능을 유지하면서 보스만의 특별한 기능을 추가합니다.
+/// 모든 보스가 공통으로 사용할 수 있는 일반 클래스입니다.
 /// </summary>
-public abstract class BossBase : Enemy
+public class BossBase : Enemy
 {
     [Header("Boss Settings")]
     [SerializeField] public BossDataSO bossData;

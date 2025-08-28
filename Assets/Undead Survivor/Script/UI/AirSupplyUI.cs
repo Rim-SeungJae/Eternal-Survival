@@ -15,7 +15,6 @@ public class AirSupplyUI : MonoBehaviour
     [SerializeField] private Image lightOverlay; // 빛 효과 오버레이
     
     [Header("Animation Settings")]
-    [SerializeField] private float shakeIntensity = 30f; // 흔들림 강도
     [SerializeField] private float shakeDuration = 3f; // 흔들림 지속 시간
     [SerializeField] private float lightFadeDuration = 1f; // 빛 효과 지속 시간
     [SerializeField] private float itemShowDelay = 0.5f; // 아이템 표시 지연 시간
