@@ -19,8 +19,7 @@ public class TripletCodeProjectile : MonoBehaviour
     [SerializeField] private GameObject hitEffectPrefab; // 충돌 이펙트 프리팹
     [PoolTagSelector] public string hitEffectPoolTag = "ProjectileHitEffect"; // 충돌 이펙트 풀 태그
     
-    [Header("Layer Settings")]
-    [SerializeField] private LayerMask playerLayer = 1 << 6; // 플레이어 레이어
+    // 태그 기반 플레이어 감지로 변경 (LayerMask 제거)
     
     // 투사체 상태
     private bool isActive = false;
@@ -162,8 +161,8 @@ public class TripletCodeProjectile : MonoBehaviour
     {
         if (!isActive) return;
         
-        // 플레이어와 충돌 체크
-        if (IsInLayerMask(other.gameObject.layer, playerLayer))
+        // 플레이어와 충돌 체크 (태그 기반)
+        if (other.CompareTag(GameTags.PLAYER))
         {
             Player player = other.GetComponent<Player>();
             if (player != null)
@@ -189,8 +188,8 @@ public class TripletCodeProjectile : MonoBehaviour
         
         GameObject other = collision.gameObject;
         
-        // 플레이어와 충돌 체크
-        if (IsInLayerMask(other.layer, playerLayer))
+        // 플레이어와 충돌 체크 (태그 기반)
+        if (other.CompareTag(GameTags.PLAYER))
         {
             Player player = other.GetComponent<Player>();
             if (player != null)
@@ -203,13 +202,7 @@ public class TripletCodeProjectile : MonoBehaviour
         }
     }
     
-    /// <summary>
-    /// 레이어 마스크 체크 유틸리티
-    /// </summary>
-    private bool IsInLayerMask(int layer, LayerMask layerMask)
-    {
-        return (layerMask.value & (1 << layer)) != 0;
-    }
+    // 레이어 마스크 체크 유틸리티 제거됨 (태그 기반 감지로 변경)
     
     /// <summary>
     /// 투사체를 파괴하고 풀로 반환합니다.

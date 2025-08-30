@@ -90,6 +90,7 @@ public class Enemy : MonoBehaviour
         
         if (!GameManager.instance.isLive || !isLive || isKnockBack || isSpecialAttacking || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
         {
+            rigid.linearVelocity = Vector2.zero; // 혹시 모를 관성을 제거
             return;
         }
 

@@ -10,7 +10,7 @@ public class AlphaArcBladeAttack : SpecialAttackBase
     [PoolTagSelector] public string chargeEffectPoolTag = "AlphaSpecialAttack";
     public float chargeDuration = 3f;
     public float swirlWaitDuration = 0.1f;
-    public LayerMask playerLayer = 1 << 6;
+    // 태그 기반 플레이어 감지로 변경 (LayerMask 제거)
     
     private AlphaChargeEffect currentChargeEffect;
     

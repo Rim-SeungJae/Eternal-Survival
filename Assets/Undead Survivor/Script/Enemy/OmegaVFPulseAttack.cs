@@ -13,7 +13,7 @@ public class OmegaVFPulseAttack : SpecialAttackBase
     [SerializeField] private float warningDuration = 2f; // 경고 표시 시간
     [SerializeField] private float explosionDuration = 0.5f; // 폭발 지속 시간
     [SerializeField] private float attackRadius = 4f; // 공격 반경
-    [SerializeField] private LayerMask playerLayer = 1 << 6; // 플레이어 레이어
+    // 태그 기반 플레이어 감지로 변경 (LayerMask 제거)
     [SerializeField] private float damage = 50f; // 공격 데미지
     
     [Header("Visual Effects")]

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7819324368041649958}
   - component: {fileID: 7806673037881927424}
   - component: {fileID: 5112439887525970834}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TripletCodeProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,9 +188,6 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 65
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 256
 --- !u!96 &5112439887525970834
 TrailRenderer:
   serializedVersion: 3

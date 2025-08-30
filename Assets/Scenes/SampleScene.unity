@@ -4910,7 +4910,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.2672043, y: -2.0123978}
+  m_AnchoredPosition: {x: -1.2672043, y: -2.0123901}
   m_SizeDelta: {x: 0.00139, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &586518690
@@ -17014,6 +17014,12 @@ MonoBehaviour:
     size: 0
   - tag: TrajectoryIndicator
     prefab: {fileID: 8490588890702643637, guid: 9538963896c10cc42aa95a71be508c71, type: 3}
+    size: 0
+  - tag: WickelineNoxiousAftermath
+    prefab: {fileID: 9002066554135692015, guid: 590f12cd7ee6d534ca35b18b28ea71eb, type: 3}
+    size: 0
+  - tag: NerveGasEffect
+    prefab: {fileID: 5335529292876784788, guid: b3dba73ffdcecfa4da3dbda43d930c8a, type: 3}
     size: 0
 --- !u!4 &1446405080
 Transform:

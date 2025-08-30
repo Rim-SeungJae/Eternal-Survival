@@ -49,6 +49,9 @@ public class WickelineTripletCodeAttack : SpecialAttackBase
     {
         try
         {
+            // 공격 시전 중 물리적 고정 시작
+            StartBossImmobilization();
+            
             // 1. 플레이어 방향 계산
             Vector2 playerDirection = GetDirectionToPlayer();
             if (playerDirection == Vector2.zero)
@@ -66,11 +69,17 @@ public class WickelineTripletCodeAttack : SpecialAttackBase
             // 4. 투사체 발사
             LaunchProjectiles(attackDirections);
             
+            // 투사체 발사 후 물리적 고정 해제
+            EndBossImmobilization();
+            
             // 5. 투사체들이 완료될 때까지 대기
             yield return new WaitForSeconds(0.5f);
         }
         finally
         {
+            // 안전장치: 물리적 고정 해제
+            EndBossImmobilization();
+            
             // 궤적 표시 정리
             CleanupTrajectoryIndicators();
             OnAttackComplete();
@@ -205,6 +214,9 @@ public class WickelineTripletCodeAttack : SpecialAttackBase
     /// </summary>
     public override void InterruptAttack()
     {
+        // 물리적 고정 해제 (중단 시 안전장치)
+        EndBossImmobilization();
+        
         CleanupTrajectoryIndicators();
         base.InterruptAttack();
     }
@@ -214,6 +226,9 @@ public class WickelineTripletCodeAttack : SpecialAttackBase
     /// </summary>
     protected override void OnAttackComplete()
     {
+        // 물리적 고정 해제 (완료 시 안전장치)
+        EndBossImmobilization();
+        
         CleanupTrajectoryIndicators();
         base.OnAttackComplete();
     }
