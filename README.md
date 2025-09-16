@@ -18,7 +18,12 @@ Assets/Undead Survivor/Sprites/Tiled Maps/Tilesets
 
 게임 맵이 정상적으로 보이기 위해서는, 사용자가 직접 **해당 타일셋을 구매하거나 준비**하여 위 경로에 추가해주셔야 합니다.
 사용된 타일셋
+
 - [EPIC RPG World Pack - Grass Land 2.0](https://rafaelmatos.itch.io/epic-rpg-world-pack-grass-land20-asset)
-- [EPIC RPG World  -  Cemetery](https://rafaelmatos.itch.io/epic-rpg-world-cemetery-asset)
+- [EPIC RPG World - Cemetery](https://rafaelmatos.itch.io/epic-rpg-world-cemetery-asset)
 
 프로젝트 전반을 완전히 실행하고자 한다면, 위 리소스를 별도로 확보한 뒤 동일한 폴더 구조에 맞춰 배치해 주세요.
+
+## 데모 버전
+
+프로젝트의 데모 버전을 직접 플레이 해볼 수 있습니다! 저장소의 Demo 폴더를 다운받고 'Eternal Survival.exe' 파일을 실행해 주세요.
