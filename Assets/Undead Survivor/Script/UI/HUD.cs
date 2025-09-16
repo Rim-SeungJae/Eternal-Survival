@@ -66,6 +66,8 @@ public class HUD : MonoBehaviour
                 float remainGameTime = GameManager.instance.maxGameTime - GameManager.instance.gameTime;
                 int min = Mathf.FloorToInt(remainGameTime / 60);
                 int sec = Mathf.FloorToInt(remainGameTime % 60);
+                if (min < 0) min = 0;
+                if (sec < 0) sec = 0;
                 // D2 포맷을 사용하여 항상 두 자리로 표시합니다. (예: 01:05)
                 myText.text = string.Format("{0:D2}:{1:D2}", min, sec);
                 break;

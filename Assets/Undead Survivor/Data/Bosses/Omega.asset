@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b63cf4e23e5905a4fae8ffaee7b33188, type: 3}
   m_Name: Omega
   m_EditorClassIdentifier: Assembly-CSharp::BossDataSO
+  bossId: 1
   bossName: "\uC624\uBA54\uAC00"
   spriteType: 0
   health: 150
   speed: 2
-  contactDamage: 15
+  contactDamage: 20
   spawnTime: 120
   requiredKills: 0
   requiredLevel: 0

@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b63cf4e23e5905a4fae8ffaee7b33188, type: 3}
   m_Name: Alpha
   m_EditorClassIdentifier: Assembly-CSharp::BossDataSO
+  bossId: 0
   bossName: "\uC54C\uD30C"
   spriteType: 0
   health: 100
   speed: 2
-  contactDamage: 10
+  contactDamage: 15
   spawnTime: 60
-  requiredKills: 10
-  requiredLevel: 10
+  requiredKills: 0
+  requiredLevel: 0
   specialAttackCooldown: 10
   specialAttackRange: 5
   specialAttackDamage: 50

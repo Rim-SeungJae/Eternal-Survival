@@ -7,6 +7,8 @@ using UnityEngine;
 public class BossDataSO : ScriptableObject
 {
     [Header("기본 정보")]
+    [Tooltip("보스 고유 ID (게임 클리어 조건 확인용)")]
+    public int bossId;
     [Tooltip("보스 이름")]
     public string bossName;
     [Tooltip("보스 스프라이트 타입 (애니메이터 컨트롤러 인덱스)")]

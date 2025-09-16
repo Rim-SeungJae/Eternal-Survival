@@ -48,6 +48,9 @@ public class GameManager : MonoBehaviour
     public float nightEnd = 60f; // 밤이 끝나는 시간
     public float nightTimer = 0f; // 현재 사이클 타이머
 
+    [Header("# Final Boss Settings")]
+    public int finalBossId = -1; // 마지막 보스 ID (-1이면 시간 기반 클리어)
+
     // Enemy 관리용 HashSet (성능 최적화)
     private HashSet<Enemy> activeEnemies = new HashSet<Enemy>();
 
@@ -199,7 +202,7 @@ public class GameManager : MonoBehaviour
         }
 
         // 최대 게임 시간에 도달하면 승리 처리
-        if (gameTime > maxGameTime)
+        if (finalBossId == -1 && gameTime > maxGameTime)
         {
             gameTime = maxGameTime;
             GameVictory();
@@ -315,5 +318,25 @@ public class GameManager : MonoBehaviour
     public void UnregisterEnemy(Enemy enemy)
     {
         activeEnemies.Remove(enemy);
+    }
+
+    /// <summary>
+    /// 보스가 처치되었을 때 호출됩니다. 마지막 보스인 경우 게임을 클리어합니다.
+    /// </summary>
+    /// <param name="bossId">처치된 보스의 ID</param>
+    public void OnBossDefeated(int bossId)
+    {
+        // 마지막 보스가 처치되었으면 게임 클리어
+        if (finalBossId != -1 && bossId == finalBossId)
+        {
+            Debug.Log($"최종 보스 (ID: {bossId}) 처치! 게임 클리어!");
+            GameVictory();
+        }
+
+        // BossSpawnManager에도 알림
+        if (bossSpawnManager != null)
+        {
+            bossSpawnManager.OnBossDefeated(bossId);
+        }
     }
 }

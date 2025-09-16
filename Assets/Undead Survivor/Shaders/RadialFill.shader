@@ -67,17 +67,17 @@ Shader "Custom/RadialFill"
                 if (angle < 0) angle += 360;
                 if (angle > 180) angle = 180; // 반원 범위 제한
                 
-                // 시계방향/반시계방향 처리
+                // 시계방향/반시계방향 처리. 변수의 네이밍 의도와 반대로 if문 작성됨. 수정 필요.
                 float fillAngle;
                 if (_Clockwise > 0.5)
                 {
-                    // 시계방향: 0도에서 시작해서 180도로
+                    // 반시계방향
                     fillAngle = angle - _StartAngle;
                     if (fillAngle < 0) fillAngle += 180;
                 }
                 else
                 {
-                    // 반시계방향: 180도에서 시작해서 0도로
+                    // 시계방향
                     fillAngle = _StartAngle - angle;
                     if (fillAngle < 0) fillAngle += 180;
                 }

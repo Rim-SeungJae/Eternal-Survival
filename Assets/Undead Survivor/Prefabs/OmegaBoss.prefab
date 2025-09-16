@@ -661,9 +661,6 @@ MonoBehaviour:
   chargeEffectPoolTag: ArcBlade
   chargeDuration: 3
   swirlWaitDuration: 0.1
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 1
 --- !u!1 &6495459414618452830
 GameObject:
   m_ObjectHideFlags: 0
@@ -859,10 +856,7 @@ MonoBehaviour:
   warningDuration: 2
   explosionDuration: 0.5
   attackRadius: 4
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 1
-  damage: 50
+  damage: 30
   pulseCurve:
     serializedVersion: 2
     m_Curve:

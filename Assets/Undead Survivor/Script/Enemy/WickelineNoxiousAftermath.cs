@@ -18,7 +18,7 @@ public class WickelineNoxiousAftermath : MonoBehaviour
     
     [Header("장판 속성")]
     [Tooltip("독성 장판 데미지")]
-    public float puddleDamage = 15f;
+    public float puddleDamage = 5f;
     
     [Tooltip("독성 장판 지속 시간")]
     public float puddleDuration = 8f;

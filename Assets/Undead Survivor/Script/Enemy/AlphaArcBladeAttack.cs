@@ -10,8 +10,9 @@ public class AlphaArcBladeAttack : SpecialAttackBase
     [PoolTagSelector] public string chargeEffectPoolTag = "AlphaSpecialAttack";
     public float chargeDuration = 3f;
     public float swirlWaitDuration = 0.1f;
+    public float damage = 20f;
     // 태그 기반 플레이어 감지로 변경 (LayerMask 제거)
-    
+
     private AlphaChargeEffect currentChargeEffect;
     
     void Awake()
@@ -132,8 +133,6 @@ public class AlphaArcBladeAttack : SpecialAttackBase
                 Player player = GameManager.instance.player.GetComponent<Player>();
                 if (player != null)
                 {
-                    // 보스 데이터에서 공격력 가져오기
-                    float damage = ownerBoss.bossData != null ? ownerBoss.bossData.specialAttackDamage : ownerBoss.contactDamage * 2f;
                     player.TakeDamage(damage);
                     
                     Debug.Log($"Arc Blade hit player for {damage} damage");

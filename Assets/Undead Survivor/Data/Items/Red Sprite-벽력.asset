@@ -21,11 +21,11 @@ MonoBehaviour:
   itemIcon: {fileID: 1950523271641948713, guid: c972904a6eb4c1346b366f17f8c4a169, type: 3}
   maxLevel: 4
   damages:
-  - 2
   - 3
-  - 4
+  - 5
   - 7
   - 9
+  - 12
   projectileSpeeds: []
   durations: []
   areas:

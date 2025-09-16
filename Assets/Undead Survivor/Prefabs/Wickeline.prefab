@@ -132,8 +132,8 @@ MonoBehaviour:
   isExecuting: 0
   gasAreaDuration: 8
   activationDelay: 1
-  speedMultiplier: 3
-  damageMultiplier: 0.1
+  speedMultiplier: 1.5
+  damageMultiplier: 1.5
   fadeInDuration: 1.5
   fadeOutDuration: 1
   nerveGasEffectPoolTag: NerveGasEffect

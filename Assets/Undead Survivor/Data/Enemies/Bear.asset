@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Bear
   m_EditorClassIdentifier: Assembly-CSharp::SpawnDataSO
   spriteType: 4
-  spawnTime: 2
+  spawnTime: 1.2
   health: 40
   speed: 1
   shadowOffset: {x: 0.05, y: -0.7}

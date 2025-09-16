@@ -22,10 +22,10 @@ MonoBehaviour:
   maxLevel: 4
   damages:
   - 4
-  - 8
+  - 6
+  - 10
   - 12
-  - 18
-  - 25
+  - 14
   projectileSpeeds:
   - 12
   durations:

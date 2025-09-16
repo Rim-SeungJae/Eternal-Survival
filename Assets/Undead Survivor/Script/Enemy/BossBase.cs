@@ -174,18 +174,24 @@ public class BossBase : Enemy
     {
         // 진행 중인 모든 특수공격 중단
         InterruptAllSpecialAttacks();
-        
+
         // 경험치 보상
         GameManager.instance.GetExp(bossData.expReward);
-        
+
         // 체력바 숨김
         if (healthBar != null)
         {
             healthBar.Hide();
         }
-        
+
         // 보스 처치 알림
         ShowBossDefeatedNotification();
+
+        // GameManager에 보스 처치 알림 (게임 클리어 조건 확인용)
+        if (bossData != null)
+        {
+            GameManager.instance.OnBossDefeated(bossData.bossId);
+        }
     }
     
     /// <summary>

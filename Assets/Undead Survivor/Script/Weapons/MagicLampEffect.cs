@@ -133,13 +133,12 @@ public class MagicLampEffect : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag(GameTags.ENEMY) && !hasDealtDamage)
+        if (other.CompareTag(GameTags.ENEMY))
         {
             Enemy enemy = other.GetComponent<Enemy>();
             if (enemy != null)
             {
                 enemy.TakeDamage(damage);
-                hasDealtDamage = true;
                 
                 // 적중 시 추가 임팩트 효과
                 PlayHitEffect();
