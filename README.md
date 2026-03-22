@@ -27,3 +27,7 @@ Assets/Undead Survivor/Sprites/Tiled Maps/Tilesets
 ## 데모 버전
 
 프로젝트의 데모 버전을 직접 플레이 해볼 수 있습니다! 저장소의 Demo 폴더를 다운받고 'Eternal Survival.exe' 파일을 실행해 주세요.
+
+## 개발 일지
+
+상세한 개발 기록이 궁금하신 분들은 제 [개발 블로그](https://rim-seungjae.github.io/)를 방문해주세요~
